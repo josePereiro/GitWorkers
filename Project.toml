@@ -1,0 +1,13 @@
+name = "GitWorkers"
+uuid = "9e5d5e8c-ba81-11ea-39e8-15323c797f61"
+authors = ["josePereiro"]
+version = "0.1.0"
+
+[compat]
+julia = "1.1"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
