@@ -2,7 +2,7 @@
 function look_down_all(fun::Function, rootdir = pwd(); retfun = (container) -> false)
     container = []
     for (root, dirs, files) in walkdir(rootdir)
-        root = abspath(root)
+        root = root |> abspath
         for file in files
             file = joinpath(root, file)
             fun(file) && push!(container, file)

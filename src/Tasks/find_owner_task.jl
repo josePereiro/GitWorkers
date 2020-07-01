@@ -1,7 +1,11 @@
+"""
+    Returns the task (taskfile) that contains the 
+    given path, or nothing otherwise.
+    If the path does not exis raise an error
+"""
 function find_owner_task(path = pwd())
+    path = path |> abspath
     !ispath(path) && error("Path $path not found!!!")
     dir = isdir(path) ? path : dirname(path)
-    task_file = look_up(dir, TASK_FILE_NAME) 
-    isnothing(task_file) && error("$path not belong to any task!!!")
-    return task_file
+    return look_up(TASK_FILE_NAME, dir) 
 end

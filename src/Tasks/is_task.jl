@@ -1,1 +1,0 @@
-is_task_dir(path) = isdir(path) && isfile(joinpath(path, TASK_FILE_NAME))

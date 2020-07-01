@@ -1,6 +1,7 @@
 # This file is not used for this package
 # It is here only for the its development process
-# It is delivered with the GitWorker_Template repo.
+# It is delivered with the see GitWorker-RepoTemplate repo.
+# TODO: Update GitWorker-RepoTemplate link
 
 
 # This file must be place in the Worker root directory

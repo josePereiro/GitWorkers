@@ -1,3 +1,6 @@
+# ------------------- GIT REPO ROOT -------------------
+REPO_DIR = find_repo_root_dir()
+
 # ------------------- GITWORKER -------------------
 WORKER_FILE_NAME = "gitworker.jl"
 WORKER_FILE = find_gitworker_file()

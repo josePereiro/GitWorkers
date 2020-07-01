@@ -1,0 +1,1 @@
+LOCAL_DIR_SUFFIX = "-local-gitworker"

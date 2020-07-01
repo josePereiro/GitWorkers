@@ -1,14 +1,16 @@
-function look_up(rootdir, name, last_rootdir = nothing)
-    rootdir = abspath(rootdir)
+function look_up(fun::Function, rootdir = pwd(), last_rootdir = nothing)
+    rootdir = rootdir |> abspath
     
     # find in root
-    for file_or_dir in readdir(rootdir)
-        basename(file_or_dir) == name && return joinpath(rootdir, file_or_dir)
+    for bname in readdir(rootdir)
+        fun(bname) && return joinpath(rootdir, bname)
     end
     
     # Base
     rootdir == last_rootdir && return nothing
     
     # recursive call
-    return look_up(dirname(rootdir), name, rootdir)
+    return look_up(fun, dirname(rootdir), rootdir)
 end
+look_up(suffix::AbstractString, rootdir = pwd(), last_rootdir = nothing) =
+    look_up((bname) -> endswith(bname, suffix), rootdir, last_rootdir)
