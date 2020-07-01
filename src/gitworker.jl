@@ -1,7 +1,7 @@
 # This file is not used for this package
 # It is here only for the its development process
-# It is delivered with the see GitWorker-RepoTemplate repo.
-# TODO: Update GitWorker-RepoTemplate link
+# It is delivered with the see GW-TaskRepoTemplate repo.
+# TODO: Update GW-TaskRepoTemplate link
 
 
 # This file must be place in the Worker root directory
