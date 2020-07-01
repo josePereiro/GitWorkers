@@ -2,8 +2,8 @@
     This function collect, from all the local tracked, 
     the one that needs to be updated
 """
-function get_local_chnages()
-    local_files = get_local_tracked()
+function get_local_changes()
+    tracked_files = get_tracked()
     return filter(tracked_files) do file
         try
             local_file = get_tasklocal(file)
