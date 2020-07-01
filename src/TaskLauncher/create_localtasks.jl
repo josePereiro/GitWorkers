@@ -1,13 +1,11 @@
 """
-    This function checks for the tracked files in the origin paths
-    that must have a local copy. If it doesn't, it create the local copy.
-
+    This function checks for the tracked in the task origin folders and create the 
+    local copies if required
 """
-function update_locals()
+function create_localtasks()
 
     tracked_files = get_tracked()
 
-    # Task
     # ALL origin task files must have a local copy. 
     task_origins = filter(is_taskorigin, tracked_files);
     for origin_ in task_origins
@@ -25,11 +23,10 @@ function update_locals()
                 mkpath(local_dir)
                 log(local_dir |> relpath, " created!!!")
             end
-
+            
             local_ = cp(origin_, local_)
             log(local_ |> relpath, " touched!!!")
         end
     end
 
-    # TODO: Add here any other origin file
 end

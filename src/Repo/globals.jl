@@ -5,6 +5,7 @@ REPO_DIR = find_repo_root_dir()
 WORKER_FILE_NAME = "gitworker.jl"
 WORKER_FILE = find_gitworker_file()
 WORKER_DIR = dirname(WORKER_FILE)
+WORKER_NAME = relpath(WORKER_DIR, REPO_DIR)
 WORKER_LOG_DIR = joinpath(WORKER_DIR, "gitworker-logs")
 mkpath(WORKER_LOG_DIR)
 
