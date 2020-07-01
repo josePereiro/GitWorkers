@@ -6,7 +6,7 @@
     the container. 
     Returns all the matches abspath of an empty array
 """
-function find_down_all(fun::Function, rootdir; container = [], 
+function findall_down(fun::Function, rootdir; container = [], 
         retfun = (container) -> false)
 
     for (root, dirs, files) in walkdir(rootdir)
@@ -22,9 +22,9 @@ function find_down_all(fun::Function, rootdir; container = [],
     end
     return container
 end
-find_down_all(suffix::String, rootdir; container = [],
+findall_down(suffix::String, rootdir; container = [],
         retfun = (container) -> false) = 
-    find_down_all((file) -> endswith(file, suffix), rootdir; 
+        findall_down((file) -> endswith(file, suffix), rootdir; 
         container = container, retfun = retfun);
 
 """
@@ -34,7 +34,7 @@ find_down_all(suffix::String, rootdir; container = [],
     Returns an abspath or nothing 
 """
 function find_down(fun::Function, rootdir)
-    founds = find_down_all(fun, rootdir; retfun = (container) -> length(container) == 1)
+    founds = findall_down(fun, rootdir; retfun = (container) -> length(container) == 1)
     return isempty(founds) ? nothing : founds |> first
 end
 find_down(suffix::String, rootdir) = find_down((file) -> endswith(file, suffix), rootdir);

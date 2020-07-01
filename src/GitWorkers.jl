@@ -11,7 +11,7 @@ import JSON
 include("Utils/Utils.jl")
 
 # # Repo
-# include("Repo/Repo.jl")
+include("Repo/Repo.jl")
 
 # # # Worker
 # include("Worker/find_repo_root_dir.jl")

@@ -6,7 +6,7 @@
     the container. 
     Returns all the matches abspath of an empty array
 """
-function find_up_all(fun::Function, rootdir; container = [], 
+function findall_up(fun::Function, rootdir; container = [], 
         retfun = (container) -> false)
         
     rootdir = rootdir |> abspath
@@ -22,14 +22,14 @@ function find_up_all(fun::Function, rootdir; container = [],
     rootdir == dirname(rootdir) && return container
     
     # recursive call
-    return find_up_all(fun, dirname(rootdir); 
+    return findall_up(fun, dirname(rootdir); 
         container = container, retfun  = retfun)
 end
 
 
-find_up_all(suffix::AbstractString, rootdir; container = [], 
+findall_up(suffix::AbstractString, rootdir; container = [], 
         retfun = (container) -> false) =
-    find_up_all((path) -> endswith(path, suffix), rootdir; 
+    findall_up((path) -> endswith(path, suffix), rootdir; 
         container = container, retfun  = retfun)
 
         
@@ -40,7 +40,7 @@ find_up_all(suffix::AbstractString, rootdir; container = [],
     Returns an abspath or nothing 
 """
 function find_up(fun::Function, rootdir)
-    founds = find_up_all(fun, rootdir; retfun = (container) -> length(container) == 1)
+    founds = findall_up(fun, rootdir; retfun = (container) -> length(container) == 1)
     return isempty(founds) ? nothing : founds |> first
 end
 find_up(suffix::String, rootdir) = find_up((file) -> endswith(file, suffix), rootdir);

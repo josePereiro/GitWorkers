@@ -1,9 +1,9 @@
 # ------------------- GIT REPO ROOT -------------------
-REPO_DIR = find_repo_root_dir()
+REPO_DIR = find_rootdir()
 
 # ------------------- GITWORKER -------------------
 WORKER_FILE_NAME = "gitworker.jl"
-WORKER_FILE = find_gitworker_file()
+WORKER_FILE = find_gitworkerfile()
 WORKER_DIR = dirname(WORKER_FILE)
 WORKER_NAME = relpath(WORKER_DIR, REPO_DIR)
 WORKER_LOG_DIR = joinpath(WORKER_DIR, "gitworker-logs")

@@ -1,2 +1,2 @@
-include("globals.jl")
 include("find.jl")
+include("globals.jl")
