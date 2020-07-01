@@ -10,14 +10,11 @@ import JSON
 # Utils
 include("Utils/Utils.jl")
 
-# # Repo
+# Repo
 include("Repo/Repo.jl")
 
-# # # Worker
-# include("Worker/find_repo_root_dir.jl")
-# include("Worker/find_gitworker_file.jl")
-# include("Worker/dirs_and_files.jl")
-# include("Worker/meta.jl")
+# # Workers
+include("Workers/Workers.jl")
 
 # # Process
 # include("Process/config.jl")
