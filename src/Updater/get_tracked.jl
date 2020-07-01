@@ -7,11 +7,11 @@
 
 =#
 """
-    This function collect all files already tracked by git
+    This function collect all existing files being tracked by git
 """
 function get_git_tracked() 
     files = read(`git ls-tree --full-tree --name-only -r HEAD`, String) |> split .|> String
-    return joinpath.(REPO_DIR, files)
+    return filter(ispath, joinpath.(REPO_DIR, files))
 end
 get_git_tracked(dir) = filter((file) -> is_subpath(file, dir), get_git_tracked()) 
 
@@ -29,12 +29,16 @@ function get_user_tracked(dir)
     return []
 end
 
-
+"""
+    Returns all the tracked paths. The paths could not be 
+    yet tracked in the repo (Ex: It could be created locally 
+    after the last push). 
+    All paths are checked to exist
+"""
 function get_tracked()
     git_tracked = get_git_tracked()
     user_tracked = get_user_tracked()
-    tracked = [git_tracked; user_tracked] |> unique
+    tracked = filter(ispath, [git_tracked; user_tracked] |> unique)
 end
-get_tracked(dir) = filter((file) -> is_subpath(file, dir), get_tracked()) 
-
-get_local_tracked() = filter()
+get_tracked(dir) = filter((file) -> ispath(file) && is_subpath(file, dir), 
+    get_tracked()) 
