@@ -1,0 +1,1 @@
+WORKER_NAME = relpath(WORKER_DIR, REPO_DIR)

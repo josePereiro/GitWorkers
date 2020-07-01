@@ -31,14 +31,14 @@ end
 
 """
     Returns all the tracked paths. The paths could not be 
-    yet tracked in the repo (Ex: It could be created locally 
+    yet tracked in the git repo (Ex: It could be created locally 
     after the last push). 
-    All paths are checked to exist
+    All paths are checked to exist before returned
 """
 function get_tracked()
     git_tracked = get_git_tracked()
     user_tracked = get_user_tracked()
     tracked = filter(ispath, [git_tracked; user_tracked] |> unique)
 end
-get_tracked(dir) = filter((file) -> ispath(file) && is_subpath(file, dir), 
+get_tracked(dir) = filter((file) -> is_subpath(file, dir), 
     get_tracked()) 

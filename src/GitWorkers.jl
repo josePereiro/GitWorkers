@@ -9,10 +9,11 @@ include("Utils/gwprint.jl")
 include("Utils/is_subpath.jl")
 
 
-# DirTree
-include("DirTree/find_repo_root_dir.jl")
-include("DirTree/find_gitworker_file.jl")
-include("DirTree/dirs_and_files.jl")
+# Worker
+include("Worker/find_repo_root_dir.jl")
+include("Worker/find_gitworker_file.jl")
+include("Worker/dirs_and_files.jl")
+include("Worker/meta.jl")
 
 # Process
 include("Process/config.jl")
@@ -31,9 +32,22 @@ include("Tasks/tasklocals.jl")
 include("Tasks/find_owner_task.jl")
 
 # Updater
+include("Updater/globals.jl")
 include("Updater/get_tracked.jl")
+include("Updater/force_pull.jl")
+include("Updater/push.jl")
+include("Updater/add_file.jl")
+include("Updater/commit.jl")
+include("Updater/add_commit_origins.jl")
+include("Updater/update_origins.jl")
 include("Updater/get_local_changes.jl")
 include("Updater/update_loop.jl")
+
+# TaskLauncher
+include("TaskLauncher/update_locals.jl")
+
+# Log
+include("Log/log.jl")
 
 
 end # module
