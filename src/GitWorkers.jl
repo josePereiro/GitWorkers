@@ -25,6 +25,9 @@ include("Tasks/Task.jl")
 # Updater
 include("Updater/Updater.jl")
 
+#TaskManager
+include("TaskManager/TaskManager.jl")
+
 # Log
 include("Log/log.jl")
 
