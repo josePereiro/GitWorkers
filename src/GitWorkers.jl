@@ -1,6 +1,6 @@
 module GitWorkers
 
-import JSON
+import TOML
 
 # Globals deps
 
