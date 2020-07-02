@@ -32,7 +32,7 @@ function write_toml(file, dict;
     end
     
     toml_str = String(take!(tempio))
-    close(tempio)
+    # close(tempio)
     
     open(file, "w") do io
         println(io, toml_str)
@@ -40,4 +40,4 @@ function write_toml(file, dict;
 
 end
 
-read_toml(file) = TOML_DICT_TYPE(TOML.parsefile("test.toml"))
+read_toml(file) = TOML_DICT_TYPE(TOML.parsefile(file))
