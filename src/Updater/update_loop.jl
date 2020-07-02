@@ -11,29 +11,29 @@ function update_loop(maxwt = 10)
         # ------------------- FORCE "PULL" -------------------
         # This force the local repo to be equal to the origin
         # This is a fundamental design desition. This way the 
-        # worker code is more robust
-        global curr_pull_start_time = time()        
-        !force_pull() && continue
-        global previous_pull_start_time = curr_pull_start_time
+        # worker code is more robust        
+        !git_force_pull() && continue
 
-        # Wait a random time 
-        sleep(5)
+        sleep(5) # Test (to see changes)
 
-        # ------------------- UPDATE ORIGINS -------------------
-        # The origin files all only mutables after the forced "pull". That's 
-        # why the tasks are runned in a local directory. Now we collect all 
-        # the possibles changes in tracked files to add then and commit before
-        # trying to push
-        global curr_origin_up_start_time = time()
-        update_origins()
-        global previous_origin_up_start_time = curr_origin_up_start_time
-        global curr_origin_up_end_time = time()
-        global previous_origin_up_end_time = curr_origin_up_end_time
+        # ------------------- UPDATE REPO LOCALS -------------------
+        # The local directories of the repo will be overwritten by
+        # its peers in the copy
+        # This implements downstream -> upstream comunication 
+        update_tasklocals()
+        
+        # ------------------- PUSH ORIGINS -------------------
+        git_add_all() && 
+        git_commit(get_worker_name() * " update") &&
+        git_push()
+        
+        # ------------------- UPDATE LOCAL ORIGINS -------------------
+        # The origin directories of the copy will be overwritten by
+        # its peers in the repo
+        # This implements upstream -> downstream comunication 
+        update_taskorigins()
         
 
-        # ------------------- PUSH ORIGINS -------------------
-        !add_commit_origins() && continue
-        push()
     end
 
 end

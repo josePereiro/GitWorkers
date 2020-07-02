@@ -6,10 +6,13 @@
     the container. 
     Returns all the matches abspath of an empty array
 """
-function findall_down(fun::Function, rootdir; container = [], 
+function findall_down(fun::Function, rootpath; container = [], 
         retfun = (container) -> false)
+    rootpath = isdir(rootpath) ? rootpath : rootpath |> dirname
 
-    for (root, dirs, files) in walkdir(rootdir)
+    fun(rootpath) && push!(container, rootpath)
+
+    for (root, dirs, files) in walkdir(rootpath)
         root = abspath(root)
 
         fun(root) && push!(container, root)
@@ -22,9 +25,9 @@ function findall_down(fun::Function, rootdir; container = [],
     end
     return container
 end
-findall_down(suffix::String, rootdir; container = [],
+findall_down(name::AbstractString, rootpath; container = [],
         retfun = (container) -> false) = 
-        findall_down((file) -> endswith(file, suffix), rootdir; 
+        findall_down((path) -> basename(path) == name, rootpath; 
         container = container, retfun = retfun);
 
 """
@@ -33,8 +36,8 @@ findall_down(suffix::String, rootdir; container = [],
     the abspath of each dir or file. 
     Returns an abspath or nothing 
 """
-function find_down(fun::Function, rootdir)
-    founds = findall_down(fun, rootdir; retfun = (container) -> length(container) == 1)
+function find_down(fun::Function, rootpath)
+    founds = findall_down(fun, rootpath; retfun = (container) -> length(container) == 1)
     return isempty(founds) ? nothing : founds |> first
 end
-find_down(suffix::String, rootdir) = find_down((file) -> endswith(file, suffix), rootdir);
+find_down(name::AbstractString, rootpath) = find_down((path) -> basename(path) == name, rootpath);

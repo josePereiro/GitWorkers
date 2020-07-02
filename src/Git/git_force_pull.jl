@@ -4,8 +4,7 @@
     before returning.
     Return true if no error was raised
 """
-function force_pull(tries = 5, maxwt = 5)
-    
+function git_force_pull(tries = 5, maxwt = 5)
     try
         # TODO: Use LibGit2
         run(`git fetch`)
@@ -16,7 +15,7 @@ function force_pull(tries = 5, maxwt = 5)
         err isa InterruptException && rethrow(err)
         sleep(maxwt * rand())
         tries <= 0 && return false
-        force_pull(tries - 1, maxwt)
+        git_force_pull(tries - 1, maxwt)
     end
     return true
 end

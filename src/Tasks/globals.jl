@@ -1,0 +1,4 @@
+TASK_FILE_NAME = "task.gitworker.jl"
+TASK_ORIGIN_DIR_NAME = "origin"
+TASK_PATTERN = joinpath(TASK_ORIGIN_DIR_NAME, TASK_FILE_NAME)
+TASK_LOCAL_DIR_NAME = "local"

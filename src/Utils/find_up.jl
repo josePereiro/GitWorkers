@@ -6,30 +6,34 @@
     the container. 
     Returns all the matches abspath of an empty array
 """
-function findall_up(fun::Function, rootdir; container = [], 
+function findall_up(fun::Function, rootpath; container = [], 
         retfun = (container) -> false)
-        
-    rootdir = rootdir |> abspath
+    
+    rootpath = rootpath |> abspath
+    rootpath = isdir(rootpath) ? rootpath : rootpath |> dirname
+
+    # Match root
+    fun(rootpath) && push!(container, rootpath)
     
     # find in root
-    for bname in readdir(rootdir)
-        path = joinpath(rootdir, bname)
+    for bname in readdir(rootpath)
+        path = joinpath(rootpath, bname)
         fun(path) && push!(container, path)
         retfun(container) && return container
     end
 
     # Base
-    rootdir == dirname(rootdir) && return container
+    rootpath == dirname(rootpath) && return container
     
     # recursive call
-    return findall_up(fun, dirname(rootdir); 
+    return findall_up(fun, dirname(rootpath); 
         container = container, retfun  = retfun)
 end
 
 
-findall_up(suffix::AbstractString, rootdir; container = [], 
+findall_up(name::AbstractString, rootpath; container = [], 
         retfun = (container) -> false) =
-    findall_up((path) -> endswith(path, suffix), rootdir; 
+    findall_up((path) -> basename(path) == name, rootpath; 
         container = container, retfun  = retfun)
 
         
@@ -39,8 +43,9 @@ findall_up(suffix::AbstractString, rootdir; container = [],
     the abspath of each dir or file. 
     Returns an abspath or nothing 
 """
-function find_up(fun::Function, rootdir)
-    founds = findall_up(fun, rootdir; retfun = (container) -> length(container) == 1)
+function find_up(fun::Function, rootpath)
+    founds = findall_up(fun, rootpath; retfun = (container) -> length(container) == 1)
     return isempty(founds) ? nothing : founds |> first
 end
-find_up(suffix::String, rootdir) = find_up((file) -> endswith(file, suffix), rootdir);
+find_up(name::String, rootpath) = 
+    find_up((path) -> basename(path) == name, rootpath);

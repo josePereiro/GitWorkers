@@ -1,3 +1,6 @@
 include("find.jl")
+include("workertree.jl")
 include("globals.jl")
-include("init.jl")
+include("name.jl")
+# include("workercopy.jl")
+

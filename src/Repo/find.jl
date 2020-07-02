@@ -8,10 +8,10 @@ function find_rootdir(dir = pwd())
     return git_dir
 end
 
-findall_repo(fun::Function) = findall_down(fun, REPO_DIR);
-findall_repo(suffix::AbstractString) = 
-    findall_repo((path) -> endswith(path, suffix));
+findall_repo(fun::Function) = findall_down(fun, find_rootdir());
+findall_repo(name::AbstractString) = 
+    findall_repo((path) -> basename(path) == name);
 
-findin_repo(fun::Function) = find_down(fun, REPO_DIR);
-findin_repo(suffix::AbstractString) = 
-    findin_repo((path) -> endswith(path, suffix));
+findin_repo(fun::Function) = find_down(fun, find_rootdir());
+findin_repo(name::AbstractString) = 
+    findin_repo((path) -> basename(path) == name);
