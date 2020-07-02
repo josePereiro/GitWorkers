@@ -14,7 +14,7 @@ function update_loop(maxwt = 10)
         # worker code is more robust        
         !git_force_pull() && continue
 
-        sleep(5) # Test (to see changes)
+        # sleep(5) # Test (to see changes)
 
         # ------------------- UPDATE REPO LOCALS -------------------
         # The local directories of the repo will be overwritten by

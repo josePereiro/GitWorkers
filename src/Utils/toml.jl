@@ -37,7 +37,6 @@ function write_toml(file, dict;
     open(file, "w") do io
         println(io, toml_str)
     end
-
 end
 
 read_toml(file) = TOML_DICT_TYPE(TOML.parsefile(file))
