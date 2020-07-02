@@ -19,6 +19,11 @@ function find_ownertask(path = pwd(); unsafe = false)
     return joinpath(taskroot, TASK_PATTERN)
 end
 
+function find_ownertask_root(path = pwd(); unsafe = false)
+    ownertask = find_ownertask(path; unsafe = unsafe)
+    return isnothing(ownertask) ? nothing : ownertask |> get_taskroot
+end
+
 has_ownertask(path = pwd()) = !isnothing(find_ownertask(path; unsafe = true))
 
 findall_task(fun::Function, path = pwd()) = findall_down(fun, find_ownertask(path));

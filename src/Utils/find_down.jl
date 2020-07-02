@@ -12,7 +12,7 @@
 """
 function findall_down(fun::Function, rootpath; container = [], 
         retfun = (path, container) -> false,
-        onerr = (path, container, err) -> nothing)
+        onerr = (path, container, err) -> false)
     rootpath = isdir(rootpath) ? rootpath : rootpath |> dirname
 
     try

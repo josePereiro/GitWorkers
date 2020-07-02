@@ -12,7 +12,7 @@
 """
 function findall_up(fun::Function, rootpath; container = [], 
         retfun = (path, container) -> false,
-        onerr = (path, container, err) -> nothing)
+        onerr = (path, container, err) -> false)
     
     rootpath = rootpath |> abspath
     rootpath = isdir(rootpath) ? rootpath : rootpath |> dirname
