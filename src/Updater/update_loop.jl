@@ -22,6 +22,7 @@ function update_loop(maxwt = 10)
         # This implements downstream -> upstream comunication 
         update_tasklocals()
         
+        # TODO: introduce checks before pushing
         # ------------------- PUSH ORIGINS -------------------
         git_add_all() && 
         git_commit(get_worker_name() * " update") &&
