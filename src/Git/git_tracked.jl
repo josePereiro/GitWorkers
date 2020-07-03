@@ -12,6 +12,6 @@
 function git_tracked() 
     # TODO: Use LibGit2
     files = read(`git ls-tree --full-tree --name-only -r HEAD`, String) |> split .|> String
-    return filter(ispath, joinpath.(find_rootdir(), files))
+    return filter(ispath, joinpath.(find_reporoot(), files))
 end
 git_tracked(dir) = filter((file) -> is_subpath(file, dir), git_tracked()) 

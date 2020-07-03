@@ -13,9 +13,6 @@ include("Utils/Utils.jl")
 #Git
 include("Git/Git.jl")
 
-# Repo
-include("Repo/Repo.jl")
-
 # Workers
 include("Workers/Workers.jl")
 

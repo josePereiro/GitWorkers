@@ -1,5 +1,7 @@
 include("find_down.jl")
+include("exist_down.jl")
 include("find_up.jl")
+include("exist_up.jl")
 include("gwprint.jl")
 include("is_subpath.jl")
 include("copy_tree.jl")
