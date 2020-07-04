@@ -1,3 +1,4 @@
+# TODO: Add tests
 build_task_exec_status_file(taskroot) = is_taskroot(taskroot) ? 
     joinpath(taskroot, LOCAL_FOLDER_NAME, TASK_EXEC_STATUS_FILE_NAME) :
     error("$(relpath(taskroot)) not a task dir!!")

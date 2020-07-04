@@ -1,3 +1,4 @@
+# TODO: Add tests
 """
     Returns true if the task must be executed
 """

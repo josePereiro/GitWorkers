@@ -1,3 +1,4 @@
+# TODO: Add tests
 is_repotaskroot(taskroot) = is_taskroot(taskroot) && !endswith(abspath(taskroot), COPY_DIR_SUFFIX)
 
 function get_repotask_path(path)

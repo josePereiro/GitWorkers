@@ -1,3 +1,4 @@
+# TODO: Add tests
 is_copytaskroot(taskroot) = is_taskroot(taskroot) && endswith(abspath(taskroot), COPY_DIR_SUFFIX)
 
 function get_copytask_path(path)
