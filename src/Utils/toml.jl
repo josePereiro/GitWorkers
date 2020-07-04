@@ -1,7 +1,7 @@
 # Force single toml files
 TOML_DICT_TYPE = Dict{String, Union{String, Number}}
 
-function toml_commtstr(lines)
+function toml_commtstr(lines::Vector)
     tempio = IOBuffer();
     foreach(lines) do line
         line = isempty(line) ? "" : "# " * line
@@ -9,6 +9,7 @@ function toml_commtstr(lines)
     end
     return String(take!(tempio))
 end
+toml_commtstr(line::String) = toml_commtstr([line])
 
 function write_toml(file, dict; 
         headcmmts = [],

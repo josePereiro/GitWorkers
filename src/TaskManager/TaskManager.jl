@@ -4,8 +4,10 @@
 # cmd = Cmd(`$julia $run_task_file`, env = ENV)
 #     run(pipeline(cmd, stdout = open(log_file, "a"), 
 #         stderr = open(error_file, "a")), wait = true);
-include("globals.jl")
+
 include("launch_tasks.jl")
-include("get_exe_order.jl")
-include("is_executable_task.jl")
+# include("has_executable_config.jl")
+# include("has_kill_config.jl")
 include("running_tasks.jl")
+include("is_running.jl")
+include("control_keys.jl")

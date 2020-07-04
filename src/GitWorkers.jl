@@ -2,13 +2,11 @@ module GitWorkers
 
 import TOML
 
-# Globals deps
-
-# Globals
-
-
 # Utils
 include("Utils/Utils.jl")
+
+# ControlFiles
+include("ControlFiles/ControlFiles.jl")
 
 #Git
 include("Git/Git.jl")
@@ -24,6 +22,7 @@ include("Updater/Updater.jl")
 
 #TaskManager
 include("TaskManager/TaskManager.jl")
+
 
 # Log
 include("Log/log.jl")
