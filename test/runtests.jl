@@ -2,9 +2,14 @@ using GitWorkers
 GW = GitWorkers
 using Test
 
-include("create_test_repo.jl")
+try
+    include("prepare_tests.jl")
 
-@testset "GitWorkers.jl" begin
-    include("TreeTests/TreeTests.jl")
-    # include("UtilsTests/UtilsTests.jl")
+    @testset "GitWorkers.jl" begin
+        include("TreeTests/TreeTests.jl")
+        include("UtilsTests/UtilsTests.jl")
+    end
+
+finally
+    include("clear_tests.jl")
 end
