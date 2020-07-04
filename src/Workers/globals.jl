@@ -5,5 +5,3 @@ WORKER_PATTERN = WORKER_FILE_NAME
 STDOUT_FILE_SUFFIX = ".stdout.gitworker.txt"
 STDERR_FILE_SUFFIX = ".stdout.gitworker.txt"
 COPY_DIR_SUFFIX = "-gitworker-copy"
-ORIGIN_FOLDER_NAME = "origin"
-LOCAL_FOLDER_NAME = "local"
