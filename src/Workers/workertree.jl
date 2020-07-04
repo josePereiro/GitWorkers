@@ -9,7 +9,16 @@ is_workerroot(dir) = isdir(dir) && isfile(joinpath(dir, WORKER_FILE_NAME))
 is_worker(path) = basename(path) == WORKER_FILE_NAME
 
 
-is_inworker(path = pwd()) = exist_up(is_worker, path)
+function is_inworker(path = pwd(),
+        ownerworker = find_ownerworker(path, check = false)) 
+    isnothing(ownerworker) && return false
+    taskroot = ownerworker |> get_workerroot
+    return is_subpath(path, taskroot)
+end
 
-get_workerroot(workerfile) = is_worker(workerfile) ? workerfile |> dirname :
-    error("$(relpath(workerfile)) not a is valid workerfile")
+"""
+    Given a workerfile, returns the worker root dir path.
+    This method do not makes any check to the 
+    taskfile
+"""
+get_workerroot(workerfile) = workerfile |> abspath |> dirname
