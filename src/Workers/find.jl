@@ -10,10 +10,11 @@ find_gitworkers() = findall_repo(is_worker)
     throw an error if nothing if found. 
     Returns an abspath or nothing
 """
-function find_ownerworker(path = pwd(); check = false)
-    workerroot = find_up(is_workerroot, path)
+function find_ownerworker(path = pwd(); check = true)
+    workerroot = findup_repo(is_workerroot, path)
     check && isnothing(workerroot) && error("Not in a `GitWorker` directoty, " *
         "$(WORKER_FILE_NAME) not found!!!")
+    isnothing(workerroot) && return nothing
     return joinpath(workerroot, WORKER_PATTERN)
 end
 

@@ -1,12 +1,12 @@
 """
     This method defines what is a gitworker root in the dir tree
 """
-is_workerroot(dir) = isdir(dir) && isfile(joinpath(dir, WORKER_FILE_NAME))
+is_workerroot(dir) = is_inrepo(dir) && isdir(dir) && isfile(joinpath(dir, WORKER_FILE_NAME))
 
 """
     This method defines what is a gitworker in the dir tree
 """
-is_worker(path) = basename(path) == WORKER_FILE_NAME
+is_worker(path) = is_inrepo(path) && basename(path) == WORKER_FILE_NAME
 
 
 function is_inworker(path = pwd(),

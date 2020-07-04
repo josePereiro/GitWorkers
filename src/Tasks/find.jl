@@ -11,14 +11,15 @@ find_tasks(path = pwd()) = findall_worker(is_task, path)
     throw an error if nothing if found. 
     Returns an abspath or nothing
 """
-function find_ownertask(path = pwd(); check = false)
-    taskroot = find_up(is_taskroot, path)
+function find_ownertask(path = pwd(); check = true)
+    taskroot = findup_repo(is_taskroot, path)
     check && isnothing(taskroot) && error("Not in a `Task` directoty, " *
         "$(TASK_FILE_NAME) not found!!!")
+    isnothing(taskroot) && return nothing
     return joinpath(taskroot, TASK_PATTERN)
 end
 
-function find_ownertask_root(path = pwd(); check = false)
+function find_ownertask_root(path = pwd(); check = true)
     ownertask = find_ownertask(path; check = check)
     return isnothing(ownertask) ? nothing : ownertask |> get_taskroot
 end

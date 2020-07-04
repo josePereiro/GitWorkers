@@ -19,7 +19,12 @@ function findall_up(fun::Function, rootpath; container = [],
     rootpath = isdir(rootpath) ? rootpath : rootpath |> dirname
 
     # Match root
-    fun(rootpath) && push!(container, rootpath)
+    try
+        fun(rootpath) && push!(container, rootpath)
+        retfun(rootpath, container) && return container
+    catch err
+        onerr(rootpath, container, err) && return container
+    end
     
     # find in root
     for bname in readdir(rootpath)

@@ -2,12 +2,12 @@
 """
     This method defines what is a task root in the dir tree
 """
-is_taskroot(dir) = isdir(dir) && isfile(joinpath(dir, ORIGIN_FOLDER_NAME, TASK_FILE_NAME))
+is_taskroot(dir) = is_inrepo(dir) && isdir(dir) && isfile(joinpath(dir, ORIGIN_FOLDER_NAME, TASK_FILE_NAME))
 
 """
     This method defines what is a task in the dir tree
 """
-is_task(path) = isfile(path) && basename(dirname(path)) == ORIGIN_FOLDER_NAME && 
+is_task(path) = is_inrepo(path) && isfile(path) && basename(dirname(path)) == ORIGIN_FOLDER_NAME && 
     basename(path) == TASK_FILE_NAME
 
 """
