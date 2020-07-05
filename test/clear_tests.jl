@@ -1,5 +1,4 @@
 # Delete test repo
-for file in TEST_FILES
-    rm(file |> dirname, force = true, recursive = true)
-end
+rm(REPOROOT, recursive = true, force = true)
+rm(NOT_REPOROOT, recursive = true, force = true)
 println("Test files deleted")

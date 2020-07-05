@@ -4,7 +4,7 @@
     with the result and a description of the rule that 
     returns
 """
-function has_kill_config(taskfile)
+function has_kill_config(taskfile; say_why = false)
     # checks
     !is_task(taskfile) && error("Not a valid taskfile")
 
@@ -14,19 +14,18 @@ function has_kill_config(taskfile)
         return say_why ? (false, "Not a copy Task") : false
 
     # ------------------- EXEC-CONFIG -------------------
-    exec_config = read_task_exec_config_toml(taskfile)
-    # tasks with missing exec_config will always be killed
-    isnothing(exec_config) && 
-        return say_why ? (true, "Missing $TASK_EXEC_CONFIG_FILE_NAME") : true
-
+    exec_config_file = find_task_exec_config_file(taskfile)
+    # tasks without TASK_EXEC_CONFIG_FILE_NAME are no killable
+    isnothing(exec_config_file) &&
+        return say_why ? (false, "Missing $TASK_EXEC_CONFIG_FILE_NAME") : false 
+    
     # ------------------- KILL_SIGN -------------------
-    exe_order = get_exec_order(exec_config)
-    # tasks without execution order are no executable
-    !haskey(exec_config, EXE_ORDER_KEY) && 
-        return say_why ? (false, "Missing $EXE_ORDER_KEY") : false 
-    exe_order = exec_config[EXE_ORDER_KEY]
-    # tasks with invalid exe_order are no executable
-    !(exe_order isa Number) && 
-        return say_why ? (false, "Invalid $EXE_ORDER_KEY") : false 
+    kill_sign = read_control(exec_config_file, KILL_SIGN_KEY)
+    # tasks with valid KILL_SIGN_KEY are killiable
+    !isnothing(kill_sign) && kill_sign == KILL_SIGN &&
+        return say_why ? (true, "Vallid KILL_SIGN $KILL_SIGN_KEY") : true 
 
+    # by default task are not killable, just in case something 
+    # wire happend
+    return say_why ? (false, "Default") : false
 end

@@ -5,3 +5,5 @@
 /dev/
 *.code-workspace
 test/TestRepo
+test/NotTestRepo
+.vscode

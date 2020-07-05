@@ -6,8 +6,8 @@
 #         stderr = open(error_file, "a")), wait = true);
 
 include("launch_tasks.jl")
-# include("has_executable_config.jl")
-# include("has_kill_config.jl")
+include("has_executable_config.jl")
+include("has_kill_config.jl")
 include("running_tasks.jl")
 include("is_running.jl")
 include("control_keys.jl")

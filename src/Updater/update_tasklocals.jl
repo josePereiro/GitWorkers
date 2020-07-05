@@ -10,13 +10,12 @@ function update_tasklocals()
     copy_taskroots = filter(is_copytaskroot, taskroots)
     copy_locals = joinpath.(copy_taskroots, LOCAL_FOLDER_NAME)
 
-    oncopy_ = (src, dest) -> println(relpath(src), " => ", relpath(dest))
     onerr_ = (src, dest, err) -> nothing
     # TODO: use filterfun to avoid copying equal files, or big ones
     for copy_local in copy_locals
         !isdir(copy_local) && continue
         repo_local = get_repotask_path(copy_local)
         copy_tree(copy_local, repo_local; 
-            oncopy = oncopy_, onerr = onerr_, force = true)
+            onerr = onerr_, force = true)
     end
 end

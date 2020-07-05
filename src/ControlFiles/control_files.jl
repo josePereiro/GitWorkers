@@ -5,12 +5,14 @@
     The key information must be in the CONTROL_MANIFEST for
     consistency cheking.
 """
-function read_control(controlfile, key)
+function read_control(controlfile, key; check_type = true)
     control_dict = read_toml(controlfile)
     !haskey(control_dict, key) && return nothing
     val = control_dict[key]
-    T = get_control_type(key)
-    !(val isa T) && return nothing
+    if check_type
+        T = get_control_type(key)
+        !(val isa T) && return nothing
+    end
     return val
 end
 function read_control(controlfile)
@@ -25,26 +27,27 @@ end
     The key information must be in the CONTROL_MANIFEST for
     consistency cheking.
 """
-function write_control(controlfile, control_dict::Dict)
+function write_control(controlfile, control_dict::Dict; check_type = true)
     desc = Dict()
     for (key, val) in control_dict
         val = control_dict[key]
-        T = get_control_type(key)
-        !(val isa T) && error("Key $key invalid type $T")
+        if check_type
+            T = get_control_type(key)
+            !(val isa T) && error("Key $key invalid type $T")
+        end
         desc[key] = get_control_desc(key)
     end
-    @show desc
     write_toml(controlfile, control_dict; 
         headcmmts = CONTROL_FILES_HEAD_COMMENT,
         keycmmts = desc,
     )
 end
 
-function write_control(controlfile, key, val)
+function write_control(controlfile, key, val; check_type = true)
     control_dict = read_control(controlfile)
     control_dict = isnothing(control_dict) ? Dict() : control_dict
     control_dict[key] = val
-    write_control(controlfile, control_dict)
+    write_control(controlfile, control_dict; check_type = check_type)
 end
 """
     Returns the type of a given control in the CONTROL_MANIFEST, 
@@ -63,7 +66,7 @@ end
 """
 function get_control_desc(key) 
     !haskey(CONTROL_MANIFEST, key) && return ""
-    @show desc = CONTROL_MANIFEST[key][CONTROL_DESC_KEY]
+    desc = CONTROL_MANIFEST[key][CONTROL_DESC_KEY]
     !(desc isa AbstractString) && return ""
     return desc
 end

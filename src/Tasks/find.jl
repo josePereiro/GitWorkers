@@ -33,3 +33,25 @@ findall_task(name::AbstractString) =
 findin_task(fun::Function, path = pwd()) = find_down(fun, find_ownertask(path));
 findin_task(name::AbstractString) = 
     findin_task((path) -> basename(path) == name);
+
+"""
+    Returns the path to the exec_config_file
+    of the path owner task. If path is not a 
+    task path throw an error.
+"""
+function find_task_exec_config_file(path = pwd())
+    taskdir = find_ownertask_root(path);
+    exec_config_file =  build_task_exec_config_file(taskdir)
+    return isfile(exec_config_file) ? exec_config_file : nothing
+end
+
+"""
+    Returns the path to the exec_status_file
+    of the path owner task. If path is not a 
+    task path throw an error.
+"""
+function find_task_exec_status_file(path = pwd())
+    taskdir = find_ownertask_root(path);
+    exec_status_file = build_task_exec_status_file(taskdir)
+    return isfile(exec_status_file) ? exec_status_file : nothing
+end

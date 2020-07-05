@@ -3,8 +3,6 @@ function update_loop(maxwt = 10)
 
     while true
 
-        flush(stdout) # Test
-
         # Wait a random time 
         sleep(maxwt * rand())
 
@@ -13,8 +11,6 @@ function update_loop(maxwt = 10)
         # This is a fundamental design desition. This way the 
         # worker code is more robust        
         !git_force_pull() && continue
-
-        # sleep(5) # Test (to see changes)
 
         # ------------------- UPDATE REPO LOCALS -------------------
         # The local directories of the repo will be overwritten by

@@ -11,9 +11,10 @@ CONTROL_MANIFEST[LAST_EXE_ORDER_KEY] = Dict(
         "used to resolve if a execution order if new"
 )
 
+KILL_SIGN_KEY = "KILL"
 KILL_SIGN = "KILL"
-CONTROL_MANIFEST[KILL_SIGN] = Dict(
-    CONTROL_TYPE_KEY => Int,
+CONTROL_MANIFEST[KILL_SIGN_KEY] = Dict(
+    CONTROL_TYPE_KEY => String,
     CONTROL_DESC_KEY => "Main control of tasks kill state, "*
         "if present the task will be killed or never run"
 )
