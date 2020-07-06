@@ -1,1 +1,0 @@
-# replace(cmd, r"[\n]+" => "\n")
