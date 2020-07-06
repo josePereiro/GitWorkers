@@ -1,7 +1,7 @@
 name = "GitWorkers"
 uuid = "9e5d5e8c-ba81-11ea-39e8-15323c797f61"
 authors = ["josePereiro"]
-version = "0.1.0"
+version = "0.2.0"
 
 [deps]
 TOML = "191fdcea-f9f2-43e0-b922-d33f71e2abc3"
