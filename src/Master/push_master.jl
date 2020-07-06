@@ -1,5 +1,5 @@
 
-function update_master()
+function push_master()
     
     # ------------------- SAVE REPO ORIGIND IN COPY -------------------
     update_taskorigins()
@@ -17,6 +17,6 @@ function update_master()
     # ------------------- PUSH ORIGINS -------------------
     git_add_all() && 
     git_commit(get_worker_name() * " update") &&
-    git_push()
+    git_push(force = true)
     
 end

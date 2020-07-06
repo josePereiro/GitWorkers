@@ -23,6 +23,9 @@ include("Updater/Updater.jl")
 #TaskManager
 include("TaskManager/TaskManager.jl")
 
+# Master
+include("Master/Master.jl")
+
 
 # Log
 include("Log/log.jl")
