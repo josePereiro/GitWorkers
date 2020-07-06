@@ -1,8 +1,8 @@
-function has_executable_config_tests()
+function get_executable_config_tests()
 
     # Non copy tasks are not executable
     @assert isfile(TASK) # From previous test
-    @test !GW.has_executable_config(TASK)
+    @test !GW.get_executable_config(TASK)
 
     tasks = GW.find_tasks()
     @assert length(tasks) == 2 # From previous test
@@ -24,13 +24,6 @@ function has_executable_config_tests()
             (missing, 1, false), # Missing config, Valid status
             (1, nothing, false), # Valid config, Empty status
             (nothing, 1, false), # Empty config, Valid status
-            ("Bla", missing, false), # Invalid config, Missing status
-            (missing, "Bla", false), # Missing config, Invalid status
-            ("Bla", nothing, false), # Invalid config, Empty status
-            (nothing, "Bla", false), # Empty config, Invalid status
-            (1, "Bla", false), # Valid config, Invalid status
-            ("Bla", 1, false), # Invalid config, Valid status
-            ("Bla", "Bla", false), # Invalid config, Invalid status
             (1, 1, false), # Valid config, Valid status, config == status
             (1, 2, false), # Valid config, Valid status, config < status
             (2, 1, true), # Valid config, Valid status, config > status
@@ -43,20 +36,20 @@ function has_executable_config_tests()
             if isnothing(config)
                 touch(exec_config_file)
             elseif !ismissing(config)
-                GW.write_control(exec_config_file, GW.EXE_ORDER_KEY, config; check_type = false)
+                GW.write_control(exec_config_file, GW.EXE_ORDER_KEY, config)
             end 
 
             if isnothing(status)
                 touch(exec_status_file)
             elseif !ismissing(status)
-                GW.write_control(exec_status_file, GW.LAST_EXE_ORDER_KEY, status; check_type = false)
+                GW.write_control(exec_status_file, GW.LAST_EXE_ORDER_KEY, status)
             end 
 
             true
         end
-        @test GW.has_executable_config(COPY_TASK) == res
+        @test GW.get_executable_config(COPY_TASK) == res
 
     end
 
 end
-has_executable_config_tests()
+get_executable_config_tests()

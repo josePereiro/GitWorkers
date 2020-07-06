@@ -1,8 +1,8 @@
-function has_kill_config_tests()
+function get_kill_config_tests()
 
     # Non copy tasks are killable
     @assert isfile(TASK) # From previous test
-    @test !GW.has_kill_config(TASK)
+    @test !GW.get_kill_config(TASK)
 
     tasks = GW.find_tasks()
     @assert length(tasks) == 2 # From previous test
@@ -35,9 +35,9 @@ function has_kill_config_tests()
             true
         end
         
-        @test GW.has_kill_config(COPY_TASK) == res
+        @test GW.get_kill_config(COPY_TASK) == res
     end
 
 
 end
-has_kill_config_tests()
+get_kill_config_tests()

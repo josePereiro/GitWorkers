@@ -6,6 +6,7 @@
     consistency cheking.
 """
 function read_control(controlfile, key; check_type = true)
+    !isfile(controlfile) && return nothing
     control_dict = read_toml(controlfile)
     !haskey(control_dict, key) && return nothing
     val = control_dict[key]
@@ -33,10 +34,11 @@ function write_control(controlfile, control_dict::Dict; check_type = true)
         val = control_dict[key]
         if check_type
             T = get_control_type(key)
-            !(val isa T) && error("Key $key invalid type $T")
+            !(val isa T) && error("Key $key ($val) invalid type '$(typeof(val))', expected '$T'")
         end
         desc[key] = get_control_desc(key)
     end
+    !isfile(controlfile) && create_file(controlfile)
     write_toml(controlfile, control_dict; 
         headcmmts = CONTROL_FILES_HEAD_COMMENT,
         keycmmts = desc,
@@ -44,6 +46,7 @@ function write_control(controlfile, control_dict::Dict; check_type = true)
 end
 
 function write_control(controlfile, key, val; check_type = true)
+    !isfile(controlfile) && create_file(controlfile)
     control_dict = read_control(controlfile)
     control_dict = isnothing(control_dict) ? Dict() : control_dict
     control_dict[key] = val
