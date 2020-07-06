@@ -42,9 +42,10 @@ function get_executable_config(taskfile)
 
     elseif isnothing(last_exe_order)
         # ------------------- LAST_EXEC_ORDER -------------------
-        # tasks without valid last execution order are not executable
+        # tasks without valid last execution order are executable
+        executable = true
         why = "Invalid or missing $LAST_EXE_ORDER_KEY"
-
+        write_task_exec_status(taskfile, LAST_EXE_ORDER_KEY, exe_order)
     elseif (exe_order > last_exe_order)
         # ------------------- COMPARE-ORDERS -------------------
         # A task with a newer execution order will be executable

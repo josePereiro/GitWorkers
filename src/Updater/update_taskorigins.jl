@@ -9,7 +9,6 @@ function update_taskorigins()
     repo_taskroots = filter(is_repotaskroot, taskroots)
     repo_origins = joinpath.(repo_taskroots, ORIGIN_FOLDER_NAME)
 
-    onerr_ = (src, dest, err) -> nothing
     # TODO: use filterfun to avoid copying equal files, or big ones
     for repo_origin in repo_origins
         !isdir(repo_origin) && continue
@@ -17,4 +16,5 @@ function update_taskorigins()
         copy_tree(repo_origin, copy_origin; 
             force = true)
     end
+
 end

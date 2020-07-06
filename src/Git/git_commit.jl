@@ -1,4 +1,4 @@
-function git_commit(msg, tries = 5, maxwt = 1)
+function git_commit(msg, tries = 1, maxwt = 1)
     try
         # TODO: Use LibGit2
         run(Cmd(`git commit -m $msg`))
