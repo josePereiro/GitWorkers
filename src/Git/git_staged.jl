@@ -1,0 +1,1 @@
+git_staged() = read(`git diff --name-only --cached`, String) |> split .|> String

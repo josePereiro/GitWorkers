@@ -22,7 +22,7 @@ function get_executable_config_tests()
             (nothing, nothing, false), # Empty config, Empty status
             (1, missing, false), # Valid config, Missing status
             (missing, 1, false), # Missing config, Valid status
-            (1, nothing, false), # Valid config, Empty status
+            (1, nothing, true), # Valid config, Empty status
             (nothing, 1, false), # Empty config, Valid status
             (1, 1, false), # Valid config, Valid status, config == status
             (1, 2, false), # Valid config, Valid status, config < status

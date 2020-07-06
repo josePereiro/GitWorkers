@@ -1,14 +1,11 @@
-function git_commit(msg, tries = 1, maxwt = 1)
+function git_commit(msg)
+    isempty(git_staged()) && return false # No changes to commit
     try
         # TODO: Use LibGit2
-        run(Cmd(`git commit -m $msg`))
+        run(Cmd(`git commit -m $msg`, ignorestatus = true))
         log("Changes commited") # TODO: regulate frec
+        return true
     catch err
-        log(err)
-        err isa InterruptException && rethrow(err)
-        sleep(maxwt * rand())
-        tries <= 0 && return false
-        git_commit(msg, tries - 1, maxwt)
+        return false
     end
-    return true
 end
