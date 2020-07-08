@@ -16,7 +16,7 @@ function worker_loop(maxwt = 10)
             # This force the local repo to be equal to the origin
             # This is a fundamental design desition. This way the 
             # worker code is more robust        
-            !git_force_pull() && continue
+            !git_pull(force = true) && continue
 
             # ------------------- UPDATE REPO LOCALS -------------------
             # The local directories of the repo will be overwritten by

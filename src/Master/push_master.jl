@@ -8,7 +8,7 @@ function push_master()
     # This force the local repo to be equal to the origin
     # This is a fundamental design desition. This way the 
     # worker code is more robust        
-    !git_force_pull() && return
+    !git_pull(force = true) && return
 
     # ------------------- SYNC ORIGINS -------------------
     copyback_taskorigins()

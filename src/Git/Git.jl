@@ -1,7 +1,7 @@
 include("globals.jl")
 include("repotree.jl")
 include("find.jl")
-include("git_force_pull.jl")
+include("git_pull.jl")
 include("git_commit.jl")
 include("git_add_all.jl")
 include("git_push.jl")
