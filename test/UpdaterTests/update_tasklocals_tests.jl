@@ -12,7 +12,7 @@ function update_tasklocals_tests()
 
     # Creating 
     @test begin
-        GW.update_tasklocals()
+        GW.sync_taskdirs(GW.COPY_ID, GW.LOCAL_FOLDER_NAME)
         true
     end
 

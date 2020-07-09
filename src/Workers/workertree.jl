@@ -22,3 +22,5 @@ end
     taskfile
 """
 get_workerroot(workerfile) = workerfile |> abspath |> dirname
+
+relpath_worker(path) = relpath(path, find_ownerworker(path) |> get_workerroot)

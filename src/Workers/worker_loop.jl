@@ -22,8 +22,8 @@ function worker_loop(maxwt = 10)
             # The local directories of the repo will be overwritten by
             # its peers in the copy
             # This implements downstream -> upstream comunication 
-            update_tasklocals()
-            
+            sync_taskdirs(COPY_ID, LOCAL_FOLDER_NAME)
+
             # TODO: introduce checks before pushing
             # ------------------- PUSH ORIGINS -------------------
             git_add_all() && 
@@ -34,7 +34,7 @@ function worker_loop(maxwt = 10)
             # The origin directories of the copy will be overwritten by
             # its peers in the repo
             # This implements upstream -> downstream comunication 
-            update_taskorigins()
+            sync_taskdirs(REPO_ID, ORIGIN_FOLDER_NAME)
             
 
             println()

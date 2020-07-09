@@ -1,6 +1,10 @@
 module GitWorkers
 
 import TOML
+import JSON
+
+# Globals
+include("Globals/Globals.jl")
 
 # Utils
 include("Utils/Utils.jl")
@@ -17,9 +21,6 @@ include("Workers/Workers.jl")
 # Tasks
 include("Tasks/Task.jl")
 
-# Updater
-include("Updater/Updater.jl")
-
 #TaskManager
 include("TaskManager/TaskManager.jl")
 
@@ -28,7 +29,7 @@ include("Master/Master.jl")
 
 
 # Log
-include("Log/log.jl")
+include("LogFiles/LogFiles.jl")
 
 
 end # module

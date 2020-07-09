@@ -10,3 +10,6 @@ is_reporoot(path) = isdir(path) && isdir(joinpath(path, GIT_DIR_NAME))
 is_repo(path) = path |> dirname |> is_reporoot
 
 is_inrepo(path = pwd()) = exist_up(is_repo, path)
+
+
+relpath_repo(path) = relpath(path, find_reporoot(path))

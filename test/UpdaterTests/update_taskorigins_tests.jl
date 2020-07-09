@@ -18,7 +18,7 @@ function update_taskorigins_tests()
 
     # Updating 
     @test begin
-        GW.update_taskorigins()
+        GW.sync_taskdirs(GW.REPO_ID, GW.ORIGIN_FOLDER_NAME)
         true
     end
 

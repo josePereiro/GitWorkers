@@ -24,3 +24,5 @@ function is_intask(path = pwd(),
     return is_subpath(path, taskroot)
 end
 
+
+relpath_task(path) = relpath(path, find_ownertask(path) |> get_taskroot)
