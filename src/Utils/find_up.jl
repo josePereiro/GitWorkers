@@ -1,3 +1,4 @@
+# Tests at file://./../../test/UtilsTests/find_up_tests.jl
 """
     Look up in the dirtree for files or dirs that make
     'fun' returns true. All matches will be stored in a 
