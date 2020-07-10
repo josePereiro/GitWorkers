@@ -19,9 +19,9 @@ function workertree_tests()
     @assert all(isabspath.(worker_files))
     foreach(GW.create_file, worker_files)
     @test all(isfile.(worker_files))
-    non_worker_files = joinpath(test_file)
-    GW.create_file(non_worker_files)
-    @assert isfile(non_worker_files)
+    non_worker_file = joinpath(test_file)
+    GW.create_file(non_worker_file)
+    @assert isfile(non_worker_file)
 
     # is_workerroot
     @test root |> GW.is_workerroot
@@ -35,9 +35,9 @@ function workertree_tests()
     foreach(worker_files) do f 
         @test GW.is_inworker(f, worker)
     end
-    @test !GW.is_inworker(non_worker_files, worker)
+    @test !GW.is_inworker(non_worker_file, worker)
 
     rm(root; force = true, recursive = true)
-    rm(non_worker_files, force = true)
+    rm(non_worker_file, force = true)
 end
 workertree_tests()
