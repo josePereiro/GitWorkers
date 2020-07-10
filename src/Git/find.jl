@@ -1,4 +1,4 @@
-
+# Tests at file://./../../test/GitTests/git_find_tests.jl
 """
     Look up for a .git dir. Return the parent dir absolute path.
     Or throw an error. 
@@ -18,7 +18,7 @@ findin_repo(name::AbstractString, path = pwd()) =
     findin_repo((path) -> basename(path) == name, path);
 
 """
-    Look down in the dirtree for the first files or dirs 
+    Look up in the dirtree for the first files or dirs 
     that make 'fun' returns true. 'fun' will receive 
     the abspath of each dir or file. 
     Returns an abspath or nothing 

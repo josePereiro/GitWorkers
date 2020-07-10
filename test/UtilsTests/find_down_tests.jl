@@ -1,10 +1,9 @@
 function find_down_tests()
 
     # create test dir tree
-    root = "TestRoot"
+    root = "TestRoot" |> abspath
     rm(root; force = true, recursive = true)
-    root = mkdir(root)
-    @assert isdir(root)
+    @assert mkdir(root) |> isdir
     test_file = "test_file"
     to_finds = map(0:rand(3:8)) do i
         return joinpath(root, fill("sub", i)..., test_file) |> abspath
