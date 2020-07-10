@@ -4,9 +4,9 @@
     Or throw an error. 
 """
 function find_reporoot(dir = pwd())
-    git_dir = find_up(is_repo, dir) |> dirname
-    isnothing(git_dir) && error("Repo not found, dir ($dir) must be in a git repo")
-    return git_dir
+    git_dir = find_up(is_repo, dir) 
+    isnothing(git_dir) && error("Repo not found, dir '$dir' must be in a git repo.")
+    return git_dir |> dirname
 end
 
 findall_repo(fun::Function, path = pwd()) = findall_down(fun, find_reporoot(path));
