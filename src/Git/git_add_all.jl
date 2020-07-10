@@ -1,9 +1,2 @@
 # TODO: Use LibGit2
-function git_add_all() 
-    try
-        run(Cmd(`git add --all`))
-        return true
-    catch
-        return false
-    end
-end
+git_add_all(;print = true) = wait(run(`git add --all`, wait = print))

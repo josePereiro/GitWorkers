@@ -1,25 +1,16 @@
 """
-    This method will fetch and hard reset to make a forced pull
-    of the origin. It will intented a number (tries) of times
-    before returning.
-    Return true if no error was raised
+    This method pull from origin, if force = true make
+    'git fetch' and `git reset --hard FETCH_HEAD` to make local 
+    identical to origin.
+    Otherwise do just 'git pull'.
+    If print = true, the git answer will be outputed
 """
-function git_pull(tries = 5, maxwt = 5; force = false)
-    try
-        # TODO: Use LibGit2
-        if force
-            run(`git fetch`)
-            run(`git reset --hard FETCH_HEAD`)
-        else
-            run(`git pull`)
-        end
-        log("Local repo updated") # TODO: regulate frec
-    catch err
-        log(err)
-        err isa InterruptException && rethrow(err)
-        sleep(maxwt * rand())
-        tries <= 0 && return false
-        git_pull(tries - 1, maxwt; force = force)
+function git_pull(;force = false, print = true)
+    # TODO: Use LibGit2
+    if force
+        wait(run(`git fetch`, wait = print))
+        wait(run(`git reset --hard FETCH_HEAD`, wait = print))
+    else
+        wait(run(`git pull`, wait = print))
     end
-    return true
 end
