@@ -1,33 +1,58 @@
 function find_down_tests()
+
+    # create test dir tree
+    root = "TestRoot"
+    rm(root; force = true, recursive = true)
+    root = mkdir(root)
+    @assert isdir(root)
+    test_file = "test_file"
+    to_finds = map(0:rand(3:8)) do i
+        return joinpath(root, fill("sub", i)..., test_file) |> abspath
+    end |> sort
+    @assert issorted(to_finds)
+    foreach(to_finds) do file
+        mkpath(file |> dirname)
+        write(file, "bla")
+    end
+    @assert all(isfile.(to_finds))
+    @assert all(isabspath.(to_finds))
+    not_to_find = "\n"
+    @assert !isfile(not_to_find)
+
     # Skiping errors
-    @test GW.findall_down((path) -> 1, REPOROOT) |> isempty
+    @test GW.findall_down((path) -> 1, root) |> isempty
 
     # Throwing errs
     @test try
-        GW.findall_down((path) -> 1, REPOROOT, onerr = (_, _, err) -> rethrow)
+        GW.findall_down((path) -> 1, root, onerr = (_, _, err) -> rethrow)
         false
     catch err 
         err isa TypeError ? true : rethrow(err)
     end
     
+    # findall
     # Empty return
-    @test GW.findall_down((path) -> false, REPOROOT)  |> isempty
-    @test GW.findall_down(NOT_FILENAME, REPOROOT) |> isempty 
+    @test GW.findall_down((path) -> false, root)  |> isempty
+    @test GW.findall_down(not_to_find, root) |> isempty 
+
+    # # NonEmpty return
+    @test GW.findall_down((path) -> true, root) |> isempty |> !
+    @test GW.findall_down(test_file, root) |> isempty |> !
+
+    # find
+    # Empty return
+    @test GW.find_down((path) -> false, root) |> isnothing
+    @test GW.find_down(not_to_find, root) |> isnothing
 
     # NonEmpty return
-    @test GW.findall_down((path) -> true, REPOROOT) |> isempty |> !
-    @test GW.findall_down(TEST_FILE_NAME, REPOROOT) |> isempty |> !
-
-    # Empty return
-    @test GW.find_down((path) -> false, REPOROOT) |> isnothing
-    @test GW.find_down(NOT_FILENAME, REPOROOT) |> isnothing
-
-    # NonEmpty return
-    @test GW.find_down((path) -> true, REPOROOT) |> isnothing |> !
-    @test GW.find_down(TEST_FILE_NAME, REPOROOT) |> isnothing |> !
+    @test GW.find_down((path) -> true, root) |> isnothing |> !
+    @test GW.find_down(test_file, root) |> isnothing |> !
 
     # Find all test files
-    @test length(GW.findall_down((file) -> file in TEST_FILES, pwd())) == length(TEST_FILES)
+    @test all(GW.findall_down(test_file, root) |> sort .== to_finds)
+
+    # clearing
+    rm(root; force = true, recursive = true)
 
 end
 find_down_tests()
