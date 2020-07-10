@@ -10,11 +10,8 @@ function find_down_tests()
         return joinpath(root, fill("sub", i)..., test_file) |> abspath
     end |> sort
     @assert issorted(to_finds)
-    foreach(to_finds) do file
-        mkpath(file |> dirname)
-        write(file, "bla")
-    end
-    @assert all(isfile.(to_finds))
+    foreach(GW.create_file, to_finds)
+    @test all(isfile.(to_finds))
     @assert all(isabspath.(to_finds))
     not_to_find = "\n"
     @assert !isfile(not_to_find)

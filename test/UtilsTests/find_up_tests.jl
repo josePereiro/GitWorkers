@@ -13,11 +13,8 @@ function find_up_tests()
     to_finds = [to_finds; deep_file] |> sort .|> abspath
     @assert issorted(to_finds)
     @assert all(isabspath.(to_finds))
-    foreach(to_finds) do file
-        mkpath(file |> dirname)
-        write(file, "bla")
-    end
-    @assert all(isfile.(to_finds))
+    foreach(GW.create_file, to_finds)
+    @test all(isfile.(to_finds))
     not_to_find = "\n"
     @assert !isfile(not_to_find)
     

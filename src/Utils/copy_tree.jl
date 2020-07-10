@@ -4,10 +4,10 @@
     non-error copy is executed. Also, passing `onerr`
     allow to handle the errors one file at the time. `filterfun`
     allow to control which paths to copy.
-    signatures:
-        filterfun(path)
-        oncopy(srcfile, destfile)
-        onerr(srcfile, destfile, err)
+    signatures/default:
+        filterfun = (path) -> true
+        oncopy = (srcfile, destfile) -> nothing,
+        onerr = (srcfile, destfile, err) -> rethrow(err)
 """
 function copy_tree(srcroot, destroot; 
         filterfun = (path) -> true, 
