@@ -1,3 +1,4 @@
+# Tests at file://./../../test/UtilsTests/copy_tree_tests.jl
 """
     Copy a tree one file at a time, alowing to 
     execute `oncopy` function everytime a 
@@ -26,7 +27,7 @@ function copy_tree(srcroot, destroot;
             !filterfun(srcfile) && continue
             destfile = joinpath(destdir, file)
             try
-                cp(srcfile, destfile, force = true)
+                cp(srcfile, destfile, force = force)
             catch err
                 onerr(srcfile, destfile, err)
             end
