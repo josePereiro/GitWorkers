@@ -1,6 +1,6 @@
 include("git.jl")
-include("workers.jl")
 include("control_files.jl")
+include("workers.jl")
 include("tasks.jl")
 include("procs.jl")
 include("control_keys.jl")
