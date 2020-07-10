@@ -9,13 +9,13 @@ function find_reporoot(dir = pwd())
     return git_dir
 end
 
-findall_repo(fun::Function) = findall_down(fun, find_reporoot());
-findall_repo(name::AbstractString) = 
-    findall_repo((path) -> basename(path) == name);
+findall_repo(fun::Function, path = pwd()) = findall_down(fun, find_reporoot(path));
+findall_repo(name::AbstractString, path = pwd()) = 
+    findall_repo((path) -> basename(path) == name, path);
 
-findin_repo(fun::Function) = find_down(fun, find_reporoot());
-findin_repo(name::AbstractString) = 
-    findin_repo((path) -> basename(path) == name);
+findin_repo(fun::Function, path = pwd()) = find_down(fun, find_reporoot(path));
+findin_repo(name::AbstractString, path = pwd()) = 
+    findin_repo((path) -> basename(path) == name, path);
 
 """
     Look down in the dirtree for the first files or dirs 

@@ -1,4 +1,3 @@
-include("globals.jl")
 include("find.jl")
 include("tasktree.jl")
 include("repotask.jl")

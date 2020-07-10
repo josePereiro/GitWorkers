@@ -4,7 +4,7 @@ function update_taskorigins_tests()
     cd(WORKERROOT)
 
     # Before update only one task
-    taskroots = GW.find_tasks() .|> GW.get_taskroot
+    taskroots = GW.findtasks_worker() .|> GW.get_taskroot
     @assert length(taskroots) == 1 
     @test GW.is_repotaskroot(taskroots[1]) && !GW.is_copytaskroot(taskroots[1])
 
@@ -23,7 +23,7 @@ function update_taskorigins_tests()
     end
 
     # Before the test we have a copy task
-    taskroots = GW.find_tasks() .|> GW.get_taskroot
+    taskroots = GW.findtasks_worker() .|> GW.get_taskroot
     @test length(taskroots) == 2
     @test GW.is_repotaskroot(taskroots[1]) == !GW.is_repotaskroot(taskroots[2])
     @test !GW.is_copytaskroot(taskroots[1]) == GW.is_copytaskroot(taskroots[2])

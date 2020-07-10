@@ -4,7 +4,7 @@ function get_kill_config_tests()
     @assert isfile(TASK) # From previous test
     @test !GW.get_kill_config(TASK)
 
-    tasks = GW.find_tasks()
+    tasks = GW.findtasks_worker()
     @assert length(tasks) == 2 # From previous test
 
     # control_files

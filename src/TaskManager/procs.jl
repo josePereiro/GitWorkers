@@ -1,14 +1,4 @@
 """
-    Store all processes that the TaskManager tagged to kill. 
-"""
-PROCS_TO_KILL = Set{Base.Process}()
-
-"""
-    Store of all child processes
-"""
-ALL_PROCS = Set{Base.Process}()
-
-"""
     Get if a process is running by trying to get the pid
 """
 function is_running(proc::Base.Process)

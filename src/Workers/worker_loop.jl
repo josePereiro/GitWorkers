@@ -1,5 +1,7 @@
 
-function worker_loop(maxwt = 10)
+function worker_loop(path = pwd(); maxwt = 10)
+
+    worker = find_ownertask(path)
 
     while true
 
@@ -7,6 +9,7 @@ function worker_loop(maxwt = 10)
 
             # Wait a random time 
             sleep(maxwt * rand())
+
 
             println()
             println("------------------- SYNC REPO -------------------")
@@ -17,6 +20,9 @@ function worker_loop(maxwt = 10)
             # This is a fundamental design desition. This way the 
             # worker code is more robust        
             !git_pull(force = true) && continue
+            
+            # ------------------- UPDATE ORIGIN_CONFIG -------------------
+            update_origin_config(worker)
 
             # ------------------- UPDATE REPO LOCALS -------------------
             # The local directories of the repo will be overwritten by
@@ -41,7 +47,7 @@ function worker_loop(maxwt = 10)
             println("------------------- MANAGING TASKS -------------------")
             println()
 
-            tasks = find_tasks()
+            tasks = findtasks_worker()
             copytasks = filter((file) -> file |> get_taskroot |> is_copytaskroot, tasks)
             for copytask in copytasks
                 
@@ -69,6 +75,8 @@ function worker_loop(maxwt = 10)
 
                 
             end # foreach task
+
+            update_local_status(path)
 
         catch err
             err isa InterruptException && rethrow(err)

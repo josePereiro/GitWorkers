@@ -4,7 +4,7 @@
     Any error in copying a file is ignored
 """
 function sync_taskdirs(src, dir; onerr_ = (src, dest, err) -> nothing)
-    taskroots = find_tasks() .|> get_taskroot
+    taskroots = findtasks_worker() .|> get_taskroot
 
     if src == REPO_ID
         # repo -> copy

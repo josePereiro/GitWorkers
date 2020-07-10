@@ -1,7 +1,6 @@
-function follow_exec(path = pwd(); wt = 5, init_margin = 50)
+function follow_exec(path = pwd(); wt = 10, init_margin = 50)
     ownertask = find_ownertask(path)
     taskroot = ownertask |> get_taskroot
-    
     
     l0 = Dict()
     stdout_file = joinpath(taskroot, LOCAL_FOLDER_NAME, "stdout.txt")
@@ -12,29 +11,32 @@ function follow_exec(path = pwd(); wt = 5, init_margin = 50)
 
     while true
 
-        # Pulling
-        wait(run(`git pull`, wait = false))
-        
-        for (file, color_) in [(stdout_file, :blue), (stderr_file, :red)]
-            !isfile(file) && continue
+        try
+            # Pulling
+            wait(run(`git pull`, wait = false))
+            last_file = nothing
+            for (file, color_) in [(stdout_file, :blue), (stderr_file, :red)]
+                !isfile(file) && continue
 
-            l0_ = l0[file]
-            lines = readlines(file)
-            length(lines) <= l0_ && continue 
+                l0_ = l0[file]
+                lines = readlines(file)
+                length(lines) <= l0_ && continue 
 
-            bn = basename(file)
-            println()
-            println()
-
-            for (i, line) in lines[l0_:end] |> enumerate
-                printstyled("[", bn, "] ", l0_ + i - 1, ":  ", color = color_)
-                println(line)
+                bn = basename(file)
+                last_file != file && println()
+                for (i, line) in lines[l0_:end] |> enumerate
+                    printstyled("[", bn, "] ", l0_ + i - 1, ":  ", color = color_)
+                    println(line)
+                end
+                l0[file] = length(lines) + 1
+                last_file = file
             end
-            l0[file] = length(lines) + 1
 
+            sleep(wt)
+        catch err
+            err isa InterruptException && return
+            rethrow(err)
         end
-
-        sleep(wt)
     end
 
 end

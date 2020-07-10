@@ -43,7 +43,7 @@ function exec_task(path = pwd())
 
 
     println()
-    println("------------------ WAITING FOR LOGS -----------------")
+    println("------------------ READING LOGS -----------------")
     println()
     follow_exec(init_margin = 0)
 

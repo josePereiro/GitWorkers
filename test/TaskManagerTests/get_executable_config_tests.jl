@@ -4,7 +4,7 @@ function get_executable_config_tests()
     @assert isfile(TASK) # From previous test
     @test !GW.get_executable_config(TASK)
 
-    tasks = GW.find_tasks()
+    tasks = GW.findtasks_worker()
     @assert length(tasks) == 2 # From previous test
 
     # control_files

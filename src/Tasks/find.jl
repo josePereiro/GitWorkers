@@ -1,14 +1,15 @@
-# TODO: Add tests
+findtasks_repo(path = pwd()) = findall_repo(is_task, path)
+
 """
     Look down for the task files in the path 
     owner worker.
     Returns an abspaths array or []. 
 """
-find_tasks(path = pwd()) = findall_worker(is_task, path)
+findtasks_worker(path = pwd()) = findall_worker(is_task, path)
 
 """
     The method look up till find an taskfile, if check = true
-    throw an error if nothing if found. 
+    throw an error if nothing is found. 
     Returns an abspath or nothing
 """
 function find_ownertask(path = pwd(); check = true)
