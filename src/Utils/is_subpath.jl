@@ -6,5 +6,5 @@
 function is_subpath(subpath, dir)
     subpath, dir = (subpath, dir) .|> abspath
     !ispath(subpath) || !isdir(dir) && return false
-    return startswith(dir, subpath)
+    return startswith(subpath, dir)
 end

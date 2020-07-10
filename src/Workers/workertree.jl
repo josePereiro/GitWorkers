@@ -8,6 +8,8 @@ is_workerroot(dir) = is_inrepo(dir) && isdir(dir) && isfile(joinpath(dir, WORKER
 """
 is_worker(path) = is_inrepo(path) && basename(path) == WORKER_FILE_NAME
 
+build_worker_file(root) = joinpath(root, WORKER_FILE_NAME)
+
 
 function is_inworker(path = pwd(),
         ownerworker = find_ownerworker(path, check = false)) 
