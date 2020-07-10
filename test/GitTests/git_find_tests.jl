@@ -36,7 +36,7 @@ function git_find_tests()
     @test GW.findin_repo(not_to_find, deep_file) |> isnothing
 
     # findup_repo
-    @show GW.findup_repo(test_file, deep_file) in to_finds
+    @show GW.findup_repo(test_file, deep_file) == deep_file
 
     # clearing
     rm(root; force = true, recursive = true)

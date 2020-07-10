@@ -44,7 +44,7 @@ function find_up_tests()
 
     # NonEmpty return
     @test GW.find_up((path) -> true, deep_file) |> isnothing |> !
-    @test GW.find_up(test_file, deep_file) |> isnothing |> !
+    @test GW.find_up(test_file, deep_file) == deep_file
 
     # Find all test files
     founds = GW.findall_up((file) -> basename(file) == test_file, deep_file; 
