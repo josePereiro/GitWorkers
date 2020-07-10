@@ -1,5 +1,5 @@
 # A worker is a folder with an origin-config file
-# test st file://./../../test/prepare_tests.jl#55s
+# Tests at file://./../../test/ControlFilesTests/control_files_tests.jl
 
 is_local_status_file(path) = isfile(path) && is_inrepo(path |> dirname) && basename(path) == LOCAL_STATUS_FILE_NAME
 

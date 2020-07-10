@@ -6,6 +6,7 @@ using Test
     include("UtilsTests/UtilsTests.jl")
     include("TreeTests/TreeTests.jl")
     include("GitTests/GitTests.jl")
+    include("ControlFilesTests/ControlFilesTests.jl")
     # include("UpdaterTests/UpdaterTests.jl")
     # include("TaskManagerTests/TaskManagerTests.jl")
 end

@@ -1,5 +1,5 @@
 # A worker is a folder with an origin-config file
-# test st file://./../../test/prepare_tests.jl#55s
+# Tests at file://./../../test/ControlFilesTests/control_files_tests.jl
 
 is_origin_config_file(path) = isfile(path) && is_workerroot(path |> dirname) && basename(path) == ORIGIN_CONFIG_FILE_NAME
 
