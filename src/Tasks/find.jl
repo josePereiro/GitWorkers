@@ -16,8 +16,7 @@ function find_ownertask(path = pwd(); check = true)
     taskroot = findup_worker(is_taskroot, path)
     check && isnothing(taskroot) && error("Not in a `Task` directoty, " *
         "$(TASK_FILE_NAME) not found!!!")
-    isnothing(taskroot) && return nothing
-    return joinpath(taskroot, TASK_PATTERN)
+    return taskroot |> build_task_file
 end
 
 function find_ownertask_root(path = pwd(); check = true)

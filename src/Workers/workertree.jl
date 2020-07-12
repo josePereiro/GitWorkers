@@ -17,7 +17,8 @@ is_workerroot(dir) = dir |> isdir && dir |> build_worker_file |> isfile && dir |
 """
     This method defines what is a gitworker in the dir tree
 """
-is_worker(path) = path |> isfile && path |> get_workerroot |> is_workerroot
+is_worker(path) = path |> isfile && path |> basename == WORKER_FILE_NAME && 
+    path |> get_workerroot |> is_workerroot
 
 
 

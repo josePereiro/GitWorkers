@@ -11,10 +11,10 @@ find_gitworkers() = findall_repo(is_worker)
     Returns an abspath or nothing
 """
 function find_ownerworker(path = pwd(); check = true)
-    worker = findup_repo(is_worker, path)
-    check && isnothing(worker) && error("Not in a `GitWorker` directoty, " *
+    workerroot = findup_repo(is_workerroot, path)
+    check && isnothing(workerroot) && error("Not in a `GitWorker` directoty, " *
         "place a '$(WORKER_FILE_NAME)' file in a dir to make one!!!")
-    return worker
+    return workerroot |> build_worker_file
 end
 
 has_ownerworker(path = pwd()) = !isnothing(find_ownerworker(path; check = false))

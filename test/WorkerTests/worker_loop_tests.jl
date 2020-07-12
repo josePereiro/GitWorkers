@@ -56,8 +56,6 @@ function worker_loop_tests()
     @assert !isfile(test_file)
     write(task, 
         """
-            println("Doing test task"); 
-            flush(stdout)
             write("$test_file", "bla"); 
         """
         )
@@ -67,11 +65,11 @@ function worker_loop_tests()
             iters = 1, maxwt = 0)
         true
     end
-    sleep(2)
+    sleep(3) # waiting for task to finish
     @test isfile(test_file)
 
     # clearing
-    # rm(root; force = true, recursive = true)
+    rm(root; force = true, recursive = true)
 
 end
 worker_loop_tests()

@@ -1,10 +1,10 @@
 # A worker is a folder with an origin-config file
 # Tests at file://./../../test/ControlFilesTests/control_files_tests.jl
 
-is_local_status_file(path) = isfile(path) && is_inrepo(path |> dirname) && basename(path) == LOCAL_STATUS_FILE_NAME
-
 build_local_status_file(workerroot) = joinpath(workerroot, LOCAL_STATUS_FILE_NAME)
-build_local_status_copy_file(workerroot) = build_local_status_file(workerroot) * GITWORKER_COPY_SUFIX
+
+is_local_status_file(path) = path |> isfile && path |> basename == LOCAL_STATUS_FILE_NAME && path |> dirname |> is_workerroot
+
 
 """
 

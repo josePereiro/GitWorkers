@@ -13,23 +13,23 @@ function control_files_tests()
     dict["B"] = "bla"
 
     worker = root |> GW.build_worker_file |> GW.create_file
-    @assert isfile(worker)
+    @assert worker |> isfile
 
-    local_status_file = GW.build_local_status_file(root)
-    @test begin 
-        GW.write_local_status(dict, worker)
-        true
-    end
-    @test local_status_file |> GW.is_local_status_file
-    @test dict == GW.read_local_status(worker)
-    
     origin_config_file = GW.build_origin_config_file(root)
     @test begin 
-        GW.write_origin_config(dict, worker)
+        GW.write_origin_config(dict, worker; create = true)
         true
     end
     @test origin_config_file |> GW.is_origin_config_file
     @test dict == GW.read_origin_config(worker)
+
+    @test begin 
+        GW.write_local_status(dict, worker; create = true)
+        true
+    end
+    local_status_file = GW.build_local_status_file(root)
+    @test local_status_file |> GW.is_local_status_file
+    @test dict == GW.read_local_status(worker)
 
     # clearing
     rm(root; force = true, recursive = true)

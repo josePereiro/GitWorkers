@@ -18,7 +18,7 @@ is_taskroot(dir) = dir |> isdir && dir |> build_task_file |> isfile && dir |> is
 """
     This method defines what is a task in the dir tree
 """
-is_task(path) = path |> isfile && path |> get_taskroot |> is_taskroot
+is_task(path) = path |> isfile && path |> basename == TASK_FILE_NAME && path |> get_taskroot |> is_taskroot
 
 function is_intask(path = pwd(), 
         ownertask = find_ownertask(path, check = false)) 
