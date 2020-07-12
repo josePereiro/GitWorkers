@@ -9,12 +9,12 @@ build_origin_config_file(workerroot) = joinpath(workerroot, ORIGIN_CONFIG_FILE_N
 """
 
 """
-function read_origin_config(path = pwd())
+function read_origin_config(path = pwd(); onmissing = Dict())
     origin_config_file = find_origin_config_file(path, allow_missing = false)
     try
         return read_json(origin_config_file)
     catch err
-        return Dict()
+        return onmissing
     end
 end
 

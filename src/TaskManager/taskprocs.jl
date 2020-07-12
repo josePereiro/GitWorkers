@@ -25,23 +25,20 @@ end
 """
     This run a given task in a child process
 """
-function run_taskproc(taskfile; verbose = true)
+function run_taskproc(taskfile, exec_order; verbose = true)
     
     # checks
     !is_task(taskfile) && error("Not a valid taskfile")
     taskroot = taskfile |> get_taskroot
-    taskname = get_taskname(taskfile)
-    exe_order = ORIGIN_CONFIG[taskname][EXE_ORDER_KEY][VALUE_KEY]
-    
+
     # TODO: Handle this in config files
     julia_cmd = "julia"  # Test
-    stdout_file = joinpath(taskroot, "local/logs/$(exe_order)-stdout.txt") # Test
-    create_file(stdout_file)
-    stderr_file = joinpath(taskroot, "local/logs/$(exe_order)-stderr.txt") # Test
-    create_file(stderr_file)
+    stdout_file = get_stdout_file(taskfile, exec_order; allow_missing = true) |> create_file
+    stderr_file = get_stderr_file(taskfile, exec_order; allow_missing = true) |> create_file
 
     cmd = Cmd(`$julia_cmd $taskfile`, dir = taskfile |> dirname, env = ENV)
-    proc = run_proc(cmd; stdout = open(stdout_file, "a"), stderr = open(stderr_file, "a"))
+    proc = run_proc(cmd; stdout = open(stdout_file, LOG_FIlES_MODE), 
+        stderr = open(stderr_file, LOG_FIlES_MODE))
     add_taskproc(taskfile, proc)
 
     if verbose

@@ -9,10 +9,8 @@ is_local_status_file(path) = path |> isfile && path |> basename == LOCAL_STATUS_
 """
 
 """
-function read_local_status(path = pwd())
-    local_status_file = find_local_status_file(path, allow_missing = false)
-    return read_json(local_status_file)
-end
+read_local_status(path = pwd()) = 
+    find_local_status_file(path, allow_missing = false) |> read_json
 
 """
 

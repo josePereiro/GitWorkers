@@ -13,9 +13,6 @@ function worker_loop(path = pwd(); maxwt = 10, verbose = true,
 
         try
 
-            # Wait a random time
-            sleep(maxwt * rand())
-
             verbose && println(
             "\n------------------- SYNC REPO -------------------\n\n")
 
@@ -100,6 +97,9 @@ function worker_loop(path = pwd(); maxwt = 10, verbose = true,
         end
 
         flush(stdout)
+
+        # Wait a random time
+        sleep(maxwt * rand())
         
-    end # while
+    end # for
 end
