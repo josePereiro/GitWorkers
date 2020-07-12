@@ -78,7 +78,7 @@ function worker_loop(path = pwd(); maxwt = 10, verbose = true,
 
                 # This will know whta to do with the task depending
                 # of the status
-                !deb && mannage_task(copytask)
+                mannage_task(copytask; verbose = verbose)
 
                 verbose && summary_task(taskname)
                 verbose && println()
@@ -88,6 +88,7 @@ function worker_loop(path = pwd(); maxwt = 10, verbose = true,
 
         catch err
 
+            deb && rethrow(err)
             verbose && println(
             "\n------------------- ERROR -------------------\n")
             flush(stdout)

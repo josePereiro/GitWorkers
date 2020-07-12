@@ -3,7 +3,7 @@
     in the LOCAL_STATUS.
     Any missing info will thrown an error.
 """
-function mannage_task(taskfile)
+function mannage_task(taskfile; verbose = true)
 
     taskname = get_taskname(taskfile)
     local_status = LOCAL_STATUS[taskname]
@@ -20,7 +20,7 @@ function mannage_task(taskfile)
     # Execution 
     exec_state = local_status[EXECUTION_STATE_KEY][VALUE_KEY]
     if exec_state
-        run_taskproc(taskfile)
+        run_taskproc(taskfile, verbose = verbose)
         return
     end
 

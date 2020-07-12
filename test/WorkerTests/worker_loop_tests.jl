@@ -26,20 +26,49 @@ function worker_loop_tests()
 
     # ------------------- EMPTY TASK TEST -------------------
 
-    # # task
-    # taskroot = joinpath(workerroot, "Task")
-    # task = taskroot |> GW.build_task_file |> GW.create_file
-    # @assert taskroot |> isdir
-    # @assert task |> isfile
-    # origin_dir = task |> dirname
-    # @test origin_dir |> basename == GW.ORIGIN_FOLDER_NAME
-    # local_dir = joinpath(taskroot, GW.LOCAL_FOLDER_NAME)
-    # @assert mkdir(local_dir) |> isdir
+    # Add task
+    taskroot = joinpath(workerroot, "Task")
+    task = taskroot |> GW.build_task_file |> GW.create_file
+    taskname = task |> GW.get_taskname
+    @assert taskroot |> isdir
+    @assert task |> isfile
+    origin_dir = task |> dirname
+    @test origin_dir |> basename == GW.ORIGIN_FOLDER_NAME
+    local_dir = joinpath(taskroot, GW.LOCAL_FOLDER_NAME)
+    @assert mkdir(local_dir) |> isdir
+
+    @test begin
+        GW.worker_loop(worker; verbose = false, deb = true, 
+            iters = 1, maxwt = 0)
+        true
+    end
+
+    @test GW.ORIGIN_CONFIG |> isempty
+    @test haskey(GW.LOCAL_STATUS, taskname)
+
+    # ------------------- EXECUTE TASK -------------------
+    test_origin_config = Dict(taskname => Dict(GW.EXE_ORDER_KEY => Dict(GW.VALUE_KEY => 1)))
+    GW.write_origin_config(test_origin_config, worker)
+    @test GW.read_origin_config(worker) == test_origin_config
 
     # Test task
-    # write(task, """
-    #     using GitWorkers; GW = GitWorkers
-    # """)
+    test_file = joinpath(taskroot, "test_file.jl")
+    @assert !isfile(test_file)
+    write(task, 
+        """
+            println("Doing test task"); 
+            flush(stdout)
+            write("$test_file", "bla"); 
+        """
+        )
+
+    @test begin
+        GW.worker_loop(worker; verbose = false, deb = true, 
+            iters = 1, maxwt = 0)
+        true
+    end
+    sleep(2)
+    @test isfile(test_file)
 
     # clearing
     # rm(root; force = true, recursive = true)

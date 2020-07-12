@@ -30,17 +30,20 @@ function run_taskproc(taskfile; verbose = true)
     # checks
     !is_task(taskfile) && error("Not a valid taskfile")
     taskroot = taskfile |> get_taskroot
+    taskname = get_taskname(taskfile)
+    exe_order = ORIGIN_CONFIG[taskname][EXE_ORDER_KEY][VALUE_KEY]
     
     # TODO: Handle this in config files
     julia_cmd = "julia"  # Test
-    stdout_file = joinpath(taskroot, "local/stdout.txt") # Test
-    stderr_file = joinpath(taskroot, "local/stderr.txt") # Test
+    stdout_file = joinpath(taskroot, "local/logs/$(exe_order)-stdout.txt") # Test
+    create_file(stdout_file)
+    stderr_file = joinpath(taskroot, "local/logs/$(exe_order)-stderr.txt") # Test
+    create_file(stderr_file)
 
     cmd = Cmd(`$julia_cmd $taskfile`, dir = taskfile |> dirname, env = ENV)
     proc = run_proc(cmd; stdout = open(stdout_file, "a"), stderr = open(stderr_file, "a"))
     add_taskproc(taskfile, proc)
 
-    # Test
     if verbose
         pid = try_getpid(proc)
         println(taskfile, " proc ($pid) started!!!") # Test
