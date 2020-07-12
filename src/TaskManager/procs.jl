@@ -49,7 +49,6 @@ function kill_procs(procs...)
 end
 
 function killEmAll() 
-    println("killEmAll") # Test
     kill_procs(ALL_PROCS...)
 end
 atexit(killEmAll)
