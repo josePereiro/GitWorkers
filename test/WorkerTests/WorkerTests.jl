@@ -1,3 +1,4 @@
 @testset "WorkerTests.jl" begin
-    include("worker_loop_tests.jl")
+    include("empty_worker_tests.jl")
+    include("empty_task_test.jl")
 end
