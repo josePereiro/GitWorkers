@@ -1,14 +1,5 @@
 # Tests at file://./../../test/TreeTests/tasktree_tests.jl
-"""
-    This method defines what is a task root in the dir tree
-"""
-is_taskroot(dir) = is_inrepo(dir) && isdir(dir) && isfile(build_task_file(dir))
 
-"""
-    This method defines what is a task in the dir tree
-"""
-is_task(path) = is_inrepo(path) && isfile(path) && basename(dirname(path)) == ORIGIN_FOLDER_NAME && 
-    basename(path) == TASK_FILE_NAME
 
 build_task_file(taskroot) = joinpath(taskroot, ORIGIN_FOLDER_NAME, TASK_FILE_NAME)
 
@@ -18,6 +9,16 @@ build_task_file(taskroot) = joinpath(taskroot, ORIGIN_FOLDER_NAME, TASK_FILE_NAM
     taskfile
 """
 get_taskroot(taskfile) = taskfile |> abspath |> dirname |> dirname
+
+"""
+    This method defines what is a task root in the dir tree
+"""
+is_taskroot(dir) = dir |> isdir && dir |> build_task_file |> isfile && dir |> is_inworker
+
+"""
+    This method defines what is a task in the dir tree
+"""
+is_task(path) = path |> isfile && path |> get_taskroot |> is_taskroot
 
 function is_intask(path = pwd(), 
         ownertask = find_ownertask(path, check = false)) 

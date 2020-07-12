@@ -1,15 +1,24 @@
 # Tests at file://./../../test/TreeTests/workertree_tests.jl
+
+build_worker_file(root) = joinpath(root, WORKER_FILE_NAME)
+
+"""
+    Given a workerfile, returns the worker root dir path.
+    This method do not makes any check to the 
+    taskfile
+"""
+get_workerroot(workerfile) = workerfile |> abspath |> dirname
+
 """
     This method defines what is a gitworker root in the dir tree
 """
-is_workerroot(dir) = is_inrepo(dir) && isdir(dir) && isfile(joinpath(dir, WORKER_FILE_NAME))
+is_workerroot(dir) = dir |> isdir && dir |> build_worker_file |> isfile && dir |> is_inrepo
 
 """
     This method defines what is a gitworker in the dir tree
 """
-is_worker(path) = is_inrepo(path) && basename(path) == WORKER_FILE_NAME
+is_worker(path) = path |> isfile && path |> get_workerroot |> is_workerroot
 
-build_worker_file(root) = joinpath(root, WORKER_FILE_NAME)
 
 
 function is_inworker(path = pwd(),
@@ -18,12 +27,5 @@ function is_inworker(path = pwd(),
     taskroot = ownerworker |> get_workerroot
     return is_subpath(path, taskroot)
 end
-
-"""
-    Given a workerfile, returns the worker root dir path.
-    This method do not makes any check to the 
-    taskfile
-"""
-get_workerroot(workerfile) = workerfile |> abspath |> dirname
 
 relpath_worker(path) = relpath(path, find_ownerworker(path) |> get_workerroot)
