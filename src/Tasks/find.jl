@@ -13,7 +13,7 @@ findtasks_worker(path = pwd()) = findall_worker(is_task, path)
     Returns an abspath or nothing
 """
 function find_ownertask(path = pwd(); check = true)
-    taskroot = findup_repo(is_taskroot, path)
+    taskroot = findup_worker(is_taskroot, path)
     check && isnothing(taskroot) && error("Not in a `Task` directoty, " *
         "$(TASK_FILE_NAME) not found!!!")
     isnothing(taskroot) && return nothing
