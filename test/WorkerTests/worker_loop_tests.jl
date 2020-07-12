@@ -1,3 +1,11 @@
+function wait_for(fun; frec = 10, wtime = 10)
+    iters = floor(Int, wtime * frec)
+    for i in 1:iters
+        fun() && return
+        sleep(1/frec)
+    end
+end
+
 function worker_loop_tests()
 
     # ------------------- CREATING TREE -------------------
@@ -56,7 +64,8 @@ function worker_loop_tests()
     @assert !isfile(test_file)
     write(task, 
         """
-            write("$test_file", "bla"); 
+            write("$test_file", pwd());
+            println(pwd())
         """
         )
 
@@ -65,8 +74,12 @@ function worker_loop_tests()
             iters = 1, maxwt = 0)
         true
     end
-    sleep(3) # waiting for task to finish
+    # waiting for task to finish
+    wait_for() do
+        isfile(test_file)
+    end
     @test isfile(test_file)
+    @test read(test_file, String) |> GW.get_repotask_path == origin_dir
 
     # clearing
     rm(root; force = true, recursive = true)

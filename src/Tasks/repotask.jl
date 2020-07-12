@@ -1,4 +1,4 @@
-# TODO: Add tests
+# Tests at file://./../../test/WorkerTests/worker_loop_tests.jl
 is_repotaskroot(taskroot) = is_taskroot(taskroot) && !endswith(abspath(taskroot), GITWORKER_COPY_SUFIX)
 
 function get_repotask_path(path)
