@@ -7,5 +7,5 @@ TASK_EXEC_STATUS_FILE_NAME = "task.exec-status.gitworker.toml"
 ORIGIN_FOLDER_NAME = "origin"
 LOCAL_FOLDER_NAME = "local"
 
-COPY_ID = :copy
-REPO_ID = :repo
+FROM_COPY = :from_copy
+FROM_REPO = :from_repo

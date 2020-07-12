@@ -1,0 +1,1 @@
+get_git_origin_url() = read(`git remote get-url --push origin`, String) |> strip

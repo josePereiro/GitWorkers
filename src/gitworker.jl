@@ -1,1 +1,0 @@
-# This file is just mark the root dir of a GitWorker folder

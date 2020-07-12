@@ -2,7 +2,7 @@
 function push_master()
     
     # ------------------- SAVE REPO ORIGIND IN COPY -------------------
-    sync_taskdirs(REPO_ID, ORIGIN_FOLDER_NAME)
+    sync_taskdirs(FROM_REPO, ORIGIN_FOLDER_NAME)
 
     # ------------------- FORCE "PULL" -------------------
     # This force the local repo to be equal to the origin
@@ -11,12 +11,12 @@ function push_master()
     !git_pull(force = true) && return
 
     # ------------------- COPY BACK -------------------
-    sync_taskdirs(COPY_ID, ORIGIN_FOLDER_NAME)
+    sync_taskdirs(FROM_COPY, ORIGIN_FOLDER_NAME)
 
     # TODO: introduce checks before pushing
     # ------------------- PUSH ORIGINS -------------------
     git_add_all() && 
-    git_commit(get_worker_name() * " update") &&
+    git_commit(get_workername() * " update") &&
     git_push(force = true)
     
 end

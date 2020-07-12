@@ -4,6 +4,5 @@
 .DS_Store
 /dev/
 *.code-workspace
-test/TestRepo
-test/NotTestRepo
+test/TestRoot*
 .vscode

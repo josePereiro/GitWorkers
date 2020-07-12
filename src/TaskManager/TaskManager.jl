@@ -3,6 +3,8 @@
 
 include("procs.jl")
 include("taskprocs.jl")
-include("get_executable_config.jl")
-include("get_kill_config.jl")
+include("update_execution_status.jl")
+include("update_kill_status.jl")
 include("sync_taskdirs.jl")
+include("update_running_status.jl")
+include("mannage_task.jl")

@@ -1,87 +1,104 @@
+"""
+    deb = true just for testing
+"""
+function worker_loop(path = pwd(); maxwt = 10, verbose = true, 
+        iters::Int = typemax(Int), deb = false)
 
-function worker_loop(path = pwd(); maxwt = 10)
+    # This loop must be run from a wirker dir
+    worker = find_ownerworker(path)
 
-    worker = find_ownertask(path)
+    # TODO: run some checks
 
-    while true
+    for it in 1:iters
 
         try
 
-            # Wait a random time 
+            # Wait a random time
             sleep(maxwt * rand())
 
-
-            println()
-            println("------------------- SYNC REPO -------------------")
-            println()
+            verbose && println(
+            "\n------------------- SYNC REPO -------------------\n\n")
 
             # ------------------- FORCE "PULL" -------------------
             # This force the local repo to be equal to the origin
             # This is a fundamental design desition. This way the 
-            # worker code is more robust        
-            !git_pull(force = true) && continue
+            # worker is more robust    
+            verbose && println("Force pull from origin")    
+            !deb && git_pull(force = true; print = verbose)
             
-            # ------------------- UPDATE ORIGIN_CONFIG -------------------
-            update_origin_config(worker)
-
-            # ------------------- UPDATE REPO LOCALS -------------------
+            # ------------------- UPDATE REPO TASKS LOCALS -------------------
             # The local directories of the repo will be overwritten by
             # its peers in the copy
             # This implements downstream -> upstream comunication 
-            sync_taskdirs(COPY_ID, LOCAL_FOLDER_NAME)
+            sync_taskdirs(FROM_COPY, LOCAL_FOLDER_NAME, worker)
+
+            # ------------------- UPDATE LOCAL STATUS FILE -------------------
+            # the updated local status in written in the file
+            # The next repo sync will reflect that
+            verbose && println()
+            verbose && println("Updating $(LOCAL_STATUS_FILE_NAME) from LOCAL_STATUS")
+            write_local_status(LOCAL_STATUS, worker; create = true)
+            verbose && println()
 
             # TODO: introduce checks before pushing
             # ------------------- PUSH ORIGINS -------------------
-            git_add_all() && 
-            git_commit(get_worker_name() * " update") &&
-            git_push()
+            verbose && println("Adding to local repo")
+            !deb && git_add_all(print = verbose)
+            msg = get_workername(worker) * " update"
+            verbose && println("\nCommiting, -m '$msg'")
+            !deb && git_commit(msg; print = verbose)
+            verbose && println("\nPushing to origin")
+            !deb && git_push(print = verbose)
             
             # ------------------- UPDATE LOCAL ORIGINS -------------------
             # The origin directories of the copy will be overwritten by
             # its peers in the repo
             # This implements upstream -> downstream comunication 
-            sync_taskdirs(REPO_ID, ORIGIN_FOLDER_NAME)
-            
+            sync_taskdirs(FROM_REPO, ORIGIN_FOLDER_NAME, worker)
 
-            println()
-            println("------------------- MANAGING TASKS -------------------")
-            println()
+            verbose && println(
+            "\n------------------- MANAGING TASKS -------------------\n\n")
 
-            tasks = findtasks_worker()
+            # ------------------- UPDATE ORIGIN_CONFIG -------------------
+            # Now ORIGIN_CONFIG is up to date with the data from origin
+            verbose && println("Updating ORIGIN_CONFIG from $(ORIGIN_CONFIG_FILE_NAME)")
+            global ORIGIN_CONFIG = read_origin_config(worker)
+            verbose && println()
+            flush(stdout)
+
+            # ------------------- TASKS MANNAGING -------------------
+            tasks = findtasks_worker(worker)
             copytasks = filter((file) -> file |> get_taskroot |> is_copytaskroot, tasks)
             for copytask in copytasks
-                
-                
-                println("$(relpath(copytask))")
-                
-                
-                # ------------------- KILL RUNNING TASK -------------------
-                # If the kill state is `true` and the task is running, the process
-                # executing the task will be kill
-                killable = get_kill_config(copytask)
-                killable && is_taskrunning(copytask) && kill_taskproc(copytask)
-                println("killable: ", killable)
-                
-                
-                # ------------------- LAUNCHING TASK -------------------
-                # If the kill state is `true` and the task is running, the process
-                # executing the task will be kill
-                executable = get_executable_config(copytask)
-                executable && !is_taskrunning(copytask) && !killable && run_taskproc(copytask)
-                println("executable: ", executable)
 
-                println("is_running: ", is_taskrunning(copytask))
+                taskname = get_taskname(copytask)
+                update_kill_status(taskname)
+                update_execution_status(taskname)
+                update_running_status(taskname)
+
+                # This will know whta to do with the task depending
+                # of the status
+                !deb && mannage_task(copytask)
+
+                verbose && summary_task(taskname)
+                verbose && println()
                 flush(stdout)
 
-                
             end # foreach task
 
-            update_local_status(path)
-
         catch err
-            err isa InterruptException && rethrow(err)
-            println(err)
+
+            verbose && println(
+            "\n------------------- ERROR -------------------\n")
+            flush(stdout)
+            verbose && showerror(stderr, err, catch_backtrace())
+            verbose && println()
+            flush(stderr)
+
+            err isa InterruptException && return
         end
+
+        flush(stdout)
         
     end # while
 end

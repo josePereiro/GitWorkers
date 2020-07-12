@@ -1,11 +1,4 @@
 # TODO: Add tests
-"""
-    Store the running tasks and its related process info.
-"""
-TASKPROCS = Dict()
-PROC_KEY = "PROC"
-PID_KEY = "pid"
-
 
 function is_taskrunning(taskfile) 
     !haskey(TASKPROCS, taskfile) && return false
@@ -29,7 +22,10 @@ function add_taskproc(taskfile, proc)
     return proc
 end
 
-function run_taskproc(taskfile)
+"""
+    This run a given task in a child process
+"""
+function run_taskproc(taskfile; verbose = true)
     
     # checks
     !is_task(taskfile) && error("Not a valid taskfile")
@@ -45,19 +41,27 @@ function run_taskproc(taskfile)
     add_taskproc(taskfile, proc)
 
     # Test
-    pid = try_getpid(proc)
-    println(taskfile, " proc ($pid) started!!!") # Test
-    flush(stdout) 
+    if verbose
+        pid = try_getpid(proc)
+        println(taskfile, " proc ($pid) started!!!") # Test
+        flush(stdout) 
+    end
 
     return proc
 
 end
 
-function kill_taskproc(taskfile)
+"""
+    This will try to kill all the process linked to a task. 
+    The implementation of how to kill a process it is in the 
+    'kill_procs' method
+"""
+function kill_taskproc(taskfile; verbose = true)
     procs = get_taskprocs(taskfile);
-    kill_proc(procs...)
+    kill_procs(procs...)
 
-    # Test
-    println(relpath(taskfile), " proc killed!!!") 
-    flush(stdout)
+    if verbose
+        println(relpath(taskfile), " proc killed!!!") 
+        flush(stdout)
+    end
 end

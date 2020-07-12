@@ -13,13 +13,13 @@ end
 
 """
     Try to get the pid of a process
-    Returns 0 if fails
+    Returns nothing if fails
 """
 function try_getpid(proc)
     try
         return getpid(proc)
     catch err
-        err isa Base.IOError && return 0
+        err isa Base.IOError && return nothing
         rethrow(err)
     end
 end
@@ -34,7 +34,12 @@ function run_proc(cmd; stdout = stdout, stderr = stderr)
     return proc
 end
 
-function kill_proc(procs...)
+"""
+    Try to kill all the process of the PROCS_TO_KILL
+    array. If new process are passed, it will pushed to the array
+    and the try to kill
+"""
+function kill_procs(procs...)
     foreach(procs) do proc
         push!(PROCS_TO_KILL, proc)
     end
@@ -45,6 +50,6 @@ end
 
 function killEmAll() 
     println("killEmAll") # Test
-    kill_proc(ALL_PROCS...)
+    kill_procs(ALL_PROCS...)
 end
 atexit(killEmAll)

@@ -20,8 +20,8 @@ function exec_task(path = pwd())
     # Config file
     # Kill sign
     write_task_exec_config(ownertask, KILL_SIGN_KEY, "NOT_$KILL_SIGN")
-    write_task_exec_status(ownertask, KILL_ORDER_STATE_KEY, false)
-    write_task_exec_status(ownertask, KILL_ORDER_STATE_INFO_KEY, "Task executed")
+    write_task_exec_status(ownertask, KILL_STATE_KEY, false)
+    write_task_exec_status(ownertask, KILL_STATE_INFO_KEY, "Task executed")
     
     # Exe order
     exe_order = read_task_exec_config(ownertask, EXE_ORDER_KEY)

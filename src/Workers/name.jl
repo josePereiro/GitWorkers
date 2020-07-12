@@ -1,1 +1,1 @@
-get_worker_name(path = pwd()) = relpath(find_ownerworker(path) |> dirname, find_reporoot(path))
+get_workername(path = pwd()) = relpath(find_ownerworker(path) |> dirname, find_reporoot(path))

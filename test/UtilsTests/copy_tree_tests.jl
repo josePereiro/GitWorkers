@@ -15,7 +15,7 @@ function copy_tree_tests()
     # Copy tree
     files2 = []
     @test begin 
-        GW.copy_tree(tree1, tree2; oncopy = (src, dest) -> push!(files2, dest))
+        GW.copy_tree(tree1, tree2; oncopy = (src, dest) -> (push!(files2, dest); false))
         true
     end
     @test all(isfile.(files1))

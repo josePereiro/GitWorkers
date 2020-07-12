@@ -11,7 +11,11 @@ build_origin_config_file(workerroot) = joinpath(workerroot, ORIGIN_CONFIG_FILE_N
 """
 function read_origin_config(path = pwd())
     origin_config_file = find_origin_config_file(path, allow_missing = false)
-    return read_json(origin_config_file)
+    try
+        return read_json(origin_config_file)
+    catch err
+        return Dict()
+    end
 end
 
 """

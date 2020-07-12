@@ -3,37 +3,37 @@
     with its repo versions. If the local is missing it will be created
     Any error in copying a file is ignored
 """
-function sync_taskdirs(src, dir; onerr_ = (src, dest, err) -> nothing)
-    taskroots = findtasks_worker() .|> get_taskroot
+function sync_taskdirs(from, dir, path = pwd(); onerr_ = (from, dest, err) -> nothing)
+    taskroots = findtasks_worker(path) .|> get_taskroot
 
-    if src == REPO_ID
+    if from == FROM_REPO
         # repo -> copy
         repo_taskroots = filter(is_repotaskroot, taskroots)
-        repo_origins = joinpath.(repo_taskroots, dir)
+        repo_dirs = joinpath.(repo_taskroots, dir)
 
         # TODO: use filterfun to avoid copying equal files, or big ones
-        for repo_origin in repo_origins
-            !isdir(repo_origin) && continue
-            copy_origin = get_copytask_path(repo_origin)
-            copy_tree(repo_origin, copy_origin; 
+        for repo_dir in repo_dirs
+            !isdir(repo_dir) && continue
+            copy_dir = get_copytask_path(repo_dir)
+            copy_tree(repo_dir, copy_dir; 
                 onerr = onerr_, force = true)
         end
 
-    elseif src == COPY_ID
+    elseif from == FROM_COPY
         # copy -> repo
         copy_taskroots = filter(is_copytaskroot, taskroots)
-        copy_origins = joinpath.(copy_taskroots, dir)
+        copy_dirs = joinpath.(copy_taskroots, dir)
 
         # TODO: use filterfun to avoid copying equal files, or big ones
-        for copy_origin in copy_origins
-            !isdir(copy_origin) && continue
-            repo_origin = get_repotask_path(copy_origin)
-            copy_tree(copy_origin, repo_origin; 
+        for copy_dir in copy_dirs
+            !isdir(copy_dir) && continue
+            repo_dir = get_repotask_path(copy_dir)
+            copy_tree(copy_dir, repo_dir; 
                 onerr = onerr_, force = true)
         end
 
     else
-        error("src must be either $REPO_ID or $COPY_ID")
+        error("from must be either $FROM_REPO or $FROM_COPY")
     end
 
 end
