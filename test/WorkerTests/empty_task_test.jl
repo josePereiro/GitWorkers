@@ -18,6 +18,9 @@ function empty_task_test()
     @assert taskroot |> isdir
     @assert task |> isfile
 
+    # reset worker
+    GW.reset()
+
     # ------------------- TESTS -------------------
     taskname = task |> GW.get_taskname
     origin_dir = task |> dirname
@@ -42,12 +45,10 @@ function empty_task_test()
     @test haskey(GW.LOCAL_STATUS[taskname][GW.EXECUTION_STATE_KEY], GW.VALUE_KEY)
     @test !GW.LOCAL_STATUS[taskname][GW.EXECUTION_STATE_KEY][GW.VALUE_KEY]
 
-    @test haskey(GW.LOCAL_STATUS, taskname)
     @test haskey(GW.LOCAL_STATUS[taskname], GW.RUNNING_STATE_KEY)
     @test haskey(GW.LOCAL_STATUS[taskname][GW.RUNNING_STATE_KEY], GW.VALUE_KEY)
     @test !GW.LOCAL_STATUS[taskname][GW.RUNNING_STATE_KEY][GW.VALUE_KEY]
 
-    @test haskey(GW.LOCAL_STATUS, taskname)
     @test haskey(GW.LOCAL_STATUS[taskname], GW.KILL_STATE_KEY)
     @test haskey(GW.LOCAL_STATUS[taskname][GW.KILL_STATE_KEY], GW.VALUE_KEY)
     @test !GW.LOCAL_STATUS[taskname][GW.KILL_STATE_KEY][GW.VALUE_KEY]

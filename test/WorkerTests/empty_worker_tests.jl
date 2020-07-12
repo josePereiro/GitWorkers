@@ -12,6 +12,9 @@ function empty_worker_tests()
     @assert workerroot |> isdir
     @assert worker |> isfile
 
+    # reset worker
+    GW.reset()
+    
     # ------------------- TESTS -------------------
     @assert GW.ORIGIN_CONFIG |> isempty
     @assert GW.LOCAL_STATUS |> isempty

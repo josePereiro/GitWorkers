@@ -15,7 +15,7 @@ end
     Try to get the pid of a process
     Returns nothing if fails
 """
-function try_getpid(proc)
+function try_getpid(proc::Base.Process)
     try
         return getpid(proc)
     catch err
@@ -44,7 +44,20 @@ function kill_procs(procs...)
         push!(PROCS_TO_KILL, proc)
     end
     foreach(PROCS_TO_KILL) do proc
-        kill(proc)
+        kill(proc) # julia native way
+        # system native
+        pid = try_getpid(proc)
+        if !isnothing(pid)
+            # TODO: implement for more systems
+            if Sys.isunix()
+                try
+                    run(`kill $pid`)
+                catch err
+                    err isa InterruptException && rethrow(err)
+                    # TODO Log this
+                end
+            end
+        end
     end
 end
 

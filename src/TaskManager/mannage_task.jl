@@ -14,7 +14,7 @@ function mannage_task(taskfile; verbose = true)
     running_state = local_status[RUNNING_STATE_KEY][VALUE_KEY]
     pids = local_status[RUNNING_STATE_KEY][PID_KEY]
     if running_state && (kill_state || length(pids) > 1)
-        kill_taskproc(taskfile)
+        kill_taskproc(taskfile; verbose = verbose)
         return
     end
 

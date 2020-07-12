@@ -69,9 +69,9 @@ function worker_loop(path = pwd(); maxwt = 10, verbose = true,
             for copytask in copytasks
 
                 taskname = get_taskname(copytask)
+                update_running_status(taskname)
                 update_kill_status(taskname)
                 update_execution_status(taskname)
-                update_running_status(taskname)
 
                 # This will know whta to do with the task depending
                 # of the status

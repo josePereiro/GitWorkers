@@ -18,7 +18,10 @@ function quick_task_test()
     @assert taskroot |> isdir
     @assert task |> isfile
 
-    # ------------------- TESTS -------------------
+    # reset worker
+    GW.reset()
+
+    # ------------------- PREPARE TASK -------------------
     origin_dir = task |> dirname
     @test origin_dir |> isdir
     local_dir = joinpath(taskroot, GW.LOCAL_FOLDER_NAME)
@@ -67,13 +70,11 @@ function quick_task_test()
     # After one loop the status must be 'true', it will be updated the next loop
     @test GW.LOCAL_STATUS[taskname][GW.EXECUTION_STATE_KEY][GW.VALUE_KEY]
 
-    @test haskey(GW.LOCAL_STATUS, taskname)
     @test haskey(GW.LOCAL_STATUS[taskname], GW.RUNNING_STATE_KEY)
     @test haskey(GW.LOCAL_STATUS[taskname][GW.RUNNING_STATE_KEY], GW.VALUE_KEY)
     # After one loop the status must be 'false', no task must be running
     @test !GW.LOCAL_STATUS[taskname][GW.RUNNING_STATE_KEY][GW.VALUE_KEY]
 
-    @test haskey(GW.LOCAL_STATUS, taskname)
     @test haskey(GW.LOCAL_STATUS[taskname], GW.KILL_STATE_KEY)
     @test haskey(GW.LOCAL_STATUS[taskname][GW.KILL_STATE_KEY], GW.VALUE_KEY)
     # After one loop the status must be 'false', no kill sign added to origin
@@ -89,8 +90,10 @@ function quick_task_test()
     # ------------------- MANY WORKER LOOP -------------------
     stdout_log_file = GW.get_stdout_file(task, exec_order)
     stderr_log_file = GW.get_stderr_file(task, exec_order)
-    @assert !isfile(stdout_log_file)
-    @assert !isfile(stderr_log_file)
+    # Log files must be in the copy folder still, in the next iteration will 
+    # be copied to the repo task folder
+    @test !isfile(stdout_log_file)
+    @test !isfile(stderr_log_file)
 
     wait_for(wtime = 30) do
         GW.worker_loop(worker; verbose = false, deb = true, 
@@ -101,6 +104,7 @@ function quick_task_test()
             isfile(stderr_log_file) &&
             occursin(stderr_secret, read(stderr_log_file, String))
     end
+    # The log files must be created and contained the secret words
     @test isfile(stdout_log_file) 
     @test occursin(stdout_secret, read(stdout_log_file, String))
     @test isfile(stderr_log_file)
@@ -121,14 +125,12 @@ function quick_task_test()
     # After many loops the status must be 'false', the last exec order was updated
     @test !GW.LOCAL_STATUS[taskname][GW.EXECUTION_STATE_KEY][GW.VALUE_KEY]
 
-    @test haskey(GW.LOCAL_STATUS, taskname)
     @test haskey(GW.LOCAL_STATUS[taskname], GW.RUNNING_STATE_KEY)
     @test haskey(GW.LOCAL_STATUS[taskname][GW.RUNNING_STATE_KEY], GW.VALUE_KEY)
     # After many loops the status must be 'false', the task is too fast for have 
     # a running state at this point
     @test !GW.LOCAL_STATUS[taskname][GW.RUNNING_STATE_KEY][GW.VALUE_KEY]
 
-    @test haskey(GW.LOCAL_STATUS, taskname)
     @test haskey(GW.LOCAL_STATUS[taskname], GW.KILL_STATE_KEY)
     @test haskey(GW.LOCAL_STATUS[taskname][GW.KILL_STATE_KEY], GW.VALUE_KEY)
     # The same than last time

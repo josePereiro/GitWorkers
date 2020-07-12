@@ -30,7 +30,8 @@ function run_taskproc(taskfile, exec_order; verbose = true)
     # checks
     !is_task(taskfile) && error("Not a valid taskfile")
     taskroot = taskfile |> get_taskroot
-
+    taskname = taskfile |> get_taskname
+    
     # TODO: Handle this in config files
     julia_cmd = "julia"  # Test
     stdout_file = get_stdout_file(taskfile, exec_order; allow_missing = true) |> create_file
@@ -39,7 +40,7 @@ function run_taskproc(taskfile, exec_order; verbose = true)
     cmd = Cmd(`$julia_cmd $taskfile`, dir = taskfile |> dirname, env = ENV)
     proc = run_proc(cmd; stdout = open(stdout_file, LOG_FIlES_MODE), 
         stderr = open(stderr_file, LOG_FIlES_MODE))
-    add_taskproc(taskfile, proc)
+    add_taskproc(taskname, proc)
 
     if verbose
         pid = try_getpid(proc)
@@ -60,8 +61,9 @@ function kill_taskproc(taskfile; verbose = true)
     procs = get_taskprocs(taskfile);
     kill_procs(procs...)
 
+    # TODO: log this
     if verbose
-        println(relpath(taskfile), " proc killed!!!") 
+        println(taskfile |> get_taskname, " proc killed!!!") 
         flush(stdout)
     end
 end
