@@ -10,19 +10,19 @@ function mannage_task(taskfile; verbose = true)
     local_status = LOCAL_STATUS[taskname]
     
     # killing
-    kill_state = local_status[KILL_STATE_KEY][VALUE_KEY]
-    running_state = local_status[RUNNING_STATE_KEY][VALUE_KEY]
-    pids = local_status[RUNNING_STATE_KEY][PID_KEY]
+    kill_state = local_status[KILL_STATUS_KEY][VALUE_KEY]
+    running_state = local_status[RUNNING_STATUS_KEY][VALUE_KEY]
+    pids = local_status[RUNNING_STATUS_KEY][PID_KEY]
     if running_state && (kill_state || length(pids) > 1)
         kill_taskproc(taskfile; verbose = verbose)
         return
     end
 
     # Execution 
-    exec_state = local_status[EXECUTION_STATE_KEY][VALUE_KEY]
+    exec_state = local_status[EXECUTION_STATUS_KEY][VALUE_KEY]
     if exec_state
         origin_config = ORIGIN_CONFIG[taskname]
-        exec_order = origin_config[EXE_ORDER_KEY][VALUE_KEY]
+        exec_order = origin_config[EXEC_ORDER_KEY][VALUE_KEY]
         run_taskproc(taskfile, exec_order; verbose = verbose)
         return
     end

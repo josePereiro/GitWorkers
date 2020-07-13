@@ -6,10 +6,10 @@ function update_running_status(taskname)
     end
 
     # running_status
-    if !haskey(LOCAL_STATUS[taskname], RUNNING_STATE_KEY)
-        LOCAL_STATUS[taskname][RUNNING_STATE_KEY] = Dict()
+    if !haskey(LOCAL_STATUS[taskname], RUNNING_STATUS_KEY)
+        LOCAL_STATUS[taskname][RUNNING_STATUS_KEY] = Dict()
     end
-    running_state = LOCAL_STATUS[taskname][RUNNING_STATE_KEY]
+    running_state = LOCAL_STATUS[taskname][RUNNING_STATUS_KEY]
 
     # update date
     running_state[UPDATE_DATE_KEY] = now()

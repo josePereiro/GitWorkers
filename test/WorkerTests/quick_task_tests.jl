@@ -30,7 +30,7 @@ function quick_task_test()
     taskname = task |> GW.get_taskname
     exec_order = rand(1:1000)
     test_origin_config = 
-    Dict(taskname => Dict(GW.EXE_ORDER_KEY => Dict(GW.VALUE_KEY => exec_order)))
+    Dict(taskname => Dict(GW.EXEC_ORDER_KEY => Dict(GW.VALUE_KEY => exec_order)))
     GW.write_origin_config(test_origin_config, worker)
     @test GW.read_origin_config(worker) == test_origin_config
 
@@ -59,26 +59,26 @@ function quick_task_test()
 
     # testing control dicts
     @test haskey(GW.ORIGIN_CONFIG, taskname)
-    @test haskey(GW.ORIGIN_CONFIG[taskname], GW.EXE_ORDER_KEY)
-    @test haskey(GW.ORIGIN_CONFIG[taskname][GW.EXE_ORDER_KEY], GW.VALUE_KEY)
+    @test haskey(GW.ORIGIN_CONFIG[taskname], GW.EXEC_ORDER_KEY)
+    @test haskey(GW.ORIGIN_CONFIG[taskname][GW.EXEC_ORDER_KEY], GW.VALUE_KEY)
     # exec_order
-    @test GW.ORIGIN_CONFIG[taskname][GW.EXE_ORDER_KEY][GW.VALUE_KEY] == exec_order
+    @test GW.ORIGIN_CONFIG[taskname][GW.EXEC_ORDER_KEY][GW.VALUE_KEY] == exec_order
 
     @test haskey(GW.LOCAL_STATUS, taskname)
-    @test haskey(GW.LOCAL_STATUS[taskname], GW.EXECUTION_STATE_KEY)
-    @test haskey(GW.LOCAL_STATUS[taskname][GW.EXECUTION_STATE_KEY], GW.VALUE_KEY)
+    @test haskey(GW.LOCAL_STATUS[taskname], GW.EXECUTION_STATUS_KEY)
+    @test haskey(GW.LOCAL_STATUS[taskname][GW.EXECUTION_STATUS_KEY], GW.VALUE_KEY)
     # After one loop the status must be 'true', it will be updated the next loop
-    @test GW.LOCAL_STATUS[taskname][GW.EXECUTION_STATE_KEY][GW.VALUE_KEY]
+    @test GW.LOCAL_STATUS[taskname][GW.EXECUTION_STATUS_KEY][GW.VALUE_KEY]
 
-    @test haskey(GW.LOCAL_STATUS[taskname], GW.RUNNING_STATE_KEY)
-    @test haskey(GW.LOCAL_STATUS[taskname][GW.RUNNING_STATE_KEY], GW.VALUE_KEY)
+    @test haskey(GW.LOCAL_STATUS[taskname], GW.RUNNING_STATUS_KEY)
+    @test haskey(GW.LOCAL_STATUS[taskname][GW.RUNNING_STATUS_KEY], GW.VALUE_KEY)
     # After one loop the status must be 'false', no task must be running
-    @test !GW.LOCAL_STATUS[taskname][GW.RUNNING_STATE_KEY][GW.VALUE_KEY]
+    @test !GW.LOCAL_STATUS[taskname][GW.RUNNING_STATUS_KEY][GW.VALUE_KEY]
 
-    @test haskey(GW.LOCAL_STATUS[taskname], GW.KILL_STATE_KEY)
-    @test haskey(GW.LOCAL_STATUS[taskname][GW.KILL_STATE_KEY], GW.VALUE_KEY)
+    @test haskey(GW.LOCAL_STATUS[taskname], GW.KILL_STATUS_KEY)
+    @test haskey(GW.LOCAL_STATUS[taskname][GW.KILL_STATUS_KEY], GW.VALUE_KEY)
     # After one loop the status must be 'false', no kill sign added to origin
-    @test !GW.LOCAL_STATUS[taskname][GW.KILL_STATE_KEY][GW.VALUE_KEY]
+    @test !GW.LOCAL_STATUS[taskname][GW.KILL_STATUS_KEY][GW.VALUE_KEY]
 
     # waiting for task to finish
     wait_for() do
@@ -112,29 +112,29 @@ function quick_task_test()
 
     # testing control dicts
     @test haskey(GW.ORIGIN_CONFIG, taskname)
-    @test haskey(GW.ORIGIN_CONFIG[taskname], GW.EXE_ORDER_KEY)
-    @test haskey(GW.ORIGIN_CONFIG[taskname][GW.EXE_ORDER_KEY], GW.VALUE_KEY)
+    @test haskey(GW.ORIGIN_CONFIG[taskname], GW.EXEC_ORDER_KEY)
+    @test haskey(GW.ORIGIN_CONFIG[taskname][GW.EXEC_ORDER_KEY], GW.VALUE_KEY)
     # After many loops the status must be the same, workes can't change this
-    @test GW.ORIGIN_CONFIG[taskname][GW.EXE_ORDER_KEY][GW.VALUE_KEY] == exec_order
+    @test GW.ORIGIN_CONFIG[taskname][GW.EXEC_ORDER_KEY][GW.VALUE_KEY] == exec_order
 
     @test haskey(GW.LOCAL_STATUS, taskname)
-    @test haskey(GW.LOCAL_STATUS[taskname], GW.EXECUTION_STATE_KEY)
-    @test haskey(GW.LOCAL_STATUS[taskname][GW.EXECUTION_STATE_KEY], GW.VALUE_KEY)
+    @test haskey(GW.LOCAL_STATUS[taskname], GW.EXECUTION_STATUS_KEY)
+    @test haskey(GW.LOCAL_STATUS[taskname][GW.EXECUTION_STATUS_KEY], GW.VALUE_KEY)
     # After many loops the status must be equal to the current (and unique) exec order
-    @test GW.LOCAL_STATUS[taskname][GW.EXECUTION_STATE_KEY][GW.LAST_EXE_ORDER_KEY] == exec_order
+    @test GW.LOCAL_STATUS[taskname][GW.EXECUTION_STATUS_KEY][GW.LAST_EXEC_ORDER_KEY] == exec_order
     # After many loops the status must be 'false', the last exec order was updated
-    @test !GW.LOCAL_STATUS[taskname][GW.EXECUTION_STATE_KEY][GW.VALUE_KEY]
+    @test !GW.LOCAL_STATUS[taskname][GW.EXECUTION_STATUS_KEY][GW.VALUE_KEY]
 
-    @test haskey(GW.LOCAL_STATUS[taskname], GW.RUNNING_STATE_KEY)
-    @test haskey(GW.LOCAL_STATUS[taskname][GW.RUNNING_STATE_KEY], GW.VALUE_KEY)
+    @test haskey(GW.LOCAL_STATUS[taskname], GW.RUNNING_STATUS_KEY)
+    @test haskey(GW.LOCAL_STATUS[taskname][GW.RUNNING_STATUS_KEY], GW.VALUE_KEY)
     # After many loops the status must be 'false', the task is too fast for have 
     # a running state at this point
-    @test !GW.LOCAL_STATUS[taskname][GW.RUNNING_STATE_KEY][GW.VALUE_KEY]
+    @test !GW.LOCAL_STATUS[taskname][GW.RUNNING_STATUS_KEY][GW.VALUE_KEY]
 
-    @test haskey(GW.LOCAL_STATUS[taskname], GW.KILL_STATE_KEY)
-    @test haskey(GW.LOCAL_STATUS[taskname][GW.KILL_STATE_KEY], GW.VALUE_KEY)
+    @test haskey(GW.LOCAL_STATUS[taskname], GW.KILL_STATUS_KEY)
+    @test haskey(GW.LOCAL_STATUS[taskname][GW.KILL_STATUS_KEY], GW.VALUE_KEY)
     # The same than last time
-    @test !GW.LOCAL_STATUS[taskname][GW.KILL_STATE_KEY][GW.VALUE_KEY]
+    @test !GW.LOCAL_STATUS[taskname][GW.KILL_STATUS_KEY][GW.VALUE_KEY]
 
     # clear
     rm(root; force = true, recursive = true)

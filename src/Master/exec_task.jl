@@ -4,6 +4,7 @@
 """
 function exec_task(path = pwd(); 
         commit_msg = get_workername(path) * " master update",
+        verbose = true,
         deb = false)
     worker = find_ownerworker(path)
     ownertask = find_ownertask(path)
@@ -14,39 +15,41 @@ function exec_task(path = pwd();
     sync_taskdirs(FROM_REPO, ORIGIN_FOLDER_NAME)
 
 
-    println()
-    println("------------------ PULLING ORIGIN -----------------")
-    println()
-    !deb && git_pull(force = true, print = true)
+    verbose && println()
+    verbose && println("------------------ PULLING ORIGIN -----------------")
+    verbose && println()
+    !deb && git_pull(force = true, print = verbose)
 
-    println()
-    println("------------------ PREPARING TASK -----------------")
-    println("task: ", taskname)
+    verbose &&println()
+    verbose &&println("------------------ PREPARING TASK -----------------")
+    verbose &&println("task: ", taskname)
 
     # Updating control dicts
     global ORIGIN_CONFIG = read_origin_config(worker)
     global LOCAL_STATUS = read_local_status(worker)
 
-    summary_task(taskname)
+    verbose && summary_task(taskname)
 
     # Kill sign to not kill
     set_kill_sign(taskname, KILL_SIGN_KEY; info = "Prepare for task execution")
 
     # exec_order
-    @show last_exec_order = get_exec_status(taskname, LAST_EXE_ORDER_KEY)
-    last_exec_order = isnothing(last_exec_order) ? 0 : last_exec_order
+    last_exec_order = get_exec_status(taskname, LAST_EXEC_ORDER_KEY)
+    last_exec_order = isnothing(last_exec_order) ? 
+        DEFAULT_LAST_EXEC_ORDER : last_exec_order
     exec_order = get_exec_order(taskname)
-    exec_order = isnothing(exec_order) ? 1 : exec_order
+    exec_order = isnothing(exec_order) ? 
+        DEFAULT_EXEC_ORDER : exec_order
     exec_order = max(exec_order, last_exec_order) + 1
     last_exec_order = exec_order - 1
     set_exec_order(taskname, exec_order)
-    set_exec_status(taskname, false; last_order = last_exec_order)
+    set_exec_status(taskname, false, last_exec_order)
 
-    println("new exec order: $exec_order")
+    verbose && println("new exec order: $exec_order")
 
-    println()
-    println("------------------ PUSHING MASTER -----------------")
-    println()
+    verbose && println()
+    verbose && println("------------------ PUSHING MASTER -----------------")
+    verbose && println()
 
     # ------------------- COPY BACK -------------------
     sync_taskdirs(FROM_COPY, ORIGIN_FOLDER_NAME)
@@ -56,13 +59,13 @@ function exec_task(path = pwd();
 
     # TODO: introduce checks before pushing
     # ------------------- PUSH ORIGINS -------------------
-    !deb && git_add_all()
-    !deb && git_commit(commit_msg)
-    !deb && git_push(force = true, print = true)
+    !deb && git_add_all(print = verbose)
+    !deb && git_commit(commit_msg, print = verbose)
+    !deb && git_push(force = true, print = verbose)
 
-    println()
-    println("------------------ READING LOGS -----------------")
-    println()
+    verbose && println()
+    verbose && println("------------------ READING LOGS -----------------")
+    verbose && println()
     follow_exec(exec_order, taskroot, init_margin = 0)
 
 end

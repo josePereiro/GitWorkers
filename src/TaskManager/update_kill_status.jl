@@ -11,10 +11,10 @@ function update_kill_status(taskname)
     end
     
     # kill state
-    if !haskey(LOCAL_STATUS[taskname], KILL_STATE_KEY)
-        LOCAL_STATUS[taskname][KILL_STATE_KEY] = Dict()
+    if !haskey(LOCAL_STATUS[taskname], KILL_STATUS_KEY)
+        LOCAL_STATUS[taskname][KILL_STATUS_KEY] = Dict()
     end
-    kill_state = LOCAL_STATUS[taskname][KILL_STATE_KEY]
+    kill_state = LOCAL_STATUS[taskname][KILL_STATUS_KEY]
     
     # ------------------- DEFAULT -------------------
     kill_state[VALUE_KEY] = false

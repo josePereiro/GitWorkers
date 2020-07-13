@@ -14,11 +14,11 @@ end
 
 # ORIGIN_CONFIG
 get_exec_order(taskname, subkey = VALUE_KEY) = 
-    get_control(ORIGIN_CONFIG, taskname, EXE_ORDER_KEY, subkey)
+    get_control(ORIGIN_CONFIG, taskname, EXEC_ORDER_KEY, subkey)
 
 get_kill_sign(taskname, subkey = VALUE_KEY) = 
     get_control(ORIGIN_CONFIG, taskname, KILL_SIGN_KEY, subkey)
 
 # LOCAL_STATUS
 get_exec_status(taskname, subkey = VALUE_KEY) = 
-    get_control(LOCAL_STATUS, taskname, EXECUTION_STATE_KEY, subkey)
+    get_control(LOCAL_STATUS, taskname, EXECUTION_STATUS_KEY, subkey)

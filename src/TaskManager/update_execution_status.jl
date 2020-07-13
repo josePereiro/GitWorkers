@@ -7,10 +7,10 @@ function update_execution_status(taskname)
     end
 
     # running_status
-    if !haskey(LOCAL_STATUS[taskname], EXECUTION_STATE_KEY)
-        LOCAL_STATUS[taskname][EXECUTION_STATE_KEY] = Dict()
+    if !haskey(LOCAL_STATUS[taskname], EXECUTION_STATUS_KEY)
+        LOCAL_STATUS[taskname][EXECUTION_STATUS_KEY] = Dict()
     end
-    exec_state = LOCAL_STATUS[taskname][EXECUTION_STATE_KEY]
+    exec_state = LOCAL_STATUS[taskname][EXECUTION_STATUS_KEY]
     
     # ------------------- DEFAULT -------------------
     exec_state[VALUE_KEY] = false
@@ -29,36 +29,36 @@ function update_execution_status(taskname)
 
     # ------------------- CHECK EXEC ORDER -------------------
     # no data, nothing to do
-    if !haskey(origin_control, EXE_ORDER_KEY) || 
-        !haskey(origin_control[EXE_ORDER_KEY], VALUE_KEY)
-        exec_state[INFO_KEY] = "Task origin $(EXE_ORDER_KEY) missing value"
+    if !haskey(origin_control, EXEC_ORDER_KEY) || 
+        !haskey(origin_control[EXEC_ORDER_KEY], VALUE_KEY)
+        exec_state[INFO_KEY] = "Task origin $(EXEC_ORDER_KEY) missing value"
         return exec_state[VALUE_KEY] = false
     end
-    exe_order = origin_control[EXE_ORDER_KEY][VALUE_KEY]
+    exe_order = origin_control[EXEC_ORDER_KEY][VALUE_KEY]
 
     if !(exe_order isa Number) 
-        exec_state[INFO_KEY] = "$(EXE_ORDER_KEY) is not a Number, " * 
+        exec_state[INFO_KEY] = "$(EXEC_ORDER_KEY) is not a Number, " * 
             "it is a $(typeof(exe_order))"
         return exec_state[VALUE_KEY] = false
     end
 
     # ------------------- CHECK LAST EXEC ORDER -------------------
-    if !haskey(exec_state, LAST_EXE_ORDER_KEY)
-        exec_state[INFO_KEY] = "Task $(LAST_EXE_ORDER_KEY) missing"
-        exec_state[LAST_EXE_ORDER_KEY] = exe_order
+    if !haskey(exec_state, LAST_EXEC_ORDER_KEY)
+        exec_state[INFO_KEY] = "Task $(LAST_EXEC_ORDER_KEY) missing"
+        exec_state[LAST_EXEC_ORDER_KEY] = exe_order
         return exec_state[VALUE_KEY] = true
     end
 
-    if !(exec_state[LAST_EXE_ORDER_KEY] isa Number)
-        exec_state[INFO_KEY] = "$(LAST_EXE_ORDER_KEY) is not a Number, " * 
-            "it is a $(typeof(exec_state[LAST_EXE_ORDER_KEY]))"
-        exec_state[LAST_EXE_ORDER_KEY] = exe_order
+    if !(exec_state[LAST_EXEC_ORDER_KEY] isa Number)
+        exec_state[INFO_KEY] = "$(LAST_EXEC_ORDER_KEY) is not a Number, " * 
+            "it is a $(typeof(exec_state[LAST_EXEC_ORDER_KEY]))"
+        exec_state[LAST_EXEC_ORDER_KEY] = exe_order
         return exec_state[VALUE_KEY] = true
     end
 
-    if exe_order > exec_state[LAST_EXE_ORDER_KEY]
-        exec_state[INFO_KEY] = "$(EXE_ORDER_KEY) > $(LAST_EXE_ORDER_KEY), run Forrest run!!!"
-        exec_state[LAST_EXE_ORDER_KEY] = exe_order
+    if exe_order > exec_state[LAST_EXEC_ORDER_KEY]
+        exec_state[INFO_KEY] = "$(EXEC_ORDER_KEY) > $(LAST_EXEC_ORDER_KEY), run Forrest run!!!"
+        exec_state[LAST_EXEC_ORDER_KEY] = exe_order
         return exec_state[VALUE_KEY] = true
     end
 end
