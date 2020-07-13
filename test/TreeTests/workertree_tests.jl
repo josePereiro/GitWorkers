@@ -1,9 +1,11 @@
 function workertree_tests()
 
-    # creating tree
+    # ------------------- CREATING TREE -------------------
     root = "TestRoot" |> abspath
     rm(root; force = true, recursive = true)
     @assert mkdir(root) |> isdir
+    git_dir = joinpath(root, ".git")
+    @assert mkdir(git_dir) |> isdir
     no_root = joinpath(root, "sub")
     @assert mkdir(no_root) |> isdir
 

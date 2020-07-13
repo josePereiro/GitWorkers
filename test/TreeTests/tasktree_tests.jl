@@ -1,9 +1,11 @@
 function tasktree_tests()
 
-    # creating tree
+    # ------------------- CREATING TREE -------------------
     workerroot = "TestRoot" |> abspath
     rm(workerroot; force = true, recursive = true)
     @assert mkdir(workerroot) |> isdir
+    git_dir = joinpath(workerroot, ".git")
+    @assert mkdir(git_dir) |> isdir
     worker = workerroot |> GW.build_worker_file |> GW.create_file
     @assert isfile(worker)
 
