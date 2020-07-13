@@ -1,3 +1,5 @@
 include("local-status.jl")
 include("origin-config.jl")
 include("find.jl")
+include("setters.jl")
+include("getters.jl")
