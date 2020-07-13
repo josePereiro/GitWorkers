@@ -16,3 +16,4 @@ KILL_STATE_KEY = "$(KILL_SIGN_KEY)_state"
 RUNNING_STATE_KEY = "running_state"
 # ------------------- VALUES -------------------
 KILL_SIGN = "kill"
+NOT_KILL_SIGN = "not_kill"

@@ -1,19 +1,21 @@
-function follow_exec(path = pwd(); wt = 10, init_margin = 50)
+function follow_exec(exec_order, path = pwd(); wt = 10, init_margin = 50)
     ownertask = find_ownertask(path)
     taskroot = ownertask |> get_taskroot
     
     l0 = Dict()
-    stdout_file = joinpath(taskroot, LOCAL_FOLDER_NAME, "stdout.txt")
-    l0[stdout_file] = !isfile(stdout_file) ? 1 : max(1, length(readlines(stdout_file)) - init_margin)
-    stderr_file = joinpath(taskroot, LOCAL_FOLDER_NAME, "stderr.txt")
-    l0[stderr_file] = !isfile(stderr_file) ? 1 : max(1, length(readlines(stderr_file)) - init_margin)
-
+    stdout_file = get_stdout_file(path, exec_order)
+    l0[stdout_file] = !isfile(stdout_file) ? 1 : 
+        max(1, length(readlines(stdout_file)) - init_margin)
+    stderr_file = get_stderr_file(path, exec_order)
+    l0[stderr_file] = !isfile(stderr_file) ? 1 : 
+        max(1, length(readlines(stderr_file)) - init_margin)
 
     while true
 
         try
             # Pulling
-            wait(run(`git pull`, wait = false))
+            git_pull(force = false, print = false)
+            
             last_file = nothing
             for (file, color_) in [(stdout_file, :blue), (stderr_file, :red)]
                 !isfile(file) && continue

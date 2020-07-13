@@ -2,49 +2,67 @@
     This function will set a given task (or path ownertask) as executable.
     Then will push_master
 """
-function exec_task(path = pwd())
+function exec_task(path = pwd(); 
+        commit_msg = get_workername(path) * " master update",
+        deb = false)
+    worker = find_ownerworker(path)
     ownertask = find_ownertask(path)
     taskroot = ownertask |> get_taskroot
+    taskname = ownertask |> get_taskname
+
+    # ------------------- SAVE REPO ORIGIND IN COPY -------------------
+    sync_taskdirs(FROM_REPO, ORIGIN_FOLDER_NAME)
+
 
     println()
     println("------------------ PULLING ORIGIN -----------------")
     println()
-
-    # pulling to have an the updated
-    !git_pull() && error("Fail to pull")
+    !deb && git_pull(force = true, print = true)
 
     println()
     println("------------------ PREPARING TASK -----------------")
-    println("task: ", relpath_worker(taskroot))
+    println("task: ", taskname)
 
-    # Config file
-    # Kill sign
-    write_task_exec_config(ownertask, KILL_SIGN_KEY, "NOT_$KILL_SIGN")
-    write_task_exec_status(ownertask, KILL_STATE_KEY, false)
-    write_task_exec_status(ownertask, KILL_STATE_INFO_KEY, "Task executed")
-    
-    # Exe order
-    exe_order = read_task_exec_config(ownertask, EXE_ORDER_KEY)
-    isnothing(exe_order) && (exe_order = 0)
-    last_exe_order = read_task_exec_status(ownertask, LAST_EXE_ORDER_KEY)
-    isnothing(last_exe_order) && (last_exe_order = 0)
+    # Updating control dicts
+    global ORIGIN_CONFIG = read_origin_config(worker)
+    global LOCAL_STATUS = read_local_status(worker)
 
-    exe_order = max(exe_order, last_exe_order) + 1
-    write_task_exec_config(ownertask, EXE_ORDER_KEY, exe_order)
+    summary_task(taskname)
 
-    println("new exec order: $exe_order")
+    # Kill sign to not kill
+    set_kill_sign(taskname, KILL_SIGN_KEY; info = "Prepare for task execution")
+
+    # exec_order
+    @show last_exec_order = get_exec_status(taskname, LAST_EXE_ORDER_KEY)
+    last_exec_order = isnothing(last_exec_order) ? 0 : last_exec_order
+    exec_order = get_exec_order(taskname)
+    exec_order = isnothing(exec_order) ? 1 : exec_order
+    exec_order = max(exec_order, last_exec_order) + 1
+    last_exec_order = exec_order - 1
+    set_exec_order(taskname, exec_order)
+    set_exec_status(taskname, false; last_order = last_exec_order)
+
+    println("new exec order: $exec_order")
 
     println()
     println("------------------ PUSHING MASTER -----------------")
     println()
 
-    # pushing to master
-    push_master()
+    # ------------------- COPY BACK -------------------
+    sync_taskdirs(FROM_COPY, ORIGIN_FOLDER_NAME)
 
+    # writing
+    write_origin_config(ORIGIN_CONFIG, path; create = true)
+
+    # TODO: introduce checks before pushing
+    # ------------------- PUSH ORIGINS -------------------
+    !deb && git_add_all()
+    !deb && git_commit(commit_msg)
+    !deb && git_push(force = true, print = true)
 
     println()
     println("------------------ READING LOGS -----------------")
     println()
-    follow_exec(init_margin = 0)
+    follow_exec(exec_order, taskroot, init_margin = 0)
 
 end

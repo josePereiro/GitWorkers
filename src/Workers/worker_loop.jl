@@ -30,7 +30,7 @@ function worker_loop(path = pwd(); maxwt = 10, verbose = true,
             sync_taskdirs(FROM_COPY, LOCAL_FOLDER_NAME, worker)
 
             # ------------------- UPDATE LOCAL STATUS FILE -------------------
-            # the updated local status in written in the file
+            # the updated local status is written in the file
             # The next repo sync will reflect that
             verbose && println()
             verbose && println("Updating $(LOCAL_STATUS_FILE_NAME) from LOCAL_STATUS")
