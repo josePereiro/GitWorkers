@@ -59,8 +59,8 @@ function long_tasks_tests()
             iters = 1, maxwt = 0)
         true
     end
-    # The task must be labeled as not running, this will be updated in the next iter
-    @test !GW.LOCAL_STATUS[taskname][GW.RUNNING_STATUS_KEY][GW.VALUE_KEY]
+    # The task must be labeled as running
+    @test GW.get_status(taskname, GW.RUNNING_STATUS_KEY, GW.VALUE_KEY; default = false)
 
     # Check task runs
     wait_for() do
@@ -75,7 +75,7 @@ function long_tasks_tests()
         GW.worker_loop(worker; verbose = false, deb = true, 
             iters = 1, maxwt = 0)
             
-        @test GW.LOCAL_STATUS[taskname][GW.RUNNING_STATUS_KEY][GW.VALUE_KEY]
+        @test GW.get_status(taskname, GW.RUNNING_STATUS_KEY, GW.VALUE_KEY; default = false)
         false
     end
     
@@ -88,8 +88,8 @@ function long_tasks_tests()
         true
     end
 
-    @test !isnothing(GW.get_status(taskname, GW.KILL_STATUS_KEY, GW.VALUE_KEY))
     # The same than last time
+    @test !isnothing(GW.get_status(taskname, GW.KILL_STATUS_KEY, GW.VALUE_KEY))
     @test GW.get_status(taskname, GW.KILL_STATUS_KEY, GW.VALUE_KEY)
 
     # the task must be killed at some point!!!

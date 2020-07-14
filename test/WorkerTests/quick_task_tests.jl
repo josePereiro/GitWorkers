@@ -65,10 +65,6 @@ function quick_task_test()
     # After one loop the status must be 'true', it will be updated the next loop
     @test GW.get_status(taskname, GW.EXEC_STATUS_KEY, GW.VALUE_KEY)
 
-    @test !isnothing(GW.get_status(taskname, GW.RUNNING_STATUS_KEY, GW.VALUE_KEY))
-    # After one loop the status must be 'false', no task must be running
-    @test !GW.get_status(taskname, GW.RUNNING_STATUS_KEY, GW.VALUE_KEY)
-
     @test !isnothing(GW.get_status(taskname, GW.KILL_STATUS_KEY, GW.VALUE_KEY))
     # After one loop the status must be 'false', no kill sign added to origin
     @test !GW.get_status(taskname, GW.KILL_STATUS_KEY, GW.VALUE_KEY)

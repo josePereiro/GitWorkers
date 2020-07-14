@@ -1,4 +1,4 @@
-function get_control(control::Dict, keys...)
+function get_control(control::Dict, keys...; default = nothing)
     isempty(keys) && return control
     
     dict_ = control
@@ -6,13 +6,13 @@ function get_control(control::Dict, keys...)
     for key in keys
         key == last_key && break
         if !haskey(dict_, key)
-            return nothing
+            return default
         end
-        !(dict_[key] isa Dict) && return nothing
+        !(dict_[key] isa Dict) && return default
         dict_ = dict_[key]
     end
-    return get(dict_, last_key, nothing) 
+    return get(dict_, last_key, default) 
 end
 
-get_config(keys...) = get_control(ORIGIN_CONFIG, keys...)
-get_status(keys...) = get_control(LOCAL_STATUS, keys...)
+get_config(keys...; default = nothing) = get_control(ORIGIN_CONFIG, keys...; default = default)
+get_status(keys...; default = nothing) = get_control(LOCAL_STATUS, keys...; default = default)
