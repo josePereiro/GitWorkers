@@ -28,11 +28,6 @@ function quick_task_test()
     @assert local_dir |> mkdir |> isdir
 
     taskname = task |> GW.get_taskname
-    exec_order = rand(1:1000)
-    test_origin_config = 
-    Dict(taskname => Dict(GW.EXEC_ORDER_KEY => Dict(GW.VALUE_KEY => exec_order)))
-    GW.write_config(test_origin_config, worker)
-    @test GW.read_config(worker) == test_origin_config
 
     test_file = joinpath(taskroot, "test_file.jl")
     @assert !isfile(test_file)
@@ -49,6 +44,10 @@ function quick_task_test()
             write("$test_file", pwd());
         """
     )
+
+    # ------------------- EXEC TASK -------------------
+    GW.exec_task(task, deb = true, verbose = false)
+    exec_order = GW.get_config(taskname, GW.EXEC_ORDER_KEY, GW.VALUE_KEY)
 
     # ------------------- ONE WORKER LOOP -------------------
     @test begin

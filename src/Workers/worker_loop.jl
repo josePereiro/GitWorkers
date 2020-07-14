@@ -41,7 +41,7 @@ function worker_loop(path = pwd(); maxwt = 10, verbose = true,
             # The next repo sync will reflect that
             verbose && println()
             verbose && println("Updating $(LOCAL_STATUS_FILE_NAME) from LOCAL_STATUS")
-            write_status(LOCAL_STATUS, worker; create = true)
+            write_status(worker; create = true)
             verbose && println()
 
             # TODO: introduce checks before pushing

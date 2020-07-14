@@ -12,7 +12,7 @@ function push_as_master(path = pwd();
     before_pull(worker)
 
     # ------------------- SAVE REPO ORIGIND IN COPY -------------------
-    sync_taskdirs(FROM_REPO, ORIGIN_FOLDER_NAME)
+    sync_taskdirs(FROM_REPO, ORIGIN_FOLDER_NAME, worker)
 
     # ------------------- FORCE "PULL" -------------------
     # This force the local repo to be equal to the origin
@@ -24,7 +24,7 @@ function push_as_master(path = pwd();
     before_push(worker)
 
     # ------------------- COPY BACK -------------------
-    sync_taskdirs(FROM_COPY, ORIGIN_FOLDER_NAME)
+    sync_taskdirs(FROM_COPY, ORIGIN_FOLDER_NAME, worker)
 
     # writing
     write_config(worker; create = true)

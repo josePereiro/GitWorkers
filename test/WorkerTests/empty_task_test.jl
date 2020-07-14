@@ -38,7 +38,7 @@ function empty_task_test()
     end
 
     # testing control dicts
-    @test GW.ORIGIN_CONFIG |> isempty
+    @test GW.get_config() |> isempty
 
     @test !isnothing(GW.get_status(taskname, GW.EXEC_STATUS_KEY, GW.VALUE_KEY))
     @test !GW.get_status(taskname, GW.EXEC_STATUS_KEY, GW.VALUE_KEY)

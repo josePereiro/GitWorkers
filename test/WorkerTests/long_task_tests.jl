@@ -30,14 +30,6 @@ function long_tasks_tests()
     @assert local_dir |> mkdir |> isdir
 
     taskname = task |> GW.get_taskname
-    exec_order = rand(1:1000)
-    test_origin_config = Dict{String, Any}(
-        taskname => Dict{String, Any}(
-            GW.EXEC_ORDER_KEY => Dict(GW.VALUE_KEY => exec_order)
-        )
-    )
-    GW.write_config(test_origin_config, worker)
-    @test GW.read_config(worker) == test_origin_config
 
     test_file = joinpath(taskroot, "test_file.jl")
     @assert !isfile(test_file)
@@ -56,6 +48,10 @@ function long_tasks_tests()
             end
         """
     )
+
+    # ------------------- EXEC TASK -------------------
+    GW.exec_task(task, deb = true, verbose = false)
+    exec_order = GW.get_config(taskname, GW.EXEC_ORDER_KEY, GW.VALUE_KEY)
 
     # Run the task
     @test begin
@@ -84,13 +80,12 @@ function long_tasks_tests()
     end
     
     # ------------------- KILL TASK -------------------
-    test_origin_config[taskname][GW.KILL_SIGN_KEY] = Dict(GW.VALUE_KEY => GW.KILL_SIGN)
-    GW.write_config(test_origin_config, worker)
-    @test GW.read_config(worker) == test_origin_config
+    # TODO: use kill_task
+    GW.set_config(GW.KILL_SIGN, taskname, GW.KILL_SIGN_KEY, GW.VALUE_KEY)
+    GW.write_config(worker; create = true)
     
     @test begin
-        GW.worker_loop(worker; verbose = false, deb = true, 
-        iters = 1, maxwt = 0)
+        GW.worker_loop(worker; verbose = false, deb = true, iters = 1, maxwt = 0)
         true
     end
 

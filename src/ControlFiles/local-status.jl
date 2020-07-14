@@ -9,24 +9,22 @@ is_local_status_file(path) = path |> isfile && path |> basename == LOCAL_STATUS_
 """
 
 """
-function read_status(path = pwd(); onmissing = Dict())
-    local_status_file = find_local_status_file(path, allow_missing = false)
-    try
-        return read_json(local_status_file)
+function read_status(path = pwd(); onerr = CONTROL_DICT_TYPE())
+    workerroot = path |> find_ownerworker |> get_workerroot
+    local_status_file = build_local_status_file(workerroot)
+    try 
+        return read_json(local_status_file) 
     catch err
-        return onmissing
+        return onerr
     end
 end
     
 """
 
 """
-function write_status(dict::Dict = ORIGIN_CONFIG, path = pwd(); create = true)
-    local_status_file = find_local_status_file(path, allow_missing = create)
-    if create && isnothing(local_status_file)
-        ownerroot = find_ownerworker(path) |> get_workerroot
-        local_status_file = build_local_status_file(ownerroot)
-        create_file(local_status_file)
-    end
-    return write_json(local_status_file, dict)
+function write_status(path = pwd(); create = true)
+    workerroot = path |> find_ownerworker |> get_workerroot
+    local_status_file = build_local_status_file(workerroot)
+    create && create_file(local_status_file)
+    return write_json(local_status_file, LOCAL_STATUS)
 end
