@@ -6,7 +6,7 @@
 function update_kill_status(taskname)
     
     # update time
-    set_status("Default", taskname, KILL_STATUS_KEY, INFO_KEY)
+    set_status(now(), taskname, KILL_STATUS_KEY, UPDATE_DATE_KEY)
 
     # ------------------- CHECK ORIGIN -------------------
     # no data, nothing to do
