@@ -1,4 +1,6 @@
 function get_control(control::Dict, keys...)
+    isempty(keys) && return control
+    
     dict_ = control
     last_key = keys[end]
     for key in keys
@@ -12,5 +14,5 @@ function get_control(control::Dict, keys...)
     return get(dict_, last_key, nothing) 
 end
 
-get_config(key, subkeys...) = get_control(ORIGIN_CONFIG, key, subkeys...)
-get_status(key, subkeys...) = get_control(LOCAL_STATUS, key, subkeys...)
+get_config(keys...) = get_control(ORIGIN_CONFIG, keys...)
+get_status(keys...) = get_control(LOCAL_STATUS, keys...)

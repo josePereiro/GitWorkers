@@ -28,8 +28,8 @@ function empty_task_test()
     local_dir = joinpath(taskroot, GW.LOCAL_FOLDER_NAME)
     @assert mkdir(local_dir) |> isdir
 
-    @test GW.ORIGIN_CONFIG |> isempty
-    @test GW.LOCAL_STATUS |> isempty
+    @test GW.get_config() |> isempty
+    @test GW.get_status() |> isempty
 
     @test begin
         GW.worker_loop(workerroot; verbose = false, deb = true, 
@@ -40,18 +40,14 @@ function empty_task_test()
     # testing control dicts
     @test GW.ORIGIN_CONFIG |> isempty
 
-    @test haskey(GW.LOCAL_STATUS, taskname)
-    @test haskey(GW.LOCAL_STATUS[taskname], GW.EXEC_STATUS_KEY)
-    @test haskey(GW.LOCAL_STATUS[taskname][GW.EXEC_STATUS_KEY], GW.VALUE_KEY)
-    @test !GW.LOCAL_STATUS[taskname][GW.EXEC_STATUS_KEY][GW.VALUE_KEY]
+    @test !isnothing(GW.get_status(taskname, GW.EXEC_STATUS_KEY, GW.VALUE_KEY))
+    @test !GW.get_status(taskname, GW.EXEC_STATUS_KEY, GW.VALUE_KEY)
 
-    @test haskey(GW.LOCAL_STATUS[taskname], GW.RUNNING_STATUS_KEY)
-    @test haskey(GW.LOCAL_STATUS[taskname][GW.RUNNING_STATUS_KEY], GW.VALUE_KEY)
-    @test !GW.LOCAL_STATUS[taskname][GW.RUNNING_STATUS_KEY][GW.VALUE_KEY]
+    @test !isnothing(GW.get_status(taskname, GW.RUNNING_STATUS_KEY, GW.VALUE_KEY))
+    @test !GW.get_status(taskname, GW.RUNNING_STATUS_KEY, GW.VALUE_KEY)
 
-    @test haskey(GW.LOCAL_STATUS[taskname], GW.KILL_STATUS_KEY)
-    @test haskey(GW.LOCAL_STATUS[taskname][GW.KILL_STATUS_KEY], GW.VALUE_KEY)
-    @test !GW.LOCAL_STATUS[taskname][GW.KILL_STATUS_KEY][GW.VALUE_KEY]
+    @test !isnothing(GW.get_status(taskname, GW.KILL_STATUS_KEY, GW.VALUE_KEY))
+    @test !GW.get_status(taskname, GW.KILL_STATUS_KEY, GW.VALUE_KEY)
 
     # clear
     rm(root; force = true, recursive = true)
