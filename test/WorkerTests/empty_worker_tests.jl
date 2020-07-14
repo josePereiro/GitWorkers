@@ -5,10 +5,11 @@ function empty_worker_tests()
     rm(root; force = true, recursive = true)
     @assert mkdir(root) |> isdir
     @assert mkdir(joinpath(root, ".git")) |> isdir
-
+    
     # add worker
     workerroot = joinpath(root, "Worker")
     worker = workerroot |> GW.build_worker_file |> GW.create_file
+    @test GW.create_gitignore(worker; force = true) |> isfile
     @assert workerroot |> isdir
     @assert worker |> isfile
 

@@ -1,5 +1,8 @@
 function follow_exec(exec_order, path = pwd(); wt = 10, init_margin = 50)
 
+    # checks
+    check_gitignores(path)
+
     task = find_ownertask(path)
     taskroot = task |> get_taskroot
     workername = path |> find_ownerworker |> get_workername

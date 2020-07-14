@@ -3,6 +3,9 @@ function kill_task(path = pwd();
         verbose = true, deb = false, 
         follow = true, push_token = follow)
 
+    # checks
+    check_gitignores(path)
+
     worker = path |> find_ownerworker
     workername = worker |> get_workername
     ownertask = path |> find_ownertask
@@ -24,9 +27,7 @@ function kill_task(path = pwd();
 
     )
 
-    verbose && println()
-    verbose && println("------------------ READING LOGS -----------------")
-    verbose && println()
+    verbose && print_title("READING LOGS")
     exec_order = get_config(taskname, EXEC_ORDER_KEY, VALUE_KEY)
     !deb && follow && follow_exec(exec_order, taskroot; init_margin = 0)
 

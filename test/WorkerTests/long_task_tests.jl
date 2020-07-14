@@ -9,6 +9,7 @@ function long_tasks_tests()
     # add worker
     workerroot = joinpath(root, "Worker")
     worker = workerroot |> GW.build_worker_file |> GW.create_file
+    @test GW.create_gitignore(worker; force = true) |> isfile
     @assert workerroot |> isdir
     @assert worker |> isfile
 

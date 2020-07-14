@@ -5,7 +5,10 @@
 function exec_task(path = pwd(); 
     commit_msg = nothing,
     verbose = true, deb = false, 
-    follow = true, push_token = follow)
+    follow = true, push_token = false)
+
+    # checks
+    check_gitignores(path)
 
     worker = path |> find_ownerworker
     workername = worker |> get_workername
@@ -21,18 +24,17 @@ function exec_task(path = pwd();
             
             info = "Master order: execute task!!"
 
-             # push token
-             set_config(push_token, PUSH_TOKEN_KEY, VALUE_KEY)
-             set_config(info, PUSH_TOKEN_KEY, INFO_KEY)
-             set_config(now(), PUSH_TOKEN_KEY, UPDATE_DATE_KEY)
+            # ------------------- PUSH TOKEN -------------------
+            if follow
+                verbose && print_title("SET PUSH TOKEN")
+                set_config(follow, PUSH_TOKEN_KEY, VALUE_KEY)
+                set_config(info, PUSH_TOKEN_KEY, INFO_KEY)
+                set_config(now(), PUSH_TOKEN_KEY, UPDATE_DATE_KEY)
+                verbose && pretty_print(Dict(PUSH_TOKEN_KEY => get_config(PUSH_TOKEN_KEY)))
+            end
 
-            verbose && println()
-            verbose && println("------------------ PUSH TOKEN -----------------")
-            verbose && pretty_print(Dict(PUSH_TOKEN_KEY => get_config(PUSH_TOKEN_KEY)))
-            verbose && println()
-
-            verbose && println()
-            verbose && println("------------------ PREPARING TASK -----------------")
+            # ------------------- PREPARING TASK -------------------
+            verbose && print_title("PREPARING TASK")
 
             # Kill sign to not kill
             set_config(NOT_KILL_SIGN, taskname, KILL_SIGN_KEY, VALUE_KEY)
@@ -53,10 +55,15 @@ function exec_task(path = pwd();
         end
     )
 
-    verbose && println()
-    verbose && println("------------------ READING LOGS -----------------")
-    verbose && println()
-    exec_order = get_config(taskname, EXEC_ORDER_KEY, VALUE_KEY)
-    !deb && follow && follow_exec(exec_order, taskroot; init_margin = 0)
+    # ------------------- READING LOGS -------------------
+    if follow
+        verbose && print_title("READING LOGS")
+        exec_order = get_config(taskname, EXEC_ORDER_KEY, VALUE_KEY)
+        !deb && follow_exec(exec_order, taskroot; init_margin = 0)
+    end
+
+    # ------------------- SENDING PUSH TOKEN -------------------
+    verbose && print_title("SENDING PUSH TOKEN")
+    send_push_token(push_token, worker; deb = deb, verbose = verbose)
 
 end
