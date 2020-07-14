@@ -4,7 +4,7 @@ function summary_task(taskname; indent = 4)
             ("LOCAL_STATUS", LOCAL_STATUS)]
         println(name)
         if haskey(data, taskname)
-            JSON.print(data[taskname], indent)
+            pretty_print(data[taskname]; indent = indent)
             println()
         else
             println("\tNo data available")

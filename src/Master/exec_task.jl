@@ -18,11 +18,21 @@ function exec_task(path = pwd();
         commit_msg = isnothing(commit_msg) ? "Master to $(workername): exec $(taskname)" : commit_msg,
 
         before_push = function(worker)
-
-            verbose &&println()
-            verbose &&println("------------------ PREPARING TASK -----------------")
-
+            
             info = "Master order: execute task!!"
+
+             # push token
+             set_config(push_token, PUSH_TOKEN_KEY, VALUE_KEY)
+             set_config(info, PUSH_TOKEN_KEY, INFO_KEY)
+             set_config(now(), PUSH_TOKEN_KEY, UPDATE_DATE_KEY)
+
+            verbose && println()
+            verbose && println("------------------ PUSH TOKEN -----------------")
+            verbose && pretty_print(Dict(PUSH_TOKEN_KEY => get_config(PUSH_TOKEN_KEY)))
+            verbose && println()
+
+            verbose && println()
+            verbose && println("------------------ PREPARING TASK -----------------")
 
             # Kill sign to not kill
             set_config(NOT_KILL_SIGN, taskname, KILL_SIGN_KEY, VALUE_KEY)
@@ -41,11 +51,6 @@ function exec_task(path = pwd();
             set_config(exec_order, taskname, EXEC_ORDER_KEY, VALUE_KEY)
             set_config(info, taskname, EXEC_ORDER_KEY, INFO_KEY)
             set_config(now(), taskname, EXEC_ORDER_KEY, UPDATE_DATE_KEY)
-
-            # push token
-            set_config(push_token, PUSH_TOKEN_KEY, VALUE_KEY)
-            set_config(info, PUSH_TOKEN_KEY, INFO_KEY)
-            set_config(now(), PUSH_TOKEN_KEY, UPDATE_DATE_KEY)
             
             verbose && summary_task(taskname)
 

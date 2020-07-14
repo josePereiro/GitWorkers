@@ -26,7 +26,12 @@ function worker_loop(path = pwd(); maxwt = 10, verbose = true,
             # ------------------- UPDATE ORIGIN_CONFIG -------------------
             # Now ORIGIN_CONFIG is up to date with the data from origin
             verbose && println("Updating ORIGIN_CONFIG from $(ORIGIN_CONFIG_FILE_NAME)")
-            global ORIGIN_CONFIG = read_config(worker)
+            read_config(worker)
+            verbose && println()
+            
+            push_token = get_config(PUSH_TOKEN_KEY, VALUE_KEY)
+            verbose && isnothing(push_token) && println("$PUSH_TOKEN_KEY: missing")
+            verbose && !isnothing(push_token) && pretty_print(Dict(PUSH_TOKEN_KEY => get_config(PUSH_TOKEN_KEY)))
             verbose && println()
             flush(stdout)
 
@@ -46,8 +51,6 @@ function worker_loop(path = pwd(); maxwt = 10, verbose = true,
 
             # TODO: introduce checks before pushing
             # ------------------- PUSH ORIGINS -------------------
-            push_token = get_config(worker, PUSH_TOKEN_KEY, VALUE_KEY)
-            verbose && println("Push token: ", isnothing(push_token) ? "missing" : push_token)
             if !isnothing(push_token) && push_token
                 verbose && println("Adding to local repo")
                 !deb && git_add_all(print = verbose)
@@ -88,15 +91,15 @@ function worker_loop(path = pwd(); maxwt = 10, verbose = true,
             end # foreach task
 
         catch err
-
+            
             deb && rethrow(err)
             verbose && println(
-            "\n------------------- ERROR -------------------\n")
+                "\n------------------- ERROR -------------------\n")
             flush(stdout)
             verbose && showerror(stderr, err, catch_backtrace())
             verbose && println()
             flush(stderr)
-
+                
             err isa InterruptException && return
         end
 

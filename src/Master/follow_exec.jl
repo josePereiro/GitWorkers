@@ -1,6 +1,8 @@
 function follow_exec(exec_order, path = pwd(); wt = 10, init_margin = 50)
-    ownertask = find_ownertask(path)
-    taskroot = ownertask |> get_taskroot
+
+    task = find_ownertask(path)
+    taskroot = task |> get_taskroot
+    workername = path |> find_ownerworker |> get_workername
     
     l0 = Dict()
     stdout_file = get_stdout_file(path, exec_order)
@@ -9,6 +11,9 @@ function follow_exec(exec_order, path = pwd(); wt = 10, init_margin = 50)
     stderr_file = get_stderr_file(path, exec_order)
     l0[stderr_file] = !isfile(stderr_file) ? 1 : 
         max(1, length(readlines(stderr_file)) - init_margin)
+
+    token = get_config(PUSH_TOKEN_KEY, VALUE_KEY)
+    isnothing(token) || !token && @warn("$workername current push token: $token")
 
     while true
 
