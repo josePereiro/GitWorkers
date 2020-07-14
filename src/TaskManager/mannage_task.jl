@@ -20,7 +20,7 @@ function mannage_task(taskfile; verbose = true)
     exec_state = get_status(taskname, EXEC_STATUS_KEY, VALUE_KEY ; default = false)
     if exec_state
         exec_order = get_config(taskname, EXEC_ORDER_KEY, VALUE_KEY)
-        !isnothing(exec_order) && run_taskproc(taskfile, exec_order; verbose = verbose)
+        !ismissing(exec_order) && run_taskproc(taskfile, exec_order; verbose = verbose)
         return
     end
 

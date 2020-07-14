@@ -10,7 +10,7 @@ function update_kill_status(taskname)
 
     # ------------------- CHECK ORIGIN -------------------
     # no data, nothing to do
-    if isnothing(get_config(taskname, KILL_SIGN_KEY))
+    if ismissing(get_config(taskname, KILL_SIGN_KEY))
         info = "Origin task config missing"
         set_status(info, taskname, KILL_STATUS_KEY, INFO_KEY)
         return set_status(false, taskname, KILL_STATUS_KEY, VALUE_KEY)
@@ -20,7 +20,7 @@ function update_kill_status(taskname)
     # ------------------- CHECK KILL SIGN -------------------
     # no data, nothing to do
     kill_sign = get_config(taskname, KILL_SIGN_KEY, VALUE_KEY)
-    if isnothing(kill_sign)
+    if ismissing(kill_sign)
         info = "Task origin $(KILL_SIGN_KEY) missing value"
         set_status(info, taskname, KILL_STATUS_KEY, INFO_KEY)
         return set_status(false, taskname, KILL_STATUS_KEY, VALUE_KEY)

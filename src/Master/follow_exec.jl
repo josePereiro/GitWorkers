@@ -13,7 +13,7 @@ function follow_exec(exec_order, path = pwd(); wt = 10, init_margin = 50)
         max(1, length(readlines(stderr_file)) - init_margin)
 
     token = get_config(PUSH_TOKEN_KEY, VALUE_KEY)
-    isnothing(token) || !token && @warn("$workername current push token: $token")
+    ismissing(token) || !token && @warn("$workername current push token: $token")
 
     while true
 

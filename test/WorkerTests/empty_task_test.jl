@@ -40,13 +40,13 @@ function empty_task_test()
     # testing control dicts
     @test GW.get_config() |> isempty
 
-    @test !isnothing(GW.get_status(taskname, GW.EXEC_STATUS_KEY, GW.VALUE_KEY))
+    @test !ismissing(GW.get_status(taskname, GW.EXEC_STATUS_KEY, GW.VALUE_KEY))
     @test !GW.get_status(taskname, GW.EXEC_STATUS_KEY, GW.VALUE_KEY)
 
-    @test !isnothing(GW.get_status(taskname, GW.RUNNING_STATUS_KEY, GW.VALUE_KEY))
+    @test !ismissing(GW.get_status(taskname, GW.RUNNING_STATUS_KEY, GW.VALUE_KEY))
     @test !GW.get_status(taskname, GW.RUNNING_STATUS_KEY, GW.VALUE_KEY)
 
-    @test !isnothing(GW.get_status(taskname, GW.KILL_STATUS_KEY, GW.VALUE_KEY))
+    @test !ismissing(GW.get_status(taskname, GW.KILL_STATUS_KEY, GW.VALUE_KEY))
     @test !GW.get_status(taskname, GW.KILL_STATUS_KEY, GW.VALUE_KEY)
 
     # clear

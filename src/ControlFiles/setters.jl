@@ -1,4 +1,4 @@
-function set_control(control::Dict, val, keys...; DictT = Dict{String, Any})
+function set_control(control::Dict, val, keys...; DictT = CONTROL_DICT_TYPE)
     dict_ = control
     last_key = keys[end]
     for key in keys

@@ -1,4 +1,4 @@
-function get_control(control::Dict, keys...; default = nothing)
+function get_control(control::Dict, keys...; default = missing)
     isempty(keys) && return control
     
     dict_ = control
@@ -14,5 +14,5 @@ function get_control(control::Dict, keys...; default = nothing)
     return get(dict_, last_key, default) 
 end
 
-get_config(keys...; default = nothing) = get_control(ORIGIN_CONFIG, keys...; default = default)
-get_status(keys...; default = nothing) = get_control(LOCAL_STATUS, keys...; default = default)
+get_config(keys...; default = missing) = get_control(ORIGIN_CONFIG, keys...; default = default)
+get_status(keys...; default = missing) = get_control(LOCAL_STATUS, keys...; default = default)

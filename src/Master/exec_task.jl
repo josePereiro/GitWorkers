@@ -40,12 +40,8 @@ function exec_task(path = pwd();
             set_config(now(), taskname, KILL_SIGN_KEY, UPDATE_DATE_KEY)
 
             # exec_order
-            last_exec_order = get_status(taskname, EXEC_STATUS_KEY, LAST_EXEC_ORDER_KEY)
-            last_exec_order = isnothing(last_exec_order) ? 
-                DEFAULT_LAST_EXEC_ORDER : last_exec_order
-            exec_order = get_config(taskname, EXEC_ORDER_KEY, VALUE_KEY)
-            exec_order = isnothing(exec_order) ? 
-                DEFAULT_EXEC_ORDER : exec_order
+            last_exec_order = get_status(taskname, EXEC_STATUS_KEY, LAST_EXEC_ORDER_KEY; default = DEFAULT_LAST_EXEC_ORDER)
+            exec_order = get_config(taskname, EXEC_ORDER_KEY, VALUE_KEY; default = DEFAULT_EXEC_ORDER)
             exec_order = max(exec_order, last_exec_order) + 1
             last_exec_order = exec_order - 1
             set_config(exec_order, taskname, EXEC_ORDER_KEY, VALUE_KEY)

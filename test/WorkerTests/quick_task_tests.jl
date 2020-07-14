@@ -57,15 +57,15 @@ function quick_task_test()
     end
 
     # testing control dicts
-    @test !isnothing(GW.get_config(taskname, GW.EXEC_ORDER_KEY, GW.VALUE_KEY))
+    @test !ismissing(GW.get_config(taskname, GW.EXEC_ORDER_KEY, GW.VALUE_KEY))
     # exec_order
     @test GW.get_config(taskname, GW.EXEC_ORDER_KEY, GW.VALUE_KEY) == exec_order
 
-    @test !isnothing(GW.get_status(taskname, GW.EXEC_STATUS_KEY, GW.VALUE_KEY))
+    @test !ismissing(GW.get_status(taskname, GW.EXEC_STATUS_KEY, GW.VALUE_KEY))
     # After one loop the status must be 'true', it will be updated the next loop
     @test GW.get_status(taskname, GW.EXEC_STATUS_KEY, GW.VALUE_KEY)
 
-    @test !isnothing(GW.get_status(taskname, GW.KILL_STATUS_KEY, GW.VALUE_KEY))
+    @test !ismissing(GW.get_status(taskname, GW.KILL_STATUS_KEY, GW.VALUE_KEY))
     # After one loop the status must be 'false', no kill sign added to origin
     @test !GW.get_status(taskname, GW.KILL_STATUS_KEY, GW.VALUE_KEY)
 
@@ -101,23 +101,23 @@ function quick_task_test()
 
     # testing control dicts
     # After many loops the status must be the same, workes can't change this
-    @test !isnothing(GW.get_config(taskname, GW.EXEC_ORDER_KEY, GW.VALUE_KEY))
+    @test !ismissing(GW.get_config(taskname, GW.EXEC_ORDER_KEY, GW.VALUE_KEY))
     @test GW.get_config(taskname, GW.EXEC_ORDER_KEY, GW.VALUE_KEY) == exec_order
 
     # After many loops the status must be equal to the current (and unique) exec order
-    @test !isnothing(GW.get_status(taskname, GW.EXEC_STATUS_KEY, GW.LAST_EXEC_ORDER_KEY))
+    @test !ismissing(GW.get_status(taskname, GW.EXEC_STATUS_KEY, GW.LAST_EXEC_ORDER_KEY))
     @test GW.get_status(taskname, GW.EXEC_STATUS_KEY, GW.LAST_EXEC_ORDER_KEY) == exec_order
     # After many loops the status must be 'false', the last exec order was updated
-    @test !isnothing(GW.get_status(taskname, GW.EXEC_STATUS_KEY, GW.VALUE_KEY))
+    @test !ismissing(GW.get_status(taskname, GW.EXEC_STATUS_KEY, GW.VALUE_KEY))
     @test !GW.get_status(taskname, GW.EXEC_STATUS_KEY, GW.VALUE_KEY)
 
     # After many loops the status must be 'false', the task is too fast for have 
     # a running state at this point
-    @test !isnothing(GW.get_status(taskname, GW.RUNNING_STATUS_KEY, GW.VALUE_KEY))
+    @test !ismissing(GW.get_status(taskname, GW.RUNNING_STATUS_KEY, GW.VALUE_KEY))
     @test !GW.get_status(taskname, GW.RUNNING_STATUS_KEY, GW.VALUE_KEY)
 
     # The same than last time
-    @test !isnothing(GW.get_status(taskname, GW.KILL_STATUS_KEY, GW.VALUE_KEY))
+    @test !ismissing(GW.get_status(taskname, GW.KILL_STATUS_KEY, GW.VALUE_KEY))
     @test !GW.get_status(taskname, GW.KILL_STATUS_KEY, GW.VALUE_KEY)
 
     # clear

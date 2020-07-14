@@ -6,7 +6,7 @@ function update_execution_status(taskname)
 
     # ------------------- CHECK ORIGIN -------------------
     # no data, nothing to do
-    if isnothing(get_config(taskname))
+    if ismissing(get_config(taskname))
         set_status("Task origin config missing", taskname, EXEC_STATUS_KEY, INFO_KEY)
         return set_status(false, taskname, EXEC_STATUS_KEY, VALUE_KEY)
     end
@@ -14,7 +14,7 @@ function update_execution_status(taskname)
     # ------------------- CHECK EXEC ORDER -------------------
     # no data, nothing to do
     exec_order = get_config(taskname, EXEC_ORDER_KEY, VALUE_KEY)
-    if isnothing(exec_order)
+    if ismissing(exec_order)
         info = "Task origin $(EXEC_ORDER_KEY) missing value"
         set_status(info, taskname, EXEC_STATUS_KEY, INFO_KEY)
         return set_status(false, taskname, EXEC_STATUS_KEY, VALUE_KEY)
@@ -28,7 +28,7 @@ function update_execution_status(taskname)
 
     # ------------------- CHECK LAST EXEC ORDER -------------------
     last_exec_order = get_status(taskname, EXEC_STATUS_KEY, LAST_EXEC_ORDER_KEY)
-    if isnothing(last_exec_order)
+    if ismissing(last_exec_order)
         info = "Task $(LAST_EXEC_ORDER_KEY) missing"
         set_status(info, taskname, EXEC_STATUS_KEY, INFO_KEY)
         set_status(exec_order, taskname, EXEC_STATUS_KEY, LAST_EXEC_ORDER_KEY)

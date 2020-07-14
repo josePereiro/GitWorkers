@@ -56,11 +56,11 @@ function worker_update(path = pwd();
     # TODO: introduce checks before pushing
     # ------------------- PUSH ORIGINS -------------------
     push_token = get_config(PUSH_TOKEN_KEY, VALUE_KEY)
-    verbose && isnothing(push_token) && println("$PUSH_TOKEN_KEY: missing")
-    verbose && !isnothing(push_token) && pretty_print(Dict(PUSH_TOKEN_KEY => get_config(PUSH_TOKEN_KEY)))
+    verbose && ismissing(push_token) && println("$PUSH_TOKEN_KEY: missing")
+    verbose && !ismissing(push_token) && pretty_print(Dict(PUSH_TOKEN_KEY => get_config(PUSH_TOKEN_KEY)))
     verbose && println()
     flush(stdout)
-    if !isnothing(push_token) && push_token
+    if !ismissing(push_token) && push_token
         verbose && println("Adding to local repo")
         !deb && git_add_all(print = verbose)
         msg = get_workername(worker) * " update"
