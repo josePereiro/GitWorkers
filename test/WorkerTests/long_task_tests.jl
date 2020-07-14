@@ -94,40 +94,35 @@ function long_tasks_tests()
         true
     end
 
-    @test haskey(GW.LOCAL_STATUS, taskname)
-    @test haskey(GW.LOCAL_STATUS[taskname], GW.KILL_STATUS_KEY)
-    @test haskey(GW.LOCAL_STATUS[taskname][GW.KILL_STATUS_KEY], GW.VALUE_KEY)
+    @test !isnothing(GW.get_status(taskname, GW.KILL_STATUS_KEY, GW.VALUE_KEY))
     # The same than last time
-    @test GW.LOCAL_STATUS[taskname][GW.KILL_STATUS_KEY][GW.VALUE_KEY]
+    @test GW.get_status(taskname, GW.KILL_STATUS_KEY, GW.VALUE_KEY)
 
     # the task must be killed at some point!!!
     wait_for(wtime = wtime * 2) do
         GW.worker_loop(worker; verbose = false, deb = true, 
             iters = 1, maxwt = 0)
             
-        return !GW.LOCAL_STATUS[taskname][GW.RUNNING_STATUS_KEY][GW.VALUE_KEY]
+        return !GW.get_status(taskname, GW.RUNNING_STATUS_KEY, GW.VALUE_KEY)
     end
-    @test !GW.LOCAL_STATUS[taskname][GW.RUNNING_STATUS_KEY][GW.VALUE_KEY]
+    @test !GW.get_status(taskname, GW.RUNNING_STATUS_KEY, GW.VALUE_KEY)
 
     # testing control dicts
-    @test haskey(GW.ORIGIN_CONFIG, taskname)
-    @test haskey(GW.ORIGIN_CONFIG[taskname], GW.EXEC_ORDER_KEY)
-    @test haskey(GW.ORIGIN_CONFIG[taskname][GW.EXEC_ORDER_KEY], GW.VALUE_KEY)
+    @test !isnothing(GW.get_config(taskname, GW.EXEC_ORDER_KEY, GW.VALUE_KEY))
     # After many loops the status must be the same, workes can't change this
-    @test GW.ORIGIN_CONFIG[taskname][GW.EXEC_ORDER_KEY][GW.VALUE_KEY] == exec_order
+    @test GW.get_config(taskname, GW.EXEC_ORDER_KEY, GW.VALUE_KEY) == exec_order
 
-    @test haskey(GW.LOCAL_STATUS[taskname], GW.EXEC_STATUS_KEY)
-    @test haskey(GW.LOCAL_STATUS[taskname][GW.EXEC_STATUS_KEY], GW.VALUE_KEY)
     # After many loops the status must be equal to the current (and unique) exec order
-    @test GW.LOCAL_STATUS[taskname][GW.EXEC_STATUS_KEY][GW.LAST_EXEC_ORDER_KEY] == exec_order
+    @test !isnothing(GW.get_status(taskname, GW.EXEC_STATUS_KEY, GW.LAST_EXEC_ORDER_KEY))
+    @test GW.get_status(taskname, GW.EXEC_STATUS_KEY, GW.LAST_EXEC_ORDER_KEY) == exec_order
     # After many loops the status must be 'false', the last exec order was updated
-    @test !GW.LOCAL_STATUS[taskname][GW.EXEC_STATUS_KEY][GW.VALUE_KEY]
+    @test !isnothing(GW.get_status(taskname, GW.EXEC_STATUS_KEY, GW.VALUE_KEY))
+    @test !GW.get_status(taskname, GW.EXEC_STATUS_KEY, GW.VALUE_KEY)
 
-    @test haskey(GW.LOCAL_STATUS[taskname], GW.RUNNING_STATUS_KEY)
-    @test haskey(GW.LOCAL_STATUS[taskname][GW.RUNNING_STATUS_KEY], GW.VALUE_KEY)
+    @test !isnothing(GW.get_status(taskname, GW.RUNNING_STATUS_KEY, GW.VALUE_KEY))
     # After many loops the status must be 'false', the task is too fast for have 
     # a running state at this point
-    @test !GW.LOCAL_STATUS[taskname][GW.RUNNING_STATUS_KEY][GW.VALUE_KEY]
+    @test !GW.get_status(taskname, GW.RUNNING_STATUS_KEY, GW.VALUE_KEY)
 
     # clear
     rm(root; force = true, recursive = true)
