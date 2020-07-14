@@ -81,8 +81,7 @@ function long_tasks_tests()
     
     # ------------------- KILL TASK -------------------
     # TODO: use kill_task
-    GW.set_config(GW.KILL_SIGN, taskname, GW.KILL_SIGN_KEY, GW.VALUE_KEY)
-    GW.write_config(worker; create = true)
+    GW.kill_task(task, verbose = false, deb = true)
     
     @test begin
         GW.worker_loop(worker; verbose = false, deb = true, iters = 1, maxwt = 0)
