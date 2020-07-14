@@ -9,6 +9,7 @@ PUSH_TOKEN_KEY = "push_token"
 # ------------------- ORIGIN_CONFIG -------------------
 EXEC_ORDER_KEY = "exe_order"
 KILL_SIGN_KEY = "kill_sign"
+PUSH_TOKEN_KEY = "push_token"
 
 # ------------------- LOCAL_STATUS -------------------
 EXEC_STATUS_KEY = "execution_state"

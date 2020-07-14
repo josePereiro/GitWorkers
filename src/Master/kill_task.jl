@@ -23,7 +23,7 @@ function kill_task(path = pwd())
     println()
 
     # pushing to master
-    push_master()
+    push_as_master()
 
 
     println()

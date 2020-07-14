@@ -4,7 +4,7 @@
 function worker_loop(path = pwd(); maxwt = 10, verbose = true, 
         iters::Int = typemax(Int), deb = false)
 
-    # This loop must be run from a wirker dir
+    # This loop must be run from a worker dir
     worker = find_ownerworker(path)
 
     # TODO: run some checks
@@ -22,7 +22,14 @@ function worker_loop(path = pwd(); maxwt = 10, verbose = true,
             # worker is more robust    
             verbose && println("Force pull from origin")    
             !deb && git_pull(force = true; print = verbose)
-            
+
+            # ------------------- UPDATE ORIGIN_CONFIG -------------------
+            # Now ORIGIN_CONFIG is up to date with the data from origin
+            verbose && println("Updating ORIGIN_CONFIG from $(ORIGIN_CONFIG_FILE_NAME)")
+            global ORIGIN_CONFIG = read_config(worker)
+            verbose && println()
+            flush(stdout)
+
             # ------------------- UPDATE REPO TASKS LOCALS -------------------
             # The local directories of the repo will be overwritten by
             # its peers in the copy
@@ -39,13 +46,17 @@ function worker_loop(path = pwd(); maxwt = 10, verbose = true,
 
             # TODO: introduce checks before pushing
             # ------------------- PUSH ORIGINS -------------------
-            verbose && println("Adding to local repo")
-            !deb && git_add_all(print = verbose)
-            msg = get_workername(worker) * " update"
-            verbose && println("\nCommiting, -m '$msg'")
-            !deb && git_commit(msg; print = verbose)
-            verbose && println("\nPushing to origin")
-            !deb && git_push(print = verbose)
+            push_token = get_config(worker, PUSH_TOKEN_KEY, VALUE_KEY)
+            verbose && println("Push token: ", isnothing(push_token) ? "missing" : push_token)
+            if !isnothing(push_token) && push_token
+                verbose && println("Adding to local repo")
+                !deb && git_add_all(print = verbose)
+                msg = get_workername(worker) * " update"
+                verbose && println("\nCommiting, -m '$msg'")
+                !deb && git_commit(msg; print = verbose)
+                verbose && println("\nPushing to origin")
+                !deb && git_push(print = verbose)
+            end
             
             # ------------------- UPDATE LOCAL ORIGINS -------------------
             # The origin directories of the copy will be overwritten by
@@ -55,13 +66,6 @@ function worker_loop(path = pwd(); maxwt = 10, verbose = true,
 
             verbose && println(
             "\n------------------- MANAGING TASKS -------------------\n\n")
-
-            # ------------------- UPDATE ORIGIN_CONFIG -------------------
-            # Now ORIGIN_CONFIG is up to date with the data from origin
-            verbose && println("Updating ORIGIN_CONFIG from $(ORIGIN_CONFIG_FILE_NAME)")
-            global ORIGIN_CONFIG = read_config(worker)
-            verbose && println()
-            flush(stdout)
 
             # ------------------- TASKS MANNAGING -------------------
             tasks = findtasks_worker(worker)
