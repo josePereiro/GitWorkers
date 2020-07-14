@@ -1,6 +1,6 @@
 function copy_tree_tests()
     # make trees
-    root = "TestRoot"
+    root = TEST_DIR_ROOT
     rm(root; force = true, recursive = true)
     root = mkdir(root)
     tree1 = joinpath(root, "tree1")

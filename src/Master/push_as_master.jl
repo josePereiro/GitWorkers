@@ -1,10 +1,15 @@
 
 function push_as_master(path = pwd(); 
+        before_pull = (worker) -> nothing,
+        before_push = (worker) -> nothing,
         commit_msg = get_workername(path) * " master update",
         verbose = true,
         deb = false)
 
     worker = find_ownerworker(path)
+
+    # ------------------- MAKE CUSTOM TASK -------------------
+    before_pull(worker)
 
     # ------------------- SAVE REPO ORIGIND IN COPY -------------------
     sync_taskdirs(FROM_REPO, ORIGIN_FOLDER_NAME)
@@ -14,6 +19,9 @@ function push_as_master(path = pwd();
     # This is a fundamental design desition. This way the 
     # worker code is more robust        
     !deb && git_pull(force = true, print = verbose)
+
+    # ------------------- MAKE CUSTOM TASK -------------------
+    before_push(worker)
 
     # ------------------- COPY BACK -------------------
     sync_taskdirs(FROM_COPY, ORIGIN_FOLDER_NAME)

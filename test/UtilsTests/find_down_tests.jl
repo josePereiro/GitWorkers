@@ -1,7 +1,7 @@
 function find_down_tests()
 
     # create test dir tree
-    root = "TestRoot" |> abspath
+    root = TEST_DIR_ROOT |> abspath
     rm(root; force = true, recursive = true)
     @assert mkdir(root) |> isdir
     test_file = "test_file"

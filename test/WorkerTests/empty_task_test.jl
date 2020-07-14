@@ -1,7 +1,7 @@
 function empty_task_test()
 
     # ------------------- CREATING TREE -------------------
-    root = "TestRoot" |> abspath
+    root = TEST_DIR_ROOT |> abspath
     rm(root; force = true, recursive = true)
     @assert mkdir(root) |> isdir
     @assert mkdir(joinpath(root, ".git")) |> isdir

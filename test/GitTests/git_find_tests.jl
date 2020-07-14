@@ -1,7 +1,7 @@
 function git_find_tests()
 
     # Test repo
-    root = "TestRoot" |> abspath
+    root = TEST_DIR_ROOT |> abspath
     rm(root; force = true, recursive = true)
     @assert mkdir(root) |> isdir
     git_dir = joinpath(root, GW.GIT_DIR_NAME)

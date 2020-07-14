@@ -1,7 +1,7 @@
 function tasktree_tests()
 
     # ------------------- CREATING TREE -------------------
-    workerroot = "TestRoot" |> abspath
+    workerroot = TEST_DIR_ROOT |> abspath
     rm(workerroot; force = true, recursive = true)
     @assert mkdir(workerroot) |> isdir
     git_dir = joinpath(workerroot, ".git")
