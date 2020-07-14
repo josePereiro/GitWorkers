@@ -36,8 +36,8 @@ function long_tasks_tests()
             GW.EXEC_ORDER_KEY => Dict(GW.VALUE_KEY => exec_order)
         )
     )
-    GW.write_origin_config(test_origin_config, worker)
-    @test GW.read_origin_config(worker) == test_origin_config
+    GW.write_config(test_origin_config, worker)
+    @test GW.read_config(worker) == test_origin_config
 
     test_file = joinpath(taskroot, "test_file.jl")
     @assert !isfile(test_file)
@@ -82,8 +82,8 @@ function long_tasks_tests()
     
     # ------------------- KILL TASK -------------------
     test_origin_config[taskname][GW.KILL_SIGN_KEY] = Dict(GW.VALUE_KEY => GW.KILL_SIGN)
-    GW.write_origin_config(test_origin_config, worker)
-    @test GW.read_origin_config(worker) == test_origin_config
+    GW.write_config(test_origin_config, worker)
+    @test GW.read_config(worker) == test_origin_config
     
     @test begin
         GW.worker_loop(worker; verbose = false, deb = true, 
@@ -114,12 +114,12 @@ function long_tasks_tests()
     # After many loops the status must be the same, workes can't change this
     @test GW.ORIGIN_CONFIG[taskname][GW.EXEC_ORDER_KEY][GW.VALUE_KEY] == exec_order
 
-    @test haskey(GW.LOCAL_STATUS[taskname], GW.EXECUTION_STATUS_KEY)
-    @test haskey(GW.LOCAL_STATUS[taskname][GW.EXECUTION_STATUS_KEY], GW.VALUE_KEY)
+    @test haskey(GW.LOCAL_STATUS[taskname], GW.EXEC_STATUS_KEY)
+    @test haskey(GW.LOCAL_STATUS[taskname][GW.EXEC_STATUS_KEY], GW.VALUE_KEY)
     # After many loops the status must be equal to the current (and unique) exec order
-    @test GW.LOCAL_STATUS[taskname][GW.EXECUTION_STATUS_KEY][GW.LAST_EXEC_ORDER_KEY] == exec_order
+    @test GW.LOCAL_STATUS[taskname][GW.EXEC_STATUS_KEY][GW.LAST_EXEC_ORDER_KEY] == exec_order
     # After many loops the status must be 'false', the last exec order was updated
-    @test !GW.LOCAL_STATUS[taskname][GW.EXECUTION_STATUS_KEY][GW.VALUE_KEY]
+    @test !GW.LOCAL_STATUS[taskname][GW.EXEC_STATUS_KEY][GW.VALUE_KEY]
 
     # TODO: Related with above TODO
     # @test haskey(GW.LOCAL_STATUS[taskname], GW.RUNNING_STATUS_KEY)

@@ -9,7 +9,7 @@ build_origin_config_file(workerroot) = joinpath(workerroot, ORIGIN_CONFIG_FILE_N
 """
 
 """
-function read_origin_config(path = pwd(); onmissing = Dict())
+function read_config(path = pwd(); onmissing = Dict())
     origin_config_file = find_origin_config_file(path, allow_missing = false)
     try
         return read_json(origin_config_file)
@@ -21,7 +21,7 @@ end
 """
 
 """
-function write_origin_config(dict::Dict = ORIGIN_CONFIG, path = pwd(); create = true)
+function write_config(dict::Dict = ORIGIN_CONFIG, path = pwd(); create = true)
     origin_config_file = find_origin_config_file(path, allow_missing = create)
     if create && isnothing(origin_config_file)
         ownerroot = find_ownerworker(path) |> get_workerroot

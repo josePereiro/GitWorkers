@@ -11,7 +11,7 @@ EXEC_ORDER_KEY = "exe_order"
 KILL_SIGN_KEY = "kill_sign"
 
 # ------------------- LOCAL_STATUS -------------------
-EXECUTION_STATUS_KEY = "execution_state"
+EXEC_STATUS_KEY = "execution_state"
 LAST_EXEC_ORDER_KEY = "last_$(EXEC_ORDER_KEY)"
 KILL_STATUS_KEY = "$(KILL_SIGN_KEY)_state"
 RUNNING_STATUS_KEY = "running_state"

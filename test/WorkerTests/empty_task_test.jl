@@ -41,9 +41,9 @@ function empty_task_test()
     @test GW.ORIGIN_CONFIG |> isempty
 
     @test haskey(GW.LOCAL_STATUS, taskname)
-    @test haskey(GW.LOCAL_STATUS[taskname], GW.EXECUTION_STATUS_KEY)
-    @test haskey(GW.LOCAL_STATUS[taskname][GW.EXECUTION_STATUS_KEY], GW.VALUE_KEY)
-    @test !GW.LOCAL_STATUS[taskname][GW.EXECUTION_STATUS_KEY][GW.VALUE_KEY]
+    @test haskey(GW.LOCAL_STATUS[taskname], GW.EXEC_STATUS_KEY)
+    @test haskey(GW.LOCAL_STATUS[taskname][GW.EXEC_STATUS_KEY], GW.VALUE_KEY)
+    @test !GW.LOCAL_STATUS[taskname][GW.EXEC_STATUS_KEY][GW.VALUE_KEY]
 
     @test haskey(GW.LOCAL_STATUS[taskname], GW.RUNNING_STATUS_KEY)
     @test haskey(GW.LOCAL_STATUS[taskname][GW.RUNNING_STATUS_KEY], GW.VALUE_KEY)

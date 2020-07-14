@@ -22,30 +22,35 @@ function exec_task(path = pwd();
 
     verbose &&println()
     verbose &&println("------------------ PREPARING TASK -----------------")
-    verbose &&println("task: ", taskname)
 
     # Updating control dicts
-    global ORIGIN_CONFIG = read_origin_config(worker)
-    global LOCAL_STATUS = read_local_status(worker)
-
-    verbose && summary_task(taskname)
+    global ORIGIN_CONFIG = read_config(worker)
+    global LOCAL_STATUS = read_status(worker)
+    info = "Master order, execute task"
 
     # Kill sign to not kill
-    set_kill_sign(taskname, KILL_SIGN_KEY; info = "Prepare for task execution")
+    set_config(NOT_KILL_SIGN, taskname, KILL_SIGN_KEY, VALUE_KEY)
+    set_config(info, taskname, KILL_SIGN_KEY, INFO_KEY)
+    set_config(now(), taskname, KILL_SIGN_KEY, UPDATE_DATE_KEY)
 
     # exec_order
-    last_exec_order = get_exec_status(taskname, LAST_EXEC_ORDER_KEY)
+    last_exec_order = get_status(taskname, EXEC_STATUS_KEY, LAST_EXEC_ORDER_KEY)
     last_exec_order = isnothing(last_exec_order) ? 
         DEFAULT_LAST_EXEC_ORDER : last_exec_order
-    exec_order = get_exec_order(taskname)
+    exec_order = get_config(taskname, EXEC_ORDER_KEY, VALUE_KEY)
     exec_order = isnothing(exec_order) ? 
         DEFAULT_EXEC_ORDER : exec_order
     exec_order = max(exec_order, last_exec_order) + 1
     last_exec_order = exec_order - 1
-    set_exec_order(taskname, exec_order)
-    set_exec_status(taskname, false, last_exec_order)
+    set_config(exec_order, taskname, EXEC_ORDER_KEY, VALUE_KEY)
+    set_config(info, taskname, EXEC_ORDER_KEY, INFO_KEY)
+    set_config(now(), taskname, EXEC_ORDER_KEY, UPDATE_DATE_KEY)
+    # set_status(false, taskname, EXEC_STATUS_KEY, VALUE_KEY)
+    # set_status(info, taskname, EXEC_STATUS_KEY, INFO_KEY)
+    # set_status(now(), taskname, EXEC_STATUS_KEY, UPDATE_DATE_KEY)
+    # set_status(last_exec_order, taskname, EXEC_STATUS_KEY, LAST_EXEC_ORDER_KEY)
 
-    verbose && println("new exec order: $exec_order")
+    verbose && summary_task(taskname)
 
     verbose && println()
     verbose && println("------------------ PUSHING MASTER -----------------")
@@ -55,7 +60,7 @@ function exec_task(path = pwd();
     sync_taskdirs(FROM_COPY, ORIGIN_FOLDER_NAME)
 
     # writing
-    write_origin_config(ORIGIN_CONFIG, path; create = true)
+    write_config(ORIGIN_CONFIG, path; create = true)
 
     # TODO: introduce checks before pushing
     # ------------------- PUSH ORIGINS -------------------
@@ -66,6 +71,7 @@ function exec_task(path = pwd();
     verbose && println()
     verbose && println("------------------ READING LOGS -----------------")
     verbose && println()
-    follow_exec(exec_order, taskroot, init_margin = 0)
+    !deb && follow_exec(exec_order, taskroot, init_margin = 0)
 
+    return nothing
 end

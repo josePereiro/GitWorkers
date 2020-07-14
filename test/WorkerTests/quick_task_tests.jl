@@ -31,8 +31,8 @@ function quick_task_test()
     exec_order = rand(1:1000)
     test_origin_config = 
     Dict(taskname => Dict(GW.EXEC_ORDER_KEY => Dict(GW.VALUE_KEY => exec_order)))
-    GW.write_origin_config(test_origin_config, worker)
-    @test GW.read_origin_config(worker) == test_origin_config
+    GW.write_config(test_origin_config, worker)
+    @test GW.read_config(worker) == test_origin_config
 
     test_file = joinpath(taskroot, "test_file.jl")
     @assert !isfile(test_file)
@@ -65,10 +65,10 @@ function quick_task_test()
     @test GW.ORIGIN_CONFIG[taskname][GW.EXEC_ORDER_KEY][GW.VALUE_KEY] == exec_order
 
     @test haskey(GW.LOCAL_STATUS, taskname)
-    @test haskey(GW.LOCAL_STATUS[taskname], GW.EXECUTION_STATUS_KEY)
-    @test haskey(GW.LOCAL_STATUS[taskname][GW.EXECUTION_STATUS_KEY], GW.VALUE_KEY)
+    @test haskey(GW.LOCAL_STATUS[taskname], GW.EXEC_STATUS_KEY)
+    @test haskey(GW.LOCAL_STATUS[taskname][GW.EXEC_STATUS_KEY], GW.VALUE_KEY)
     # After one loop the status must be 'true', it will be updated the next loop
-    @test GW.LOCAL_STATUS[taskname][GW.EXECUTION_STATUS_KEY][GW.VALUE_KEY]
+    @test GW.LOCAL_STATUS[taskname][GW.EXEC_STATUS_KEY][GW.VALUE_KEY]
 
     @test haskey(GW.LOCAL_STATUS[taskname], GW.RUNNING_STATUS_KEY)
     @test haskey(GW.LOCAL_STATUS[taskname][GW.RUNNING_STATUS_KEY], GW.VALUE_KEY)
@@ -118,12 +118,12 @@ function quick_task_test()
     @test GW.ORIGIN_CONFIG[taskname][GW.EXEC_ORDER_KEY][GW.VALUE_KEY] == exec_order
 
     @test haskey(GW.LOCAL_STATUS, taskname)
-    @test haskey(GW.LOCAL_STATUS[taskname], GW.EXECUTION_STATUS_KEY)
-    @test haskey(GW.LOCAL_STATUS[taskname][GW.EXECUTION_STATUS_KEY], GW.VALUE_KEY)
+    @test haskey(GW.LOCAL_STATUS[taskname], GW.EXEC_STATUS_KEY)
+    @test haskey(GW.LOCAL_STATUS[taskname][GW.EXEC_STATUS_KEY], GW.VALUE_KEY)
     # After many loops the status must be equal to the current (and unique) exec order
-    @test GW.LOCAL_STATUS[taskname][GW.EXECUTION_STATUS_KEY][GW.LAST_EXEC_ORDER_KEY] == exec_order
+    @test GW.LOCAL_STATUS[taskname][GW.EXEC_STATUS_KEY][GW.LAST_EXEC_ORDER_KEY] == exec_order
     # After many loops the status must be 'false', the last exec order was updated
-    @test !GW.LOCAL_STATUS[taskname][GW.EXECUTION_STATUS_KEY][GW.VALUE_KEY]
+    @test !GW.LOCAL_STATUS[taskname][GW.EXEC_STATUS_KEY][GW.VALUE_KEY]
 
     @test haskey(GW.LOCAL_STATUS[taskname], GW.RUNNING_STATUS_KEY)
     @test haskey(GW.LOCAL_STATUS[taskname][GW.RUNNING_STATUS_KEY], GW.VALUE_KEY)

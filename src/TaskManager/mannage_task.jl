@@ -19,7 +19,7 @@ function mannage_task(taskfile; verbose = true)
     end
 
     # Execution 
-    exec_state = local_status[EXECUTION_STATUS_KEY][VALUE_KEY]
+    exec_state = local_status[EXEC_STATUS_KEY][VALUE_KEY]
     if exec_state
         origin_config = ORIGIN_CONFIG[taskname]
         exec_order = origin_config[EXEC_ORDER_KEY][VALUE_KEY]

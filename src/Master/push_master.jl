@@ -15,7 +15,7 @@ function push_master(path = pwd(),
     sync_taskdirs(FROM_COPY, ORIGIN_FOLDER_NAME)
 
     # writing
-    write_origin_config(ORIGIN_CONFIG, path; create = true)
+    write_config(ORIGIN_CONFIG, path; create = true)
 
     # TODO: introduce checks before pushing
     # ------------------- PUSH ORIGINS -------------------

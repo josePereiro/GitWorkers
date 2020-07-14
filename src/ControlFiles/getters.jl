@@ -12,13 +12,5 @@ function get_control(control::Dict, keys...)
     return get(dict_, last_key, nothing) 
 end
 
-# ORIGIN_CONFIG
-get_exec_order(taskname, subkey = VALUE_KEY) = 
-    get_control(ORIGIN_CONFIG, taskname, EXEC_ORDER_KEY, subkey)
-
-get_kill_sign(taskname, subkey = VALUE_KEY) = 
-    get_control(ORIGIN_CONFIG, taskname, KILL_SIGN_KEY, subkey)
-
-# LOCAL_STATUS
-get_exec_status(taskname, subkey = VALUE_KEY) = 
-    get_control(LOCAL_STATUS, taskname, EXECUTION_STATUS_KEY, subkey)
+get_config(key, subkeys...) = get_control(ORIGIN_CONFIG, key, subkeys...)
+get_status(key, subkeys...) = get_control(LOCAL_STATUS, key, subkeys...)

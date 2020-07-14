@@ -17,19 +17,19 @@ function control_files_tests()
 
     origin_config_file = GW.build_origin_config_file(root)
     @test begin 
-        GW.write_origin_config(dict, worker; create = true)
+        GW.write_config(dict, worker; create = true)
         true
     end
     @test origin_config_file |> GW.is_origin_config_file
-    @test dict == GW.read_origin_config(worker)
+    @test dict == GW.read_config(worker)
 
     @test begin 
-        GW.write_local_status(dict, worker; create = true)
+        GW.write_status(dict, worker; create = true)
         true
     end
     local_status_file = GW.build_local_status_file(root)
     @test local_status_file |> GW.is_local_status_file
-    @test dict == GW.read_local_status(worker)
+    @test dict == GW.read_status(worker)
 
     # clearing
     rm(root; force = true, recursive = true)

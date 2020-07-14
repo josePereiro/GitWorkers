@@ -34,7 +34,7 @@ function worker_loop(path = pwd(); maxwt = 10, verbose = true,
             # The next repo sync will reflect that
             verbose && println()
             verbose && println("Updating $(LOCAL_STATUS_FILE_NAME) from LOCAL_STATUS")
-            write_local_status(LOCAL_STATUS, worker; create = true)
+            write_status(LOCAL_STATUS, worker; create = true)
             verbose && println()
 
             # TODO: introduce checks before pushing
@@ -59,7 +59,7 @@ function worker_loop(path = pwd(); maxwt = 10, verbose = true,
             # ------------------- UPDATE ORIGIN_CONFIG -------------------
             # Now ORIGIN_CONFIG is up to date with the data from origin
             verbose && println("Updating ORIGIN_CONFIG from $(ORIGIN_CONFIG_FILE_NAME)")
-            global ORIGIN_CONFIG = read_origin_config(worker)
+            global ORIGIN_CONFIG = read_config(worker)
             verbose && println()
             flush(stdout)
 
