@@ -45,12 +45,15 @@ function long_tasks_tests()
     stderr_secret = rand(Int128) |> string
 
     # Program task
-    wtime = 4
+    iters = 50
+    wtime = 5
     write(task, 
         """
             write("$test_file", getpid() |> string);
             sleep(1) # for the file to be created
-            sleep($wtime)
+            for i in 1:$iters
+                sleep($wtime/$iters)
+            end
         """
     )
 
@@ -97,15 +100,14 @@ function long_tasks_tests()
     # The same than last time
     @test GW.LOCAL_STATUS[taskname][GW.KILL_STATUS_KEY][GW.VALUE_KEY]
 
-    # TODO: Find way this test fails
-    # # the task must be killed at some point!!!
-    # wait_for(wtime = wtime * 3) do
-    #     GW.worker_loop(worker; verbose = false, deb = true, 
-    #         iters = 1, maxwt = 0)
+    # the task must be killed at some point!!!
+    wait_for(wtime = wtime * 2) do
+        GW.worker_loop(worker; verbose = false, deb = true, 
+            iters = 1, maxwt = 0)
             
-    #     return !GW.LOCAL_STATUS[taskname][GW.RUNNING_STATUS_KEY][GW.VALUE_KEY]
-    # end
-    # @test !GW.LOCAL_STATUS[taskname][GW.RUNNING_STATUS_KEY][GW.VALUE_KEY]
+        return !GW.LOCAL_STATUS[taskname][GW.RUNNING_STATUS_KEY][GW.VALUE_KEY]
+    end
+    @test !GW.LOCAL_STATUS[taskname][GW.RUNNING_STATUS_KEY][GW.VALUE_KEY]
 
     # testing control dicts
     @test haskey(GW.ORIGIN_CONFIG, taskname)
@@ -121,12 +123,11 @@ function long_tasks_tests()
     # After many loops the status must be 'false', the last exec order was updated
     @test !GW.LOCAL_STATUS[taskname][GW.EXEC_STATUS_KEY][GW.VALUE_KEY]
 
-    # TODO: Related with above TODO
-    # @test haskey(GW.LOCAL_STATUS[taskname], GW.RUNNING_STATUS_KEY)
-    # @test haskey(GW.LOCAL_STATUS[taskname][GW.RUNNING_STATUS_KEY], GW.VALUE_KEY)
-    # # After many loops the status must be 'false', the task is too fast for have 
-    # # a running state at this point
-    # @test !GW.LOCAL_STATUS[taskname][GW.RUNNING_STATUS_KEY][GW.VALUE_KEY]
+    @test haskey(GW.LOCAL_STATUS[taskname], GW.RUNNING_STATUS_KEY)
+    @test haskey(GW.LOCAL_STATUS[taskname][GW.RUNNING_STATUS_KEY], GW.VALUE_KEY)
+    # After many loops the status must be 'false', the task is too fast for have 
+    # a running state at this point
+    @test !GW.LOCAL_STATUS[taskname][GW.RUNNING_STATUS_KEY][GW.VALUE_KEY]
 
     # clear
     rm(root; force = true, recursive = true)
