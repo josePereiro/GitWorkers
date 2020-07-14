@@ -5,7 +5,7 @@ function send_push_token(token::Bool, path = pwd();
     worker = find_ownerworker(path)
     name = get_workername(worker)
     msg = token ? "Master to $name: push!" : "Master to $name: Shut up!"
-    push_as_master(worker; commit_msg = msg, deb = deb, verbose = verbose,
+    master_update(worker; commit_msg = msg, deb = deb, verbose = verbose,
 
         before_push = function(worker)
 

@@ -1,13 +1,15 @@
-function kill_task(path = pwd())
+function kill_task(path = pwd(); verbose = true, deb = false)
     ownertask = find_ownertask(path)
     taskroot = ownertask |> get_taskroot
 
-    println()
-    println("------------------ PULLING ORIGIN -----------------")
-    println()
+    if !deb
+        verbose && println()
+        verbose && println("------------------ PULLING ORIGIN -----------------")
+        verbose && println()
 
-    # pulling to have an the updated
-    !git_pull() && error("Fail to pull")
+        # pulling to have an the updated
+        git_pull()
+    end
 
     println()
     println("------------------ PREPARING TASK -----------------")
@@ -23,7 +25,7 @@ function kill_task(path = pwd())
     println()
 
     # pushing to master
-    push_as_master()
+    master_update()
 
 
     println()

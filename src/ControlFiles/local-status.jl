@@ -13,10 +13,11 @@ function read_status(path = pwd(); onerr = CONTROL_DICT_TYPE())
     workerroot = path |> find_ownerworker |> get_workerroot
     local_status_file = build_local_status_file(workerroot)
     try 
-        return read_json(local_status_file) 
+        global LOCAL_STATUS = read_json(local_status_file) 
     catch err
-        return onerr
+        global LOCAL_STATUS = onerr
     end
+    return LOCAL_STATUS
 end
     
 """

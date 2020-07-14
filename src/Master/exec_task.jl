@@ -1,6 +1,6 @@
 """
     This function will set a given task (or path ownertask) as executable.
-    Then will push_as_master
+    Then will master_update
 """
 function exec_task(path = pwd(); 
     commit_msg = nothing,
@@ -13,7 +13,7 @@ function exec_task(path = pwd();
     taskroot = ownertask |> get_taskroot
     taskname = ownertask |> get_taskname
 
-    push_as_master(worker; deb = deb, verbose = verbose,
+    master_update(worker; deb = deb, verbose = verbose,
 
         commit_msg = isnothing(commit_msg) ? "Master to $(workername): exec $(taskname)" : commit_msg,
 

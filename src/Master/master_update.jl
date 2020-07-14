@@ -1,5 +1,5 @@
 
-function push_as_master(path = pwd(); 
+function master_update(path = pwd(); 
         before_pull = (worker) -> nothing,
         before_push = (worker) -> nothing,
         commit_msg = get_workername(path) * " master update",

@@ -13,10 +13,11 @@ function read_config(path = pwd(); onerr = CONTROL_DICT_TYPE())
     workerroot = path |> find_ownerworker |> get_workerroot
     origin_config_file = build_origin_config_file(workerroot)
     try 
-        return read_json(origin_config_file) 
+        global ORIGIN_CONFIG =  read_json(origin_config_file) 
     catch err
-        return onerr
+        global ORIGIN_CONFIG = onerr
     end
+    return ORIGIN_CONFIG
 end
 
 """
