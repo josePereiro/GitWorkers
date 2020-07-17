@@ -36,6 +36,6 @@ function master_update(path = pwd();
     write_config(worker; create = true)
     !deb && git_add_all(print = verbose)
     !deb && git_commit(commit_msg; print = verbose)
-    !deb && git_push(force = true, print = verbose)
+    !deb && git_push(force = false, print = verbose)
     
 end
