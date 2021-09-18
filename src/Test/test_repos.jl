@@ -14,14 +14,14 @@ function _create_test_repos(testdir)
     run(Cmd(["git", "-C", upstream_home, "--bare", "init"]))
     println("\n")
 
-    # setup gitsh
+    # setup gitwr
     url = string("file://", upstream_home)
     verb = true
     @info("setting up client")
-    setup_gitsh(;url, sys_home = client_home, verb)
+    setup_gitworker(;url, sys_home = client_home, verb)
     println("\n")
     @info("setting up server")
-    setup_gitsh(;url, sys_home = server_home, verb)
+    setup_gitworker(;url, sys_home = server_home, verb)
     println("\n")
 
     return url, client_home, server_home

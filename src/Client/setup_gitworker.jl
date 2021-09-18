@@ -1,7 +1,7 @@
 ## ---------------------------------------------------------------
 # TODO: connect with config
 # init setup
-function setup_gitsh(;
+function setup_gitworker(;
         url::AbstractString,
         sys_home::AbstractString = homedir(),
         verb::Bool = false
@@ -12,11 +12,11 @@ function setup_gitsh(;
     _set_root!(sys_home)
     
     # pull
-    _pull_gitsh(;verb, force = false)
+    _pull_gitwr(;verb, force = false)
 
     # config
     if !_has_config()
-        _locked_sync_gitsh!(:CLIENT; verb) do
+        _locked_sync_gitwr!(:CLIENT; verb) do
             _save_config(_default_config())
         end
     end

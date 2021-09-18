@@ -1,6 +1,6 @@
-function _monkey_delete(repo_dir::String, frec::Float64; verb = true)
+function _monkey_delete(dir::String, frec::Float64; verb = true)
     frec < rand() || return
-    for (root, _, files) in walkdir(repo_dir)
+    for (root, _, files) in walkdir(dir)
         for file in files
             frec > rand() && continue
             rfile = joinpath(root, file)

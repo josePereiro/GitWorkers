@@ -12,7 +12,7 @@ function run_server(;
     
     # ---------------------------------------------------------------
     # SERVER GLOBALS
-    urldir = _gitsh_urldir()
+    urldir = _gitwr_urldir()
 
     # ---------------------------------------------------------------
     # sync loop
@@ -37,7 +37,7 @@ function run_server(;
                 # basi maintinance
 
                 # copy stage to urldir
-                stagedir = _gitsh_stagedir()
+                stagedir = _gitwr_stagedir()
                 for (_root, _, _files) in walkdir(stagedir)
                     for name in _files
                         stage_file = joinpath(_root, name)

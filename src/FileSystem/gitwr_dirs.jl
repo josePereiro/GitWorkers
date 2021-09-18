@@ -2,7 +2,7 @@
 dir_structure() = 
 """"
 sys_root
-    |------- gitsh_home (.gitsh)
+    |------- gitwr_home (.gitworker)
     |        |------- url_dir 1
     |        |        |------ .git
     |        |        |------ .local
@@ -15,62 +15,62 @@ sys_root
 """
 
 # ---------------------------------------------------------------
-_gitsh_rootdir(rootdir::String = _get_root()) = rootdir
+_gitwr_rootdir(rootdir::String = _get_root()) = rootdir
 
 # ---------------------------------------------------------------
-const _GITSH_HOMEDIR_NAME = ".gitsh"
+const _gitwr_HOMEDIR_NAME = ".gitworker"
 
-function _gitsh_homedir(rootdir::String = _gitsh_rootdir())
-    home = joinpath(rootdir, _GITSH_HOMEDIR_NAME)
+function _gitwr_homedir(rootdir::String = _gitwr_rootdir())
+    home = joinpath(rootdir, _gitwr_HOMEDIR_NAME)
     !isdir(home) && mkpath(home)
     return abspath(home)
 end
 
 # ---------------------------------------------------------------
-function _gitsh_urldir(homedir::String, url::String)
+function _gitwr_urldir(homedir::String, url::String)
     url = replace(url, r"[^a-zA-Z0-9-_\\.]"=> "_")
     urldir = joinpath(homedir, url)
     !isdir(urldir) && mkpath(urldir)
     return urldir
 end
 
-_gitsh_urldir() = _gitsh_urldir(_gitsh_homedir(), _get_url())
+_gitwr_urldir() = _gitwr_urldir(_gitwr_homedir(), _get_url())
 
 # ---------------------------------------------------------------
-const _GITSH_TEMPDIR_NAME = "$(_GITSH_HOMEDIR_NAME)_temp"
+const _gitwr_TEMPDIR_NAME = "$(_gitwr_HOMEDIR_NAME)_temp"
 
-function _gitsh_tempdir(urldir::String = _gitsh_urldir()) 
-    dir = joinpath(urldir, _GITSH_TEMPDIR_NAME)
+function _gitwr_tempdir(urldir::String = _gitwr_urldir()) 
+    dir = joinpath(urldir, _gitwr_TEMPDIR_NAME)
     !isdir(dir) && mkpath(dir)
     return dir
 end
 
-function _tempfile(urldir = _gitsh_urldir())
+function _tempfile(urldir = _gitwr_urldir())
     while true
-        file = joinpath(_gitsh_tempdir(urldir), _gen_id())
+        file = joinpath(_gitwr_tempdir(urldir), _gen_id())
         !isfile(file) && return file
     end
 end
 
-function _ls_gitsh_tempdir(urldir::String = _gitsh_urldir())
-    dir = _gitsh_tempdir(urldir)
+function _ls_gitwr_tempdir(urldir::String = _gitwr_urldir())
+    dir = _gitwr_tempdir(urldir)
     isdir(dir) ? readdir(dir) : String[]
 end
 
 # ---------------------------------------------------------------
-const _GITSH_LOCALDIR_NAME = "$(_GITSH_HOMEDIR_NAME)_local"
+const _gitwr_LOCALDIR_NAME = "$(_gitwr_HOMEDIR_NAME)_local"
 
-function _gitsh_localdir(urldir::String = _gitsh_urldir()) 
-    dir = joinpath(urldir, _GITSH_LOCALDIR_NAME)
+function _gitwr_localdir(urldir::String = _gitwr_urldir()) 
+    dir = joinpath(urldir, _gitwr_LOCALDIR_NAME)
     !isdir(dir) && mkpath(dir)
     return dir
 end
 
 # ---------------------------------------------------------------
-const _GITSH_STAGEDIR_NAME = "$(_GITSH_HOMEDIR_NAME)_stage"
+const _gitwr_STAGEDIR_NAME = "$(_gitwr_HOMEDIR_NAME)_stage"
 
-function _gitsh_stagedir(urldir::String = _gitsh_urldir()) 
-    dir = joinpath(urldir, _GITSH_STAGEDIR_NAME)
+function _gitwr_stagedir(urldir::String = _gitwr_urldir()) 
+    dir = joinpath(urldir, _gitwr_STAGEDIR_NAME)
     !isdir(dir) && mkpath(dir)
     return dir
 end

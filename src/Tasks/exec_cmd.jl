@@ -1,4 +1,4 @@
-_temp_script_file(cmdid) = joinpath(_gitsh_tempdir(), string(cmdid, ".script.jl"))
+_temp_script_file(cmdid) = joinpath(_gitwr_tempdir(), string(cmdid, ".script.jl"))
 
 function _exec_cmd(cmd_file; verb = false)
 
@@ -6,7 +6,7 @@ function _exec_cmd(cmd_file; verb = false)
     
     !isfile(cmd_file) && return
 
-    _locked_sync_gitsh!(cmdid; verb) do
+    _locked_sync_gitwr!(cmdid; verb) do
         # config
         wdir = _load_config!("wdir", homedir())
 
@@ -53,5 +53,5 @@ function _exec_cmd(cmd_file; verb = false)
         
         println("\n"^5)
     
-    end # _locked_sync_gitsh
+    end # _locked_sync_gitwr
 end

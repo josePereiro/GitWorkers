@@ -1,7 +1,7 @@
 ## ---------------------------------------------------------------
 function _try_sync(fun::Function; 
         msg = "Update at $(now())", 
-        repo_dir = _gitsh_urldir(),
+        repo_dir = _gitwr_urldir(),
         url = _get_url(),
         att = 5,
         startup = String[], # TODO: connect with config 
@@ -28,7 +28,7 @@ function _try_sync(fun::Function;
 		println("\n\n------------------------------")
 
         # down hard
-        @time _, out = Gitsh._run_bash([
+        @time _, out = _run_bash([
             # init
             startup;
 
@@ -63,7 +63,7 @@ function _try_sync(fun::Function;
         fun()
         
         # up
-        @time _, out = Gitsh._run_bash([ 
+        @time _, out = _run_bash([ 
             # init
             startup;
             # utils
@@ -85,55 +85,4 @@ function _try_sync(fun::Function;
         contains(out, fatal_token) && continue
     end 
     return false
-end
-
-## ---------------------------------------------------------------
-# TODO: connect with config
-function _pull_gitsh(; verb = false, force = true)
-
-    # gitsh
-    gitsh = _gitsh_urldir()
-    runargs = (;
-        buff_file = _tempfile(),
-        run_fun = _run,
-        ios = [strdout]
-    )
-    
-    # gitsh
-    url = _get_url()
-    gitsh = _gitsh_urldir(url)
-
-    _git = joinpath(gitsh, ".git")
-    if isdir(_git) 
-        _try() do
-            if force
-                pid, out = _run_bash([ git_startup;
-                    "git -C '$gitsh' fetch";
-                    "git -C '$gitsh' reset --hard FETCH_HEAD"
-                ]; runargs... )
-            else
-                pid, out = _run_bash([ git_startup;
-                    "git -C '$gitsh' pull";
-                    "git -C '$gitsh' reset --hard FETCH_HEAD"
-                ]; runargs... )
-            end
-        end 
-    else
-        _try() do
-            gitsh_cmd("clone", url, gitsh; gitsh, verb)
-        end
-    end
-end
-
-## ---------------------------------------------------------------
-# TODO: connect with config
-function _clone_gitsh(;verb = false)
-
-    # gitsh
-    url = _get_url()
-    gitsh = _gitsh_urldir(url)
-
-    _try() do
-        gitsh_cmd("clone", url, gitsh; gitsh, verb)
-    end
 end

@@ -4,7 +4,7 @@ using Dates
 let
     ## ------------------------------------------------------------------------
     depth = 5
-    nuked_dir = "/Users/Pereiro/.gitsh/nuked"
+    nuked_dir = "/Users/Pereiro/.gitworker/nuked"
     url = "https://github.com/josePereiro/GitshDevRepo"
 
     # git config receive.denyNonFastForwards false
