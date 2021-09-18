@@ -79,7 +79,7 @@ end
 
 # ---------------------------------------------------------------
 function _short_run(cmd; 
-        stdout_log::String = _gitwr_tempfile(), stderr_log::String = _gitwr_tempfile(),
+        stdout_log::String = tempname(), stderr_log::String = tempname(),
         stdout_tee_ios = [stdout], stderr_tee_ios = [stderr],
         append = false
     )
@@ -109,7 +109,7 @@ end
 
 # ---------------------------------------------------------------
 function _long_run(cmd; 
-        stderr_log = _gitwr_tempfile(), stdout_log = _gitwr_tempfile(), 
+        stderr_log = tempname(), stdout_log = tempname(), 
         stdout_tee_ios = [stdout], stderr_tee_ios = [stderr],  
         lk = ReentrantLock(), timeout = time() + 1e9,
         savetime = 60.0, # To wait for flushing
@@ -149,7 +149,7 @@ end
 function _run_bash(
         cmds::Vector{String};
         startup::Vector{String} = String[],
-        buff_file = _tempname(),
+        buff_file = tempname(),
         run_fun = _run,
         rm_buff = true,
         runkwargs...
@@ -160,10 +160,9 @@ function _run_bash(
 
     src = join(filter(!isempty, [
         startup; 
-        rm_buff ? "rm -f '$(buff_file)';" : ""; 
+        rm_buff ? """rm -f '$(buff_file)';""" : ""; 
         cmds
     ]), "\n")
-    # src = replace(src, "\"" => "\\\"")
 
     write(buff_file, src)
 

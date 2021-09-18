@@ -1,88 +1,114 @@
 ## ---------------------------------------------------------------
 function _try_sync(fun::Function; 
-        msg = "Update at $(now())", 
-        repo_dir = _gitwr_urldir(),
-        url = _get_url(),
+        msg = "Sync at $(now())", 
         att = 5,
         startup = String[], # TODO: connect with config 
         ios = [stdout], 
-        buff_file = _gitwr_tempfile(), 
-        force_clonning = false
+        force_clonning = false, 
+        pull = true, 
+        push = true
     )
-
-    # utils
+        
+    # from
+    url = _get_url()
+    urldir = _gitwr_urldir()
+    
+    # from
     success_token = _gen_id()
     fatal_token = _gen_id()
-    repo_dir = abspath(repo_dir)
-    repo_dir_git = joinpath(repo_dir, ".git")
-    force_clonning && rm(repo_dir_git; force = true, recursive = true)
-    recovery_dir = _gitwr_tempfile()
+    buff_file = _gitwr_tempfile()
+    urldir_git = _gitwr_urldir(".git")
+    force_clonning && rm(urldir_git; force = true, recursive = true)
+    recovery_dir = _gitwr_tempdir(_gen_id())
     recovery_git_dir = joinpath(recovery_dir, ".git")
     
-    _success_cmd_str = """_success () { echo "success token: $success_token"; rm -frd "$(recovery_dir)"; exit; }"""
-    _fatal_cmd_str = """_fatal () { echo "fatal token: $fatal_token"; rm -frd "$(recovery_dir)"; rm -frd "$(repo_dir_git)"; exit; }"""
-
-    for _ in 1:att
+    _success_cmd_str = """_success () { echo "success token: $(success_token)"; rm -frd "$(recovery_dir)"; exit; }"""
+    _fatal_cmd_str = """_fatal () { echo "fatal token: $(fatal_token)"; rm -frd "$(recovery_dir)"; rm -frd "$(urldir_git)"; exit; }"""
+    _check_root_str = join([
+        """_is_root () {""", 
+            """local reporoot="\$(git -C "$(urldir)" rev-parse --show-toplevel)" """, 
+            """if [ -d "\${reporoot}" ] && [ "\${reporoot}" != "$(urldir)" ]; then return 1; fi""",
+            """return 0""",
+        """}""", 
+    ], "\n")
+    
+    out = ""
+    # for _ in 1:att
+    for _ in 1:2
 
         # TEST
 		println("\n\n------------------------------")
 
         # down hard
-        @time _, out = _run_bash([
-            # init
-            startup;
+        if pull || force_clonning
+            _, out = _run_bash([
+                # init
+                startup;
 
-            # utils
-            _fatal_cmd_str;
-            _success_cmd_str;
+                # utils
+                _fatal_cmd_str;
+                _success_cmd_str;
+                _check_root_str;
 
-            # go to root
-            """mkdir -p "$(repo_dir)" || _fatal """;
-            """cd "$(repo_dir)" || _fatal """;
-            
-            # clonning if necesary
-            """echo""";
-            """echo checking repo integrity""";
-            """[ -d .git ] || mkdir -p  "$(recovery_dir)" || _fatal """;
-            """[ -d .git ] || git clone --depth=1 "$(url)" "$(recovery_dir)" || _fatal """;
-            """[ -d .git ] || mv -f "$(recovery_git_dir)" "$(repo_dir)" || _fatal """;
-            """rm -frd "$(recovery_dir)" """;
+                # go to root
+                """mkdir -p "$(urldir)" || _fatal """;
+                """cd "$(urldir)" || _fatal """;
+                
+                # pull or clonne if necesary
+                """if [ -d .git ]; then""";
+                    """echo""";
+                    """echo pulling hard""";
+                    """_is_root || _fatal """;
+                    """git -C "$(urldir)" fetch || _fatal """;
+                    """git -C "$(urldir)" reset --hard FETCH_HEAD || _fatal """;
+                """else""";
+                    """echo""";
+                    """echo checking repo integrity""";
+                    """[ -d .git ] || mkdir -p  "$(recovery_dir)" || _fatal """;
+                    """[ -d .git ] || git -C "$(urldir)" clone --depth=1 "$(url)" "$(recovery_dir)" || _fatal """;
+                    """[ -d .git ] || mv -f "$(recovery_git_dir)" "$(urldir)" || _fatal """;
+                """fi""";
+                """rm -frd "$(recovery_dir)" """;
 
-            # pull hard
-            """echo""";
-            """echo pulling hard""";
-            """git fetch || _fatal """;
-            """git reset --hard FETCH_HEAD || _fatal """;
-
-            # success
-            """_success"""
-        ]; run_fun = _run, ios, buff_file)
-        contains(out, fatal_token) && continue
+                # success
+                """_success"""
+            ]; run_fun = _run, ios, buff_file)
+            contains(out, fatal_token) && continue
+        end
 
         # custom function
         fun()
         
         # up
-        @time _, out = _run_bash([ 
-            # init
-            startup;
-            # utils
-            _fatal_cmd_str;
-            _success_cmd_str;
+        if push
+            _, out = _run_bash([ 
 
-            # add commit push
-            """echo""";
-            """echo soft pushing""";
-            """cd "$repo_dir" || _fatal """;
-            """git add -A || _fatal """;
-            """git diff-index --quiet HEAD && _success """;
-            """git commit -am "$msg" || _fatal """;
-            """git push || _fatal """;
-            """_success"""
-        ]; run_fun = _run, ios, buff_file)
+                # init
+                startup;
 
-        contains(out, success_token) && return true
-        contains(out, fatal_token) && continue
+                # utils
+                _fatal_cmd_str;
+                _success_cmd_str;
+                _check_root_str;
+
+                # go to root
+                """mkdir -p "$(urldir)" || _fatal """;
+                """cd "$(urldir)" || _fatal """;
+
+                # add commit push
+                """echo""";
+                """echo soft pushing""";
+                """_is_root || _fatal """;
+                """git -C "$(urldir)" add -A || _fatal """;
+                """git -C "$(urldir)" diff-index --quiet HEAD && _success """;
+                """git -C "$(urldir)" commit -am "$msg" || _fatal """;
+                """git -C "$(urldir)" push || _fatal """;
+                """_success"""
+            ]; run_fun = _run, ios, buff_file)
+
+            contains(out, success_token) && return true
+            contains(out, fatal_token) && continue
+        end
     end 
     return false
 end

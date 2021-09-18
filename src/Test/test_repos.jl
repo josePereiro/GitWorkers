@@ -16,12 +16,11 @@ function _create_test_repos(testdir)
 
     # setup gitwr
     url = string("file://", upstream_home)
-    verb = true
     @info("setting up client")
-    setup_gitworker(;url, sys_home = client_home, verb)
+    setup_gitworker(;url, sys_home = client_home)
     println("\n")
     @info("setting up server")
-    setup_gitworker(;url, sys_home = server_home, verb)
+    setup_gitworker(;url, sys_home = server_home)
     println("\n")
 
     return url, client_home, server_home
