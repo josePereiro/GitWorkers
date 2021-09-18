@@ -1,4 +1,0 @@
-LOGS_FOLDER_NAME = "logs"
-STDOUT_LOG_FILE_SUFFIX = ".stdout.txt"
-STDERR_LOG_FILE_SUFFIX = ".stderr.txt"
-LOG_FIlES_MODE = "w"

@@ -1,6 +1,0 @@
-include("find.jl")
-include("tasktree.jl")
-include("name.jl")
-include("repotask.jl")
-include("copytask.jl")
-include("summary.jl")

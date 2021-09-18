@@ -1,36 +1,43 @@
 module GitWorkers
 
-# import TOML
-import Dates: now
-import JSON
+    # TODO: make a tem folder system .gitignored
+    
+    using FilesTreeTools
+    import LibGit2
+    using Dates
+    using Serialization
+    import TOML
 
-# Globals
-include("Globals/Globals.jl")
+    # export @gitsh, setup_gitsh, run_server
 
-# Utils
-include("Utils/Utils.jl")
+    # include("ExternalCmds/run_cmd.jl")
+    # include("ExternalCmds/force_kill.jl")
+    # include("ExternalCmds/julia.jl")
 
-# ControlFiles
-include("ControlFiles/ControlFiles.jl")
+    # include("Core/config.jl")
+    # include("Core/sys_globals.jl")
+    # include("Core/sync_gitsh.jl")
+    # include("Core/lock_gitsh.jl")
+    # include("Core/filter_gitsh.jl")
+    # include("Core/gen_id.jl")
 
-#Git
-include("Git/Git.jl")
-
-# Workers
-include("Workers/Workers.jl")
-
-# Tasks
-include("Tasks/Task.jl")
-
-#TaskManager
-include("TaskManager/TaskManager.jl")
-
-# Master
-include("Master/Master.jl")
-
-
-# Log
-include("LogFiles/LogFiles.jl")
-
-
-end # module
+    # include("GitshTree/gitsh_dirs.jl")
+    
+    # include("Client/setup_gitsh.jl")
+    # include("Client/gitsh.jl")
+    
+    # include("Server/run_server.jl")
+    # include("Maintenance/gitignore.jl")
+    
+    # include("GitshCmd/curr_cmd.jl")
+    # include("GitshCmd/exec_cmd.jl")
+    # include("GitshCmd/gitsh_cmd.jl")
+    
+    # include("Events/FileTracker.jl")
+    
+    # include("Test/test_repos.jl")
+    # include("Test/monkey_delete.jl")
+    # include("Test/create_test_engine.jl")
+    
+    
+end

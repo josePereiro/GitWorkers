@@ -1,1 +1,0 @@
-pretty_print(dict::Dict; indent = 4) = JSON.print(dict, indent)

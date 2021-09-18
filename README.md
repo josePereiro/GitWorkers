@@ -1,4 +1,3 @@
-# GitWorkers
+# Gitsh
 
-[![Build Status](https://travis-ci.com/josePereiro/GitWorkers.jl.svg?branch=master)](https://travis-ci.com/josePereiro/GitWorkers.jl)
-[![Codecov](https://codecov.io/gh/josePereiro/GitWorkers.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/josePereiro/GitWorkers.jl)
+[![Build Status](https://github.com/josePereiro/GitWorkers.jl/workflows/CI/badge.svg)](https://github.com/josePereiro/GitWorkers.jl/actions)

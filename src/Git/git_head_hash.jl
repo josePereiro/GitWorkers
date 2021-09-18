@@ -1,1 +1,0 @@
-git_head_hash() = run(`git rev-parse --verify HEAD`)
