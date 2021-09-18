@@ -5,9 +5,9 @@ function _force_gitignore()
             """
             # This file is machine generated.
             # Any change will be overwritten
-            /$(_gitwr_TEMPDIR_NAME)
-            /$(_gitwr_LOCALDIR_NAME)
-            /$(_gitwr_STAGEDIR_NAME)
+            /$(_GITWR_TEMPDIR_NAME)
+            /$(_GITWR_LOCALDIR_NAME)
+            /$(_GITWR_STAGEDIR_NAME)
             """
         )
     end

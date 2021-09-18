@@ -79,7 +79,7 @@ end
 
 # ---------------------------------------------------------------
 function _short_run(cmd; 
-        stdout_log::String = _tempfile(), stderr_log::String = _tempfile(),
+        stdout_log::String = _gitwr_tempfile(), stderr_log::String = _gitwr_tempfile(),
         stdout_tee_ios = [stdout], stderr_tee_ios = [stderr],
         append = false
     )
@@ -109,7 +109,7 @@ end
 
 # ---------------------------------------------------------------
 function _long_run(cmd; 
-        stderr_log = _tempfile(), stdout_log = _tempfile(), 
+        stderr_log = _gitwr_tempfile(), stdout_log = _gitwr_tempfile(), 
         stdout_tee_ios = [stdout], stderr_tee_ios = [stderr],  
         lk = ReentrantLock(), timeout = time() + 1e9,
         savetime = 60.0, # To wait for flushing

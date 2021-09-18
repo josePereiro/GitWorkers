@@ -6,7 +6,7 @@ function _try_sync(fun::Function;
         att = 5,
         startup = String[], # TODO: connect with config 
         ios = [stdout], 
-        buff_file = _tempfile(repo_dir), 
+        buff_file = _gitwr_tempfile(), 
         force_clonning = false
     )
 
@@ -16,7 +16,7 @@ function _try_sync(fun::Function;
     repo_dir = abspath(repo_dir)
     repo_dir_git = joinpath(repo_dir, ".git")
     force_clonning && rm(repo_dir_git; force = true, recursive = true)
-    recovery_dir = _tempfile(repo_dir)
+    recovery_dir = _gitwr_tempfile()
     recovery_git_dir = joinpath(recovery_dir, ".git")
     
     _success_cmd_str = """_success () { echo "success token: $success_token"; rm -frd "$(recovery_dir)"; exit; }"""
