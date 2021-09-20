@@ -3,7 +3,7 @@
 # init setup
 function setup_gitworker(;
         url::AbstractString,
-        sys_home::AbstractString = homedir()
+        sys_home::AbstractString
     )
 
     # global

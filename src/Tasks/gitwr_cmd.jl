@@ -1,8 +1,4 @@
 _gitwr_CMD_EXT = ".gitworker.cmd"
-const _ID_ALPHABET_ = join(['a':'z'; 'A':'Z'; '0':'9'])
-const _ID_LENGTH_ = 8
-
-_rand_cmd_id() = join(rand(_ID_ALPHABET_, _ID_LENGTH_))
 
 _gitwr_cmd_file(cmdid) = joinpath(_gitwr_urldir(), string(cmdid, _gitwr_CMD_EXT))
 

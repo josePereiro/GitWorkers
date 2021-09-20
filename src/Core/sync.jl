@@ -1,22 +1,28 @@
 ## ---------------------------------------------------------------
 function _try_sync(fun::Function; 
         msg = "Sync at $(now())", 
-        att = 5,
         startup = String[], # TODO: connect with config 
         ios = [stdout], 
         force_clonning = false, 
         pull = true, 
-        push = true
+        push = true,
+
+        success_token = _gen_id(),
+        fatal_token = _gen_id(),
+        buff_file = _gitwr_tempfile(),
+
+        
+        att = 5,
     )
+
+    # TODO: connect this with locals for remembering scripts (buffers)
+    # use file tracker
         
     # from
     url = _get_url()
     urldir = _gitwr_urldir()
     
     # from
-    success_token = _gen_id()
-    fatal_token = _gen_id()
-    buff_file = _gitwr_tempfile()
     urldir_git = _gitwr_urldir(".git")
     force_clonning && rm(urldir_git; force = true, recursive = true)
     recovery_dir = _gitwr_tempdir(_gen_id())
@@ -33,8 +39,7 @@ function _try_sync(fun::Function;
     ], "\n")
     
     out = ""
-    # for _ in 1:att
-    for _ in 1:2
+    for _ in 1:att
 
         # TEST
 		println("\n\n------------------------------")
@@ -111,4 +116,44 @@ function _try_sync(fun::Function;
         end
     end 
     return false
+end
+
+## ---------------------------------------------------------------
+# core sync rutine
+function _gwsync(;
+        msg = "Client push",
+        startup = String[], 
+        ios = [stdout], 
+        force_clonning = false,
+        buff_file = _gitwr_tempfile()
+    )
+
+    urldir = _gitwr_urldir()
+
+    # SYNCHRONIZATION FUN
+    function _on_sync()
+                
+        # basi maintinance
+        _force_gitignore()
+        _delall()
+
+        # copy stage to urldir
+        stagedir = _gitwr_stagedir()
+        for (_root, _, _files) in walkdir(stagedir)
+            for name in _files
+                stagefile = joinpath(_root, name)
+                _on_mtime_event(stagefile; dofirst = true) do
+                    wdirfile = replace(stagefile, stagedir => urldir)
+                    _cp(stagefile, wdirfile)
+                end
+            end
+        end
+
+    end
+
+    _try_sync(_on_sync; 
+        buff_file,
+        msg, startup, ios, 
+        force_clonning
+    )
 end

@@ -15,26 +15,27 @@ module GitWorkers
     include("Core/sync.jl")
     include("Core/locks.jl")
     include("Core/gen_id.jl")
-
+    include("Core/utils.jl")
+    
     include("FileSystem/gitwr_dirs.jl")
     include("FileSystem/filter_gitwr.jl")
     
     include("Client/setup_gitworker.jl")
     include("Client/gitworker.jl")
+    include("Client/gwpush.jl")
     
     include("Server/run_server.jl")
     
     include("Maintenance/gitignore.jl")
+    include("Maintenance/todel.jl")
     
-    # include("Tasks/curr_cmd.jl")
-    # include("Tasks/exec_cmd.jl")
-    # include("Tasks/gitwr_cmd.jl")
+    include("Tasks/exec_cmd.jl")
+    include("Tasks/gitwr_cmd.jl")
     
     include("Events/FileTracker.jl")
     
     include("Test/test_repos.jl")
     include("Test/monkey_delete.jl")
     include("Test/create_test_engine.jl")
-    
     
 end

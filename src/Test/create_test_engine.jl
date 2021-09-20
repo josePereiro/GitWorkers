@@ -1,7 +1,7 @@
 ## ---------------------------------------------------------------
-function _create_test_engine(testdir)
+function _create_test_engine(testdir; clear = true)
     repodir = joinpath(testdir, "repos")
-    rm(repodir; force = true, recursive = true)
+    clear && rm(repodir; force = true, recursive = true)
     mkpath(repodir)
     url, client_home, server_home = _create_test_repos(repodir)
 
@@ -13,13 +13,12 @@ function _create_test_engine(testdir)
             "",
             "## ---------------------------------------------------------------",
             "# run to reset all",
-            "GitWorkers._create_test_engine(@__DIR__)",
+            "# GitWorkers._create_test_engine(@__DIR__)",
             "",
             "## ---------------------------------------------------------------",
-            "GitWorkers.setup_client(;",
+            "GitWorkers.setup_gitworker(;",
                 """\tsys_home = "$(client_home)",""",
-                """\turl = "$(url)",""", 
-                "\tverb = true",
+                """\turl = "$(url)",""",
             ")"
         ], "\n")
     )
@@ -33,8 +32,7 @@ function _create_test_engine(testdir)
             "## ---------------------------------------------------------------",
             "GitWorkers.run_server(;",
                 """\tsys_home = "$(server_home)",""",
-                """\turl = "$(url)",""", 
-                "\tverb = true",
+                """\turl = "$(url)",""",
             ")"
         ], "\n")
     )

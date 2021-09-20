@@ -1,6 +1,7 @@
 function _force_gitignore()
-    gitignore = joinpath(_gitwr_urldir(), ".gitignore")
-    return _on_content_event(gitignore) do
+    gitignore = _gitwr_urldir(".gitignore")
+    !isfile(gitignore) && touch(gitignore)
+    _on_content_event(gitignore; dofirst = true) do
         write(gitignore, 
             """
             # This file is machine generated.
