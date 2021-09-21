@@ -3,6 +3,12 @@
 [[Base64]]
 uuid = "2a0f44e3-6c83-55bd-87e4-b1978d98bd5f"
 
+[[DataFileNames]]
+deps = ["Printf", "RegexTools"]
+git-tree-sha1 = "975a91a67c6c1fb27eecc9b1a16343c4127d3e82"
+uuid = "82dba31a-8ab6-430f-a22d-9cbb81344561"
+version = "0.3.7"
+
 [[Dates]]
 deps = ["Printf"]
 uuid = "ade2ca70-3891-5945-98fb-dc099432e06a"
@@ -22,6 +28,11 @@ uuid = "ca575930-c2e3-43a9-ace4-1e988b2c1908"
 [[Printf]]
 deps = ["Unicode"]
 uuid = "de0858da-6303-5e67-8744-51eddeeeb8d7"
+
+[[RegexTools]]
+git-tree-sha1 = "3dc00229a24f2cef9dcd9ec3d09151a0d464c365"
+uuid = "3cb95532-3c78-4535-bbc5-067405b402f6"
+version = "0.2.0"
 
 [[SHA]]
 uuid = "ea8e919c-243c-51af-8825-aaa63cd721ce"

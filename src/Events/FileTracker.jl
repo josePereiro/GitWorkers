@@ -10,6 +10,13 @@ function _reset_file_trakers!()
     empty!(_FILE_TRACKER_CONTENT_HASH_DB)
 end
 
+function _reset_file_trakers!(file::String)
+    delete!(_FILE_TRACKER_MTIME_UTILITY_DB_, file)
+    delete!(_FILE_TRACKER_MTIME_DB, file)
+    delete!(_FILE_TRACKER_SIZE_DB, file)
+    delete!(_FILE_TRACKER_CONTENT_HASH_DB, file)
+end
+
 function _event_handler!(userfun::Function, file::String, event::Function, new_datfun::Function, DB, dbdef, dofirst)
     
     file = abspath(file)

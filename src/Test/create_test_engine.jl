@@ -17,7 +17,7 @@ function _create_test_engine(testdir; clear = true)
             "",
             "## ---------------------------------------------------------------",
             "GitWorkers.setup_gitworker(;",
-                """\tsys_home = "$(client_home)",""",
+                """\tsys_root = "$(client_home)",""",
                 """\turl = "$(url)",""",
             ")"
         ], "\n")
@@ -31,7 +31,7 @@ function _create_test_engine(testdir; clear = true)
             "",
             "## ---------------------------------------------------------------",
             "GitWorkers.run_server(;",
-                """\tsys_home = "$(server_home)",""",
+                """\tsys_root = "$(server_home)",""",
                 """\turl = "$(url)",""",
             ")"
         ], "\n")

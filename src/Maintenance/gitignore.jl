@@ -1,3 +1,5 @@
+# git ls-files
+
 function _force_gitignore()
     gitignore = _gitwr_urldir(".gitignore")
     !isfile(gitignore) && touch(gitignore)
@@ -6,9 +8,12 @@ function _force_gitignore()
             """
             # This file is machine generated.
             # Any change will be overwritten
-            /$(_GITWR_TEMPDIR_NAME)
-            /$(_GITWR_LOCALDIR_NAME)
-            /$(_GITWR_STAGEDIR_NAME)
+            # Ignore all
+            *
+            */*
+            !/$(_GITWR_GLOBALDIR_NAME)
+            !/$(_GITWR_GLOBALDIR_NAME)/*
+            !.gitignore
             """
         )
     end

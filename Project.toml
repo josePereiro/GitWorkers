@@ -4,6 +4,7 @@ authors = ["josePereiro"]
 version = "0.4.0"
 
 [deps]
+DataFileNames = "82dba31a-8ab6-430f-a22d-9cbb81344561"
 Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
 FilesTreeTools = "638332cd-b357-4bf5-bfa2-3531168477f5"
 LibGit2 = "76f85450-5226-5b5a-8eaa-529ad045b433"

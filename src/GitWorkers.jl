@@ -1,10 +1,12 @@
 module GitWorkers
     
-    using FilesTreeTools
     import LibGit2
+    import TOML
+
+    using DataFileNames
+    using FilesTreeTools
     using Dates
     using Serialization
-    import TOML
 
     include("ExternalCmds/run_cmd.jl")
     include("ExternalCmds/force_kill.jl")
@@ -29,8 +31,8 @@ module GitWorkers
     include("Maintenance/gitignore.jl")
     include("Maintenance/todel.jl")
     
-    include("Tasks/exec_cmd.jl")
-    include("Tasks/gitwr_cmd.jl")
+    include("Tasks/spawn_task.jl")
+    include("Tasks/tasks.jl")
     
     include("Events/FileTracker.jl")
     

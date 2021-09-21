@@ -8,30 +8,35 @@ function _try_sync(fun::Function;
         push = true,
 
         success_token = _gen_id(),
-        fatal_token = _gen_id(),
+        error_token = _gen_id(),
         buff_file = _gitwr_tempfile(),
 
         
         att = 5,
     )
-
-    # TODO: connect this with locals for remembering scripts (buffers)
-    # use file tracker
         
-    # from
     url = _get_url()
     urldir = _gitwr_urldir()
+    globaldir = _gitwr_globaldir()
     
-    # from
     urldir_git = _gitwr_urldir(".git")
+    urldir_gitignore = _gitwr_urldir(".gitignore")
     force_clonning && rm(urldir_git; force = true, recursive = true)
     recovery_dir = _gitwr_tempdir(_gen_id())
     recovery_git_dir = joinpath(recovery_dir, ".git")
     
     _success_cmd_str = """_success () { echo "success token: $(success_token)"; rm -frd "$(recovery_dir)"; exit; }"""
-    _fatal_cmd_str = """_fatal () { echo "fatal token: $(fatal_token)"; rm -frd "$(recovery_dir)"; rm -frd "$(urldir_git)"; exit; }"""
-    _check_root_str = join([
-        """_is_root () {""", 
+    _error_cmd_str = join([
+        """_error () { """,
+            """echo "error token: $(error_token)" """,
+            """echo "error: \$1" """,
+            """rm -frd "$(urldir_git)" """,
+            """rm -frd "$(recovery_dir)" """,
+            """exit """,
+        """}"""
+    ], "\n")
+    _is_root_cmd_str = join([
+        """_is_root () { """, 
             """local reporoot="\$(git -C "$(urldir)" rev-parse --show-toplevel)" """, 
             """if [ -d "\${reporoot}" ] && [ "\${reporoot}" != "$(urldir)" ]; then return 1; fi""",
             """return 0""",
@@ -51,34 +56,34 @@ function _try_sync(fun::Function;
                 startup;
 
                 # utils
-                _fatal_cmd_str;
+                _error_cmd_str;
                 _success_cmd_str;
-                _check_root_str;
+                _is_root_cmd_str;
 
                 # go to root
-                """mkdir -p "$(urldir)" || _fatal """;
-                """cd "$(urldir)" || _fatal """;
+                """mkdir -p "$(urldir)" || _error "unable to create repo dir" """;
+                """cd "$(urldir)" || _error "unable to cd repo dir" """;
                 
                 # pull or clonne if necesary
                 """if [ -d .git ]; then""";
                     """echo""";
                     """echo pulling hard""";
-                    """_is_root || _fatal """;
-                    """git -C "$(urldir)" fetch || _fatal """;
-                    """git -C "$(urldir)" reset --hard FETCH_HEAD || _fatal """;
+                    """_is_root || _error "unexpected repo root" """;
+                    """git -C "$(urldir)" fetch || _error "git fetch failed" """;
+                    """git -C "$(urldir)" reset --hard FETCH_HEAD || _error "git reset --hard FETCH_HEAD failed" """;
                 """else""";
                     """echo""";
                     """echo checking repo integrity""";
-                    """[ -d .git ] || mkdir -p  "$(recovery_dir)" || _fatal """;
-                    """[ -d .git ] || git -C "$(urldir)" clone --depth=1 "$(url)" "$(recovery_dir)" || _fatal """;
-                    """[ -d .git ] || mv -f "$(recovery_git_dir)" "$(urldir)" || _fatal """;
+                    """mkdir -p  "$(recovery_dir)" || _error "unable to create recovery dir" """;
+                    """git -C "$(urldir)" clone --depth=1 "$(url)" "$(recovery_dir)" || _error "git clone failed" """;
+                    """mv -f "$(recovery_git_dir)" "$(urldir)" || _error "recovery copy failed" """;
                 """fi""";
                 """rm -frd "$(recovery_dir)" """;
 
                 # success
                 """_success"""
             ]; run_fun = _run, ios, buff_file)
-            contains(out, fatal_token) && continue
+            contains(out, error_token) && continue
         end
 
         # custom function
@@ -92,27 +97,29 @@ function _try_sync(fun::Function;
                 startup;
 
                 # utils
-                _fatal_cmd_str;
+                _error_cmd_str;
                 _success_cmd_str;
-                _check_root_str;
+                _is_root_cmd_str;
 
                 # go to root
-                """mkdir -p "$(urldir)" || _fatal """;
-                """cd "$(urldir)" || _fatal """;
+                """mkdir -p "$(urldir)" || _error """;
+                """cd "$(urldir)" || _error """;
 
                 # add commit push
                 """echo""";
                 """echo soft pushing""";
-                """_is_root || _fatal """;
-                """git -C "$(urldir)" add -A || _fatal """;
+                """_is_root || _error "unexpected repo root" """;
+                """[ -f "$(urldir_gitignore)" ] || _error ".gitignore missing" """;
+                """git -C "$(urldir)" add "$(globaldir)" "$(urldir_gitignore)" || _error "adding global failed" """;
+                """git -C "$(urldir)" status || _error """;
                 """git -C "$(urldir)" diff-index --quiet HEAD && _success """;
-                """git -C "$(urldir)" commit -am "$msg" || _fatal """;
-                """git -C "$(urldir)" push || _fatal """;
+                """git -C "$(urldir)" commit -am "$msg" || _error "commit -am 'msg' failed" """;
+                """git -C "$(urldir)" push || _error "git push failed" """;
                 """_success"""
             ]; run_fun = _run, ios, buff_file)
 
             contains(out, success_token) && return true
-            contains(out, fatal_token) && continue
+            contains(out, error_token) && continue
         end
     end 
     return false
@@ -125,10 +132,11 @@ function _gwsync(;
         startup = String[], 
         ios = [stdout], 
         force_clonning = false,
-        buff_file = _gitwr_tempfile()
+        buff_file = _gitwr_tempfile(), 
+        att = 5
     )
 
-    urldir = _gitwr_urldir()
+    globaldir = _gitwr_globaldir()
 
     # SYNCHRONIZATION FUN
     function _on_sync()
@@ -137,14 +145,14 @@ function _gwsync(;
         _force_gitignore()
         _delall()
 
-        # copy stage to urldir
+        # copy stage to globaldir
         stagedir = _gitwr_stagedir()
         for (_root, _, _files) in walkdir(stagedir)
             for name in _files
                 stagefile = joinpath(_root, name)
                 _on_mtime_event(stagefile; dofirst = true) do
-                    wdirfile = replace(stagefile, stagedir => urldir)
-                    _cp(stagefile, wdirfile)
+                    globalfile = replace(stagefile, stagedir => globaldir)
+                    _cp(stagefile, globalfile)
                 end
             end
         end
@@ -154,6 +162,6 @@ function _gwsync(;
     _try_sync(_on_sync; 
         buff_file,
         msg, startup, ios, 
-        force_clonning
+        force_clonning, att
     )
 end

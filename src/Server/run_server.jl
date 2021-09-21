@@ -5,9 +5,8 @@ function run_server(;
     )
 
     # ---------------------------------------------------------------
-    # SYS GLOBALS
-    _set_url!(url)
-    _set_root!(sys_home)
+    # SETUP
+    setup_gitworker(;url, sys_home)
     
     # ---------------------------------------------------------------
     # SERVER GLOBALS
@@ -27,7 +26,7 @@ function run_server(;
     # Jobs
     # exec cmd
     function _exec_cmds()
-        for cmdfile in _find_cmds()
+        for cmdfile in _find_tasks()
             _exec_cmd(cmdfile; verb = false)
         end
     end
@@ -49,7 +48,7 @@ function run_server(;
             )
 
             # exec cmd
-            for cmdfile in _find_cmds()
+            for cmdfile in _find_tasks()
                 _exec_cmd(cmdfile; verb = false)
             end
 

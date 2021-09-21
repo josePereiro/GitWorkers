@@ -3,9 +3,8 @@ macro gitworker(ex)
     
     cmdid = _gen_id()
     cmdfile = _gitwr_cmd_file(cmdid)
-    _try_sync(;force_clonning = false) do
-        serialize(cmdfile, ex)
-    end
+    serialize(cmdfile, ex)
+    _gwsync(;force_clonning = false)
 
     return :(nothing)
 end
