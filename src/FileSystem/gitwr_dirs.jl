@@ -1,14 +1,35 @@
 # ---------------------------------------------------------------
-dir_structure() = 
+gitworkers_structure() = 
 """"
-sys_root
-    |------- gitwr_home (.gitworker)
-    |        |------- url_dir 1
-    |        |        |------ .git
-    |        |        |------ .local
-    |        |        |------ .stage
+sys_root                                                        
+    |------- .gitworkers                                        
+    |        |------- urldir 1                                  
+    |        |        |------ .local                            
+    |        |        |         |------ local.config
+    |        |        |         |------ .tasks                  
+    |        |        |         |           |------ .exprs      
+    |        |        |         |           |------ .logs       
+    |        |        |         |           |                   
+    |        |        |         |
+    |        |        |         |
+    |        |        |         |------ .sys                  
+    |        |        |         |
+    |        |        |         |
+    |        |        |         .
+    |        |        |         .
+    |        |        |         .
     |        |        |
-    |        |        |
+    |        |        |------ .global
+    |        |        |         |------ .git
+    |        |        |         |------ local.config
+    |        |        |         |------ .tasks                  
+    |        |        |         |           |                   
+    |        |        |         |           |                   
+    |        |        |         |           .
+    |        |        |         |           .
+    |        |        |         .
+    |        |        |         .
+    |        |        |         .
     .        .        .
     .        .        .
     .        .        .
@@ -20,22 +41,22 @@ _gitwr_rootdir() = abspath(_get_root())
 
 # ---------------------------------------------------------------
 # the home of GitWorkers
-const _GITWR_HOMEDIR_NAME = ".gitworker"
+const _GITWR_HOMEDIR_NAME = ".gitworkers"
 
-function _gitwr_homedir()
+function _gitworkers_homedir()
     homedir = joinpath(_gitwr_rootdir(), _GITWR_HOMEDIR_NAME)
     !isdir(homedir) && mkpath(homedir)
     return homedir
 end
 
-_gitwr_homedir(n, ns...) = joinpath(_gitwr_homedir(), string(n), string.(ns)...)
+_gitworkers_homedir(n, ns...) = joinpath(_gitworkers_homedir(), string(n), string.(ns)...)
 
 # ---------------------------------------------------------------
 # the root of the repo
 _format_url(url) = replace(url, r"[^a-zA-Z0-9-_]"=> "_")
 
 function _gitwr_urldir()
-    urldir = _gitwr_homedir(_format_url(_get_url()))
+    urldir = _gitworkers_homedir(_format_url(_get_url()))
     !isdir(urldir) && mkpath(urldir)
     return urldir
 end
@@ -78,6 +99,18 @@ function _gitwr_localdir()
     return dir
 end
 _gitwr_localdir(n, ns...) = joinpath(_gitwr_localdir(), string(n), string.(ns)...)
+
+# ---------------------------------------------------------------
+# transient data that will be pushed in the next round
+const _GITWR_LOGSDIR_NAME = ".logs"
+const _GITWR_LOGSDIR_GC_TIMETH =  10 * 24 * 60 * 60 # time in seconds
+
+function _gitwr_logsdir() 
+    dir = _gitwr_localdir(_GITWR_STAGEDIR_NAME)
+    !isdir(dir) && mkpath(dir)
+    return dir
+end
+_gitwr_logsdir(n, ns...) = joinpath(_gitwr_logsdir(), string(n), string.(ns)...)
 
 # ---------------------------------------------------------------
 # data synchronized with upstream

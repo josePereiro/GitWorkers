@@ -2,6 +2,6 @@ using GitWorkers
 using Test
 
 @testset "GitWorkers.jl" begin
-    # Testing action
-    @test true
+    
+    include(tasks_tests.jl)
 end

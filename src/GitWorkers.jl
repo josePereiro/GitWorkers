@@ -15,9 +15,9 @@ module GitWorkers
     include("Core/config.jl")
     include("Core/sys_globals.jl")
     include("Core/sync.jl")
-    include("Core/locks.jl")
     include("Core/gen_id.jl")
     include("Core/utils.jl")
+    include("Core/routines.jl")
     
     include("FileSystem/gitwr_dirs.jl")
     include("FileSystem/filter_gitwr.jl")
@@ -30,6 +30,7 @@ module GitWorkers
     
     include("Maintenance/gitignore.jl")
     include("Maintenance/todel.jl")
+    include("Maintenance/gc_old_files.jl")
     
     include("Tasks/spawn_task.jl")
     include("Tasks/tasks.jl")

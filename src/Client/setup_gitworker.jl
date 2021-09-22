@@ -9,8 +9,9 @@ function setup_gitworker(;
     # globals
     _set_url!(url)
     _set_root!(sys_root)
+    _set_wutime!()
 
-    # setup
+    # initial setup
     _reset_file_trakers!()
     _del_gitwr_tempfiles()
     _del_gitwr_stagedir()

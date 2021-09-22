@@ -1,5 +1,16 @@
 const _TODEL = String[]
+const _TODEL_LK = ReentrantLock()
 
-_reg_todel(fn, fns...) = push!(_TODEL, fn, fns...)
+function _reg_todel(fn, fns...) 
+    lock(_TODEL_LK) do
+        push!(_TODEL, fn, fns...)
+    end
+end
 
-_delall() = foreach((fn) -> rm(fn; recursive = true, force = true), _TODEL)
+function _delall()
+    lock(_TODEL_LK) do
+        for _ in eachindex(_TODEL)
+            rm(pop!(_TODEL); recursive = true, force = true)
+        end
+    end
+end

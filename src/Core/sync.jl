@@ -3,7 +3,7 @@ function _try_sync(fun::Function;
         msg = "Sync at $(now())", 
         startup = String[], # TODO: connect with config 
         ios = [stdout], 
-        force_clonning = false, 
+        force_clonning = false,
         pull = true, 
         push = true,
 
@@ -11,7 +11,6 @@ function _try_sync(fun::Function;
         error_token = _gen_id(),
         buff_file = _gitwr_tempfile(),
 
-        
         att = 5,
     )
         
@@ -25,23 +24,7 @@ function _try_sync(fun::Function;
     recovery_dir = _gitwr_tempdir(_gen_id())
     recovery_git_dir = joinpath(recovery_dir, ".git")
     
-    _success_cmd_str = """_success () { echo "success token: $(success_token)"; rm -frd "$(recovery_dir)"; exit; }"""
-    _error_cmd_str = join([
-        """_error () { """,
-            """echo "error token: $(error_token)" """,
-            """echo "error: \$1" """,
-            """rm -frd "$(urldir_git)" """,
-            """rm -frd "$(recovery_dir)" """,
-            """exit """,
-        """}"""
-    ], "\n")
-    _is_root_cmd_str = join([
-        """_is_root () { """, 
-            """local reporoot="\$(git -C "$(urldir)" rev-parse --show-toplevel)" """, 
-            """if [ -d "\${reporoot}" ] && [ "\${reporoot}" != "$(urldir)" ]; then return 1; fi""",
-            """return 0""",
-        """}""", 
-    ], "\n")
+    
     
     out = ""
     for _ in 1:att
@@ -51,39 +34,10 @@ function _try_sync(fun::Function;
 
         # down hard
         if pull || force_clonning
-            _, out = _run_bash([
-                # init
-                startup;
-
-                # utils
-                _error_cmd_str;
-                _success_cmd_str;
-                _is_root_cmd_str;
-
-                # go to root
-                """mkdir -p "$(urldir)" || _error "unable to create repo dir" """;
-                """cd "$(urldir)" || _error "unable to cd repo dir" """;
-                
-                # pull or clonne if necesary
-                """if [ -d .git ]; then""";
-                    """echo""";
-                    """echo pulling hard""";
-                    """_is_root || _error "unexpected repo root" """;
-                    """git -C "$(urldir)" fetch || _error "git fetch failed" """;
-                    """git -C "$(urldir)" reset --hard FETCH_HEAD || _error "git reset --hard FETCH_HEAD failed" """;
-                """else""";
-                    """echo""";
-                    """echo checking repo integrity""";
-                    """mkdir -p  "$(recovery_dir)" || _error "unable to create recovery dir" """;
-                    """git -C "$(urldir)" clone --depth=1 "$(url)" "$(recovery_dir)" || _error "git clone failed" """;
-                    """mv -f "$(recovery_git_dir)" "$(urldir)" || _error "recovery copy failed" """;
-                """fi""";
-                """rm -frd "$(recovery_dir)" """;
-
-                # success
-                """_success"""
-            ]; run_fun = _run, ios, buff_file)
-            contains(out, error_token) && continue
+            # _, out
+            # pull or clone
+            # contains(out, error_token) && continue
+            
         end
 
         # custom function
@@ -102,19 +56,19 @@ function _try_sync(fun::Function;
                 _is_root_cmd_str;
 
                 # go to root
-                """mkdir -p "$(urldir)" || _error """;
-                """cd "$(urldir)" || _error """;
+                """mkdir -p "\${sh_repodir}" || _error """;
+                """cd "\${sh_repodir}" || _error """;
 
                 # add commit push
                 """echo""";
                 """echo soft pushing""";
                 """_is_root || _error "unexpected repo root" """;
-                """[ -f "$(urldir_gitignore)" ] || _error ".gitignore missing" """;
-                """git -C "$(urldir)" add "$(globaldir)" "$(urldir_gitignore)" || _error "adding global failed" """;
-                """git -C "$(urldir)" status || _error """;
-                """git -C "$(urldir)" diff-index --quiet HEAD && _success """;
-                """git -C "$(urldir)" commit -am "$msg" || _error "commit -am 'msg' failed" """;
-                """git -C "$(urldir)" push || _error "git push failed" """;
+                """[ -f "\${"\${sh_gitignore}"}" ] || _error ".gitignore missing" """;
+                """git -C "\${sh_repodir}" add "$(globaldir)" "\${"\${sh_gitignore}"}" || _error "adding global failed" """;
+                """git -C "\${sh_repodir}" status || _error """;
+                """git -C "\${sh_repodir}" diff-index --quiet HEAD && _success """;
+                """git -C "\${sh_repodir}" commit -am "$msg" || _error "commit -am 'msg' failed" """;
+                """git -C "\${sh_repodir}" push || _error "git push failed" """;
                 """_success"""
             ]; run_fun = _run, ios, buff_file)
 
@@ -141,7 +95,7 @@ function _gwsync(;
     # SYNCHRONIZATION FUN
     function _on_sync()
                 
-        # basi maintinance
+        # every round maintenance
         _force_gitignore()
         _delall()
 

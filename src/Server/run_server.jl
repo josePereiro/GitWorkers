@@ -21,16 +21,6 @@ function run_server(;
     sync_startup = String[]
     buff_file = _gitwr_tempfile()
 
-
-    # ---------------------------------------------------------------
-    # Jobs
-    # exec cmd
-    function _exec_cmds()
-        for cmdfile in _find_tasks()
-            _exec_cmd(cmdfile; verb = false)
-        end
-    end
-
     # ---------------------------------------------------------------
     # SERVER LOOP
     for iter in 1:niters
@@ -48,7 +38,7 @@ function run_server(;
             )
 
             # exec cmd
-            for cmdfile in _find_tasks()
+            for cmdfile in _find_tasks_files()
                 _exec_cmd(cmdfile; verb = false)
             end
 
