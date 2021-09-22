@@ -41,7 +41,7 @@ _success () {
 }
 _error () { 
 	echo "error token: ${sh_error_token}"
-	echo "error: $1"
+	echo "error: ${sh_fail_token}"
 	rm -frd "${sh_repodir_git}" # force clone next time
 	rm -frd "${sh_recovery_dir}" # clear recoveri_dir
 	exit
@@ -57,18 +57,24 @@ _is_force_clone_mode () {
 	return 1
 }
 _is_pull_mode () {
-	local op_mode=$1
 	[ "${sh_op_mode}" = "PULL_OR_CLONE" ] && return 0
 	[ "${sh_op_mode}" = "PULL_OR_CLONE_AND_PUSH" ] && return 0
 	[ "${sh_op_mode}" = "FORCE_CLONE" ] && return 0
 	return 1
 }
 _is_push_mode () {
-	local op_mode=$1
 	[ "${sh_op_mode}" = "FORCE_CLONE_AND_PUSH" ] && return 0
 	[ "${sh_op_mode}" = "PUSH" ] && return 0
 	return 1
 }
+_is_no_op_mode () {
+	[ "${sh_op_mode}" = "NO_OP" ] && return 0
+	return 1
+}
+
+# ---------------------------------------------------------------------------------------
+# check no op
+_is_no_op_mode && exit 0
 
 # ---------------------------------------------------------------------------------------
 # go to root 

@@ -15,11 +15,11 @@ function _try_sync(fun::Function;
     )
         
     url = _get_url()
-    urldir = _gitwr_urldir()
-    globaldir = _gitwr_globaldir()
+    urldir = _urldir()
+    globaldir = _globaldir()
     
-    urldir_git = _gitwr_urldir(".git")
-    urldir_gitignore = _gitwr_urldir(".gitignore")
+    urldir_git = _urldir(".git")
+    urldir_gitignore = _urldir(".gitignore")
     force_clonning && rm(urldir_git; force = true, recursive = true)
     recovery_dir = _gitwr_tempdir(_gen_id())
     recovery_git_dir = joinpath(recovery_dir, ".git")
@@ -90,7 +90,7 @@ function _gwsync(;
         att = 5
     )
 
-    globaldir = _gitwr_globaldir()
+    globaldir = _globaldir()
 
     # SYNCHRONIZATION FUN
     function _on_sync()

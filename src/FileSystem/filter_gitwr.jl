@@ -3,7 +3,7 @@ function _keepout_git(path)
 end
 
 _filter_gitwr(f::Function; keepout = _keepout_git, onerr = rethrow) =
-    filterdown(f, _gitwr_urldir(); keepout, onerr)
+    filterdown(f, _urldir(); keepout, onerr)
 
 _walkdown_gitwr(f::Function; keepout = _keepout_git, onerr = rethrow) = 
     walkdown(f::Function; keepout = _keepout_git, onerr = rethrow)

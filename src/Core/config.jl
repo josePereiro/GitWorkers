@@ -8,7 +8,7 @@ _default_config() = Dict{String, Any}(
 )
 
 ## ---------------------------------------------------------------
-_gitwr_configfile() = joinpath(_gitwr_urldir(), ".gitworker.config.toml")
+_gitwr_configfile() = joinpath(_urldir(), ".gitworker.config.toml")
 
 ## ---------------------------------------------------------------
 function _save_config(config_dict::Dict; verb=false)
