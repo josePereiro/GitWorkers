@@ -13,17 +13,17 @@ function setup_gitworker(;
 
     # initial setup
     _reset_file_trakers!()
-    _del_gitwr_tempfiles()
-    _del_gitwr_stagedir()
     
-    # pull
-    _create_dummy()
-    _gwsync(; 
-        msg = "Setting up at $(now())", 
-        startup = String[], # TODO: connect with config 
-        ios = [stdout], 
-        force_clonning = false, 
-        att = 1 # Test
+    # sync
+    setup_ios = [stdout]
+
+    _global_update(_touch_dummy;
+        commit_msg = "Sync at ($now())", 
+        pull = true,
+        push = true,
+        force_clonning = false,
+        ios = setup_ios
     )
+    
     return nothing
 end

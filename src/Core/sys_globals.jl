@@ -15,5 +15,5 @@ _get_root() = _get_global("root")
 _set_root!(home) = (_SYSTEM_GLOBALS["root"] = home)
 
 _set_wutime!(wutime) = (_SYSTEM_GLOBALS["wutime"] = wutime)
-_set_wutime!() = _set_wutime!()
+_set_wutime!() = _set_wutime!(time())
 _get_wutime() = _get_global("wutime")

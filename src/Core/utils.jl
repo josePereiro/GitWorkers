@@ -5,4 +5,4 @@ function _cp(src::AbstractString, dst::AbstractString)
     cp(src, dst; force = true)
 end
 
-_create_dummy() = write(_gitwr_stagedir(".gitworker.dummy"), _gen_id())
+_touch_dummy() = write(_globaldir(".dummy"), _gen_id())

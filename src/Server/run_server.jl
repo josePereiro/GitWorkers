@@ -1,49 +1,76 @@
 function run_server(;
         url::AbstractString,
-        sys_home::AbstractString = homedir(),
+        sys_root::AbstractString = homedir(),
         niters = typemax(Int)
     )
 
     # ---------------------------------------------------------------
     # SETUP
-    setup_gitworker(;url, sys_home)
+    setup_gitworker(;url, sys_root)
     
     # ---------------------------------------------------------------
     # SERVER GLOBALS
-    urldir = _urldir()
+    repodir = _urldir()
 
     # ---------------------------------------------------------------
     # sync loop
     # TODO: connect to config
-    force_clonning = false
+    
     server_ios = [stdout]
     sync_msg = ""
-    sync_startup = String[]
-    buff_file = _gitwr_tempfile()
-
+    
+    # ---------------------------------------------------------------
+    # setup
+    
     # ---------------------------------------------------------------
     # SERVER LOOP
     for iter in 1:niters
 
         try
 
-            # Sync gw
-            sync_msg = "Sync iter: $(iter) time $(iter):$(now())"
-            _gwsync(;
-                msg = sync_msg,
-                startup = sync_startup, 
-                ios = server_ios, 
-                force_clonning,
-                buff_file
-            )
+            # ------------------------------------------------------
+            fail_token = _gen_id()
+            success_token = _gen_id()
 
-            # exec cmd
-            for cmdfile in _find_tasks_files()
-                _exec_cmd(cmdfile; verb = false)
+            # ------------------------------------------------------
+            # pull
+            _, pull_out = _call_sync_script(;
+                repodir, url, 
+                pull = true,
+                force_clonning = false, 
+                push = false,
+                success_token, fail_token,
+                ios = server_ios,
+                detach = false
+            )
+            contains(pull_out, fail_token) && continue
+
+            # ------------------------------------------------------
+            # global routine
+            _global_routines_dir = _globaldir(".global_routines")
+            _exec_routines(_global_routines_dir; mod0 = Main)
+
+            # ------------------------------------------------------
+            # push
+            sync_msg = "Sync iter: $(iter) time :$(now())"
+            for att in 1:5
+                _, push_out = _call_sync_script(;
+                    repodir, url, 
+                    pull = false,
+                    force_clonning = false,
+                    push = true,
+                    commit_msg = sync_msg,
+                    success_token, fail_token,
+                    ios = server_ios,
+                    detach = false
+                )
+                contains(push_out, success_token) && break
             end
 
-            # wait engine
-            sleep(5.0)
+            # ------------------------------------------------------
+            # local routine
+            _local_routines_dir = _globaldir(".local_routines")
+            _exec_routines(_local_routines_dir; mod0 = Main)
 
         catch err
             err isa InterruptException && rethrow(err)
@@ -52,6 +79,10 @@ function run_server(;
             # Test
             # rethrow(err) 
         end
+
+        # loop control
+        # TODO: connect with global
+        sleep(5.0)
 
     end # server loop end
     

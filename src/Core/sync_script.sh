@@ -5,6 +5,7 @@ if [ $# -lt 6 ]; then
 	echo "Usage: sync_script <repodir> <url> <op_mode> <commit_msg> <success_token> <fail_token>"
 	exit 1
 fi
+
 sh_repodir="$1" 
 sh_url="$2" 
 sh_op_mode="$3" 
@@ -40,8 +41,9 @@ _success () {
 	exit 0
 }
 _error () { 
+	local msg="$1"
 	echo "error token: ${sh_error_token}"
-	echo "error: ${sh_fail_token}"
+	echo "error: ${msg}"
 	rm -frd "${sh_repodir_git}" # force clone next time
 	rm -frd "${sh_recovery_dir}" # clear recoveri_dir
 	exit
@@ -86,17 +88,18 @@ cd "${sh_repodir}" || _error "unable to cd repo dir"
 _is_force_clone_mode && rm -frd "${sh_repodir_git}" 
 if _is_pull_mode; then
 	_check_root || _error "_check_root fails" 
-	if [ ! -d "${sh_repodir_git}" ]; then
+	if [ -d "${sh_repodir_git}" ]; then
+		echo
+		echo "pulling hard"
+	else
 		echo
 		echo "clonning repo"
 		mkdir -p "${sh_recovery_dir}" || _error "unable to create recovery dir" 
 		git -C "${sh_repodir}" clone --depth=1 "${sh_url}" "${sh_recovery_dir}" || _error "git clone failed" 
 		mv -f "${sh_recovery_dir_git}" "${sh_repodir_git}" || _error "recovery copy failed" 
+		git -C "${sh_repodir}" fetch || : # unchecked I know
+		git -C "${sh_repodir}" reset --hard FETCH_HEAD || : # unchecked I know
 	fi
-	echo
-	echo "pulling hard"
-	git -C "${sh_repodir}" fetch || _error "git fetch failed" 
-	git -C "${sh_repodir}" reset --hard FETCH_HEAD || _error "git reset --hard FETCH_HEAD failed" 
 fi
 [ "$?" != "0" ] && _error "PULL or CLONE fails"
 
@@ -110,7 +113,7 @@ if _is_push_mode; then
 	echo
 	echo "soft pushing"
 	_check_root || _error "_check_root fails" 
-	[ -f "${sh_gitignore}" ] || _error ".gitignore missing" 
+	rm -frd "${sh_gitignore}" || _error "rm -frd .gitignore" 
 	git -C "${sh_repodir}" add -A || _error "add -A failed" 
 	git -C "${sh_repodir}" status || _error 
 	git -C "${sh_repodir}" diff-index --quiet HEAD && _success # If nothing to commit _success

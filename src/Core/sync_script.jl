@@ -8,22 +8,28 @@ _SYNC_SCRIPT_PUSH_MODE = "PUSH"
 _SYNC_SCRIPT_NO_OP_MODE = "NO_OP"
 
 ## ---------------------------------------------------------------
+# TODO: create script Template to handle custom 'git' commands
+const _SYNC_SCRIPT_FILE = joinpath(dirname(pathof(GitWorkers)), "Core", "sync_script.sh")
+
+## ---------------------------------------------------------------
 function _call_sync_script(
-        sync_script, repodir, url, op_mode,
+        repodir, url, op_mode,
         commit_msg, success_token, fail_token; 
         ios = [stdout], detach = false
     )
+
     cmd = Cmd([
-        "bash", sync_script, repodir, url, 
+        "bash", _SYNC_SCRIPT_FILE, repodir, url, 
         op_mode, commit_msg, success_token, fail_token
     ])
     _run(cmd; ios, detach)
+    
 end
 
 ## ---------------------------------------------------------------
-function _call_sync_script(sync_script; 
+function _call_sync_script(; 
         repodir, url, 
-        commit_msg, 
+        commit_msg = "", 
         force_clonning = false,
         pull = false, 
         push = false,
@@ -45,7 +51,7 @@ function _call_sync_script(sync_script;
     end
     
     _call_sync_script(
-        sync_script, repodir, url, op_mode,
+        repodir, url, op_mode,
         commit_msg, success_token, fail_token; 
         ios, detach
     )
