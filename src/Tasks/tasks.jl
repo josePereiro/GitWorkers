@@ -8,7 +8,7 @@ _is_task_file(fn) = !isnothing(match(_TASK_FILE_REGEX, fn))
 
 function _find_tasks_files(ftype="expr")
     hint = string(".task.", ftype)
-    filterdown(_globaldir(); keepout = _keepout_git, onerr = rethrow) do path
+    filterdown(_repodir(); keepout = _keepout_git, onerr = rethrow) do path
         endswith(path, hint)
     end
 end

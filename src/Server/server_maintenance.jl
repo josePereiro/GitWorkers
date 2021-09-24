@@ -5,6 +5,6 @@ end
 
 function _server_maintenance()
 
-    _walkdown_gitwr
+    _walkdown_urldir
 
 end

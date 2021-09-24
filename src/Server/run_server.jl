@@ -10,14 +10,16 @@ function run_server(;
     
     # ---------------------------------------------------------------
     # SERVER GLOBALS
-    repodir = _urldir()
+    repodir = _repodir()
 
     # ---------------------------------------------------------------
     # sync loop
-    # TODO: connect to config
-    
     server_ios = [stdout]
     sync_msg = ""
+    iterfrec = 10.0
+    last_push_time = 0.0
+    pull_out = ""
+    push_out = ""
     
     # ---------------------------------------------------------------
     # setup
@@ -28,61 +30,75 @@ function run_server(;
 
         try
 
+            println("\n------------------------------------------------------")
+            println("Server loop, iter: ", iter)
+
             # ------------------------------------------------------
+            # tokens
             fail_token = _gen_id()
             success_token = _gen_id()
 
             # ------------------------------------------------------
             # pull
-            _, pull_out = _call_sync_script(;
-                repodir, url, 
-                pull = true,
-                force_clonning = false, 
-                push = false,
-                success_token, fail_token,
-                ios = server_ios,
-                detach = false
-            )
-            contains(pull_out, fail_token) && continue
-
-            # ------------------------------------------------------
-            # global routine
-            _global_routines_dir = _globaldir(".global_routines")
-            _exec_routines(_global_routines_dir; mod0 = Main)
-
-            # ------------------------------------------------------
-            # push
-            sync_msg = "Sync iter: $(iter) time :$(now())"
-            for att in 1:5
-                _, push_out = _call_sync_script(;
+            while true
+                _, pull_out = _call_sync_script(;
                     repodir, url, 
-                    pull = false,
-                    force_clonning = false,
-                    push = true,
-                    commit_msg = sync_msg,
+                    pull = true,
+                    force_clonning = false, 
+                    push = false,
                     success_token, fail_token,
                     ios = server_ios,
                     detach = false
                 )
-                contains(push_out, success_token) && break
+                iterfrec = _load_iterfrec()
+                elap_time = time() - last_push_time
+                (elap_time > iterfrec) && break
+                println("\nJust listening, next iter at: ", round(max(0.0, iterfrec - elap_time)), " second(s)")
+                sleep(_GITWR_ITER_FRACWT)
             end
+            contains(pull_out, fail_token) && continue
+
+            # ------------------------------------------------------
+            # repo routine
+            println("\nrunning repo routines")
+            _uprepo_rtdir = _repodir(_GITWR_UPREPO_RTDIR)
+            _eval_routines(_uprepo_rtdir)
+
+            # ------------------------------------------------------
+            # push
+            sync_msg = "Sync iter: $(iter) time :$(now())"
+            _, push_out = _call_sync_script(;
+                repodir, url, 
+                pull = false,
+                force_clonning = false,
+                push = true,
+                commit_msg = sync_msg,
+                success_token, fail_token,
+                ios = server_ios,
+                detach = false
+            )
+            contains(push_out, success_token) ? (last_push_time = time()) : continue
 
             # ------------------------------------------------------
             # local routine
-            _local_routines_dir = _globaldir(".local_routines")
-            _exec_routines(_local_routines_dir; mod0 = Main)
+            println("\nrunning local routines")
+            _uplocal_rtdir = _repodir(_GITWR_UPLOCAL_RTDIR)
+            _eval_routines(_uplocal_rtdir)
 
         catch err
-            err isa InterruptException && rethrow(err)
-            @warn("Error", err)
-            println()
+            rethrow(err)
+            # err isa InterruptException && rethrow(err)
+            # @warn("Error", err)
+            # println()
             # Test
             # rethrow(err) 
         end
 
         # loop control
-        # TODO: connect with global
-        sleep(5.0)
+        # TODO: connect with config
+        # sleep(5.0)
+
+        println("\n")
 
     end # server loop end
     

@@ -1,7 +1,7 @@
 # git ls-files
 
 function _force_gitignore()
-    gitignore = _urldir(".gitignore")
+    gitignore = _repodir(".gitignore")
     !isfile(gitignore) && touch(gitignore)
     _on_content_event(gitignore; dofirst = true) do
         write(gitignore, 

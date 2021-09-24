@@ -10,7 +10,7 @@ end
 function _delall()
     lock(_TODEL_LK) do
         for _ in eachindex(_TODEL)
-            rm(pop!(_TODEL); recursive = true, force = true)
+            _gwrm(pop!(_TODEL))
         end
     end
 end

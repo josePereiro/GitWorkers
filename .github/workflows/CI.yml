@@ -23,14 +23,14 @@ jobs:
         with:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
-      - uses: actions/cache@v1
+      - uses: actions/local@v1
         env:
-          cache-name: cache-artifacts
+          local-name: local-artifacts
         with:
           path: ~/.julia/artifacts
-          key: ${{ runner.os }}-test-${{ env.cache-name }}-${{ hashFiles('**/Project.toml') }}
+          key: ${{ runner.os }}-test-${{ env.local-name }}-${{ hashFiles('**/Project.toml') }}
           restore-keys: |
-            ${{ runner.os }}-test-${{ env.cache-name }}-
+            ${{ runner.os }}-test-${{ env.local-name }}-
             ${{ runner.os }}-test-
             ${{ runner.os }}-
       # Intalling custom registry 

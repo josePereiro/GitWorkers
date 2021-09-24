@@ -1,12 +1,12 @@
-function _global_update(upfun::Function;
-        commit_msg = "Sync at ($now())", 
+function _repo_update(upfun::Function;
+        commit_msg = "Sync at ($(now()))", 
         pull = true,
         push = true,
         force_clonning = false,
         ios = [stdout]
     )
 
-    repodir = _urldir()
+    repodir = _repodir()
     url = _get_url()
     success_token = _gen_id()
     fail_token = _gen_id()
@@ -27,7 +27,7 @@ function _global_update(upfun::Function;
         !contains(pull_out, success_token) && continue
 
         # ------------------------------------------------------
-        # Should affect global
+        # Should affect repo
         upfun()
 
         # ------------------------------------------------------

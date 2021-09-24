@@ -17,8 +17,8 @@ function setup_gitworker(;
     # sync
     setup_ios = [stdout]
 
-    _global_update(_touch_dummy;
-        commit_msg = "Sync at ($now())", 
+    _repo_update(_touch_dummy;
+        commit_msg = "Sync at ($(now()))", 
         pull = true,
         push = true,
         force_clonning = false,

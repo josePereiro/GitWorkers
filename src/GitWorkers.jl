@@ -13,20 +13,25 @@ module GitWorkers
 
     include("Core/config.jl")
     include("Core/sys_globals.jl")
-    include("Core/global_update.jl")
+    include("Core/repo_update.jl")
     include("Core/sync_script.jl")
     include("Core/gen_id.jl")
     include("Core/utils.jl")
-    include("Core/routines.jl")
+
+    include("Routines/routines.jl")
+    include("Routines/routines_templates.jl")
+    include("Routines/utils.jl")
     
     include("FileSystem/gitwr_dirs.jl")
     include("FileSystem/filter_gitwr.jl")
+    include("FileSystem/utils.jl")
     
     include("Client/setup_gitworker.jl")
-    include("Client/gitworker.jl")
+    include("Client/gwspawn.jl")
     include("Client/gwpush.jl")
     
     include("Server/run_server.jl")
+    include("Server/loop_control.jl")
     
     include("Maintenance/gitignore.jl")
     include("Maintenance/todel.jl")

@@ -91,14 +91,15 @@ if _is_pull_mode; then
 	if [ -d "${sh_repodir_git}" ]; then
 		echo
 		echo "pulling hard"
+		git -C "${sh_repodir}" fetch || _error "git fetch failed" 
+		git -C "${sh_repodir}" reset --hard FETCH_HEAD || _error "git reset --hard FETCH_HEAD failed" 
 	else
 		echo
 		echo "clonning repo"
 		mkdir -p "${sh_recovery_dir}" || _error "unable to create recovery dir" 
 		git -C "${sh_repodir}" clone --depth=1 "${sh_url}" "${sh_recovery_dir}" || _error "git clone failed" 
-		mv -f "${sh_recovery_dir_git}" "${sh_repodir_git}" || _error "recovery copy failed" 
-		git -C "${sh_repodir}" fetch || : # unchecked I know
-		git -C "${sh_repodir}" reset --hard FETCH_HEAD || : # unchecked I know
+		mv -f "${sh_recovery_dir_git}" "${sh_repodir_git}" || _error "recovery copy failed"
+		git -C "${sh_repodir}" pull || : # unchecked I know
 	fi
 fi
 [ "$?" != "0" ] && _error "PULL or CLONE fails"

@@ -4,7 +4,7 @@ function _monkey_delete(dir::String, frec::Float64; verb = true)
         for file in files
             frec > rand() && continue
             rfile = joinpath(root, file)
-            rm(rfile; recursive = true, force = true)
+            _gwrm(rfile)
             verb && println("monkey deleted!! ", rfile)
         end
     end
