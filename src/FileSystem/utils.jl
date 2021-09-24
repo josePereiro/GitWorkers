@@ -14,11 +14,15 @@ function _relbasepath(path, startpath)
 	return relpath_
 end
 
+function _rm(path)
+    try; rm(path; recursive = true, force = true)
+    catch err; end
+end
+
 function _gwrm(path)
     path = _local_urlpath(path)
     !ispath(path) && return
-    try; rm(path; recursive = true, force = true)
-        catch err; end
+    _rm(path)
 end
 
 function _gwcp(src::AbstractString, dst::AbstractString)

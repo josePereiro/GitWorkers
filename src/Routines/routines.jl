@@ -60,6 +60,7 @@ function _eval_routines(rtdir)
         catch err
             err isa InterruptException && rethrow()
             @warn("ERROR", err)
+            rethrow(err) # Test
         end
     end
 end

@@ -26,13 +26,9 @@ function run_server(;
     
     # ---------------------------------------------------------------
     # SERVER LOOP
-    for iter in 1:niters
+    while true
 
         try
-
-            println("\n------------------------------------------------------")
-            println("Server loop, iter: ", iter)
-
             # ------------------------------------------------------
             # tokens
             fail_token = _gen_id()
@@ -50,19 +46,32 @@ function run_server(;
                     ios = server_ios,
                     detach = false
                 )
-                iterfrec = _load_iterfrec()
+
+                # iter control
+                iterfrec = _get_iterfrec()
                 elap_time = time() - last_push_time
                 (elap_time > iterfrec) && break
+                _check_pushflag() && break
+
                 println("\nJust listening, next iter at: ", round(max(0.0, iterfrec - elap_time)), " second(s)")
                 sleep(_GITWR_ITER_FRACWT)
             end
             contains(pull_out, fail_token) && continue
 
             # ------------------------------------------------------
+            iter = _get_curriter()
+
+            println("\n------------------------------------------------------")
+            println("Server loop, iter: ", iter)
+
+            # ------------------------------------------------------
             # repo routine
             println("\nrunning repo routines")
             _uprepo_rtdir = _repodir(_GITWR_UPREPO_RTDIR)
             _eval_routines(_uprepo_rtdir)
+
+            # ------------------------------------------------------
+            _set_curriter(iter + 1)
 
             # ------------------------------------------------------
             # push
@@ -77,6 +86,7 @@ function run_server(;
                 ios = server_ios,
                 detach = false
             )
+            !contains(push_out, success_token) && exit() # Test
             contains(push_out, success_token) ? (last_push_time = time()) : continue
 
             # ------------------------------------------------------
@@ -84,6 +94,7 @@ function run_server(;
             println("\nrunning local routines")
             _uplocal_rtdir = _repodir(_GITWR_UPLOCAL_RTDIR)
             _eval_routines(_uplocal_rtdir)
+
 
         catch err
             rethrow(err)

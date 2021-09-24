@@ -1,7 +1,7 @@
 ## ---------------------------------------------------------------
 function _create_test_engine(testdir; clear = true)
     repodir = joinpath(testdir, "repos")
-    clear && _gwrm(repodir)
+    clear && _rm(repodir)
     mkpath(repodir)
     url, client_home, server_home = _create_test_repos(repodir)
 

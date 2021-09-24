@@ -17,6 +17,7 @@ module GitWorkers
     include("Core/sync_script.jl")
     include("Core/gen_id.jl")
     include("Core/utils.jl")
+    include("Core/sysfiles.jl")
 
     include("Routines/routines.jl")
     include("Routines/routines_templates.jl")
@@ -28,10 +29,13 @@ module GitWorkers
     
     include("Client/setup_gitworker.jl")
     include("Client/gwspawn.jl")
-    include("Client/gwpush.jl")
+    include("Client/gw_push.jl")
+    include("Client/waitfor.jl")
+    include("Client/gw_pull.jl")
+    include("Client/gw_clear_rts.jl")
+    include("Client/gw_set_iterfrec.jl")
     
     include("Server/run_server.jl")
-    include("Server/loop_control.jl")
     
     include("Maintenance/gitignore.jl")
     include("Maintenance/todel.jl")

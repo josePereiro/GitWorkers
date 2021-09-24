@@ -41,7 +41,13 @@ _on_mtime_event(fun::Function, file::String; event = _default_event, dofirst = f
 _on_size_event(fun::Function, file::String; event = _default_event, dofirst = false) =
     _event_handler!(fun, file, event, filesize, _FILE_TRACKER_SIZE_DB, -1.0, dofirst)
     
-_file_content_hash(file) = hash(read(file, String))
+function _file_content_hash(file) 
+    hash_ = hash("")
+    isfile(file) && for line in eachline(file)
+        hash_ = hash(line, hash_)
+    end
+    return hash_
+end
 
 function _on_content_event(fun::Function, file::String; event = _default_event, dofirst = false)
     # check if mtime changes (performance)

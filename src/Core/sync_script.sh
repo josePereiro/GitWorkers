@@ -44,7 +44,8 @@ _error () {
 	local msg="$1"
 	echo "error token: ${sh_error_token}"
 	echo "error: ${msg}"
-	rm -frd "${sh_repodir_git}" # force clone next time
+	# Test
+	# rm -frd "${sh_repodir}" # force clone next time
 	rm -frd "${sh_recovery_dir}" # clear recoveri_dir
 	exit
 }
@@ -85,7 +86,7 @@ cd "${sh_repodir}" || _error "unable to cd repo dir"
 
 # ---------------------------------------------------------------------------------------
 # pull or clonne if necesary 
-_is_force_clone_mode && rm -frd "${sh_repodir_git}" 
+_is_force_clone_mode && rm -frd "${sh_repodir}" 
 if _is_pull_mode; then
 	_check_root || _error "_check_root fails" 
 	if [ -d "${sh_repodir_git}" ]; then
@@ -115,8 +116,9 @@ if _is_push_mode; then
 	echo "soft pushing"
 	_check_root || _error "_check_root fails" 
 	rm -frd "${sh_gitignore}" || _error "rm -frd .gitignore" 
+	git -C "${sh_repodir}" status || _error "git status failed" 
 	git -C "${sh_repodir}" add -A || _error "add -A failed" 
-	git -C "${sh_repodir}" status || _error 
+	git -C "${sh_repodir}" status || _error "git status failed"
 	git -C "${sh_repodir}" diff-index --quiet HEAD && _success # If nothing to commit _success
 	git -C "${sh_repodir}" commit -am "${sh_commit_msg}" || _error "commit -am 'msg' failed" 
 	git -C "${sh_repodir}" push || _error "git push failed" 
