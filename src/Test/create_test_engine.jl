@@ -1,13 +1,14 @@
 ## ---------------------------------------------------------------
-function _create_test_engine(testdir; clear = true)
+function _create_test_engine(testdir; clear_repos = true, clear_scripts = false)
     repodir = joinpath(testdir, "repos")
-    clear && _rm(repodir)
+    clear_repos && _rm(repodir)
     mkpath(repodir)
-    url, client_home, server_home = _create_test_repos(repodir)
+    url, client_root, server_root = _create_test_repos(repodir)
 
     # client script
-    client_scrpt = joinpath(testdir, "client.jl")
-    !isfile(client_scrpt) && write(client_scrpt, 
+    client_script = joinpath(testdir, "client.jl")
+    clear_scripts && rm(client_script; force = true)
+    !isfile(client_script) && write(client_script, 
         join([
             "using GitWorkers", 
             "",
@@ -17,25 +18,26 @@ function _create_test_engine(testdir; clear = true)
             "",
             "## ---------------------------------------------------------------",
             "GitWorkers.setup_gitworker(;",
-                """\tsys_root = "$(client_home)",""",
+                """\tsys_root = "$(client_root)",""",
                 """\turl = "$(url)",""",
             ")"
         ], "\n")
     )
 
     # server script
-    server_scrpt = joinpath(testdir, "server.jl")
-    !isfile(server_scrpt) && write(server_scrpt, 
+    server_script = joinpath(testdir, "server.jl")
+    clear_scripts && rm(server_script; force = true)
+    write(server_script, 
         join([
             "using GitWorkers", 
             "",
             "## ---------------------------------------------------------------",
             "GitWorkers.run_server(;",
-                """\tsys_root = "$(server_home)",""",
+                """\tsys_root = "$(server_root)",""",
                 """\turl = "$(url)",""",
             ")"
         ], "\n")
     )
     
-    @info("GitWorkers setup", url, client_home, server_home)
+    @info("GitWorkers setup", url, client_root, server_root)
 end

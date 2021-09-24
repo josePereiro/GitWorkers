@@ -1,4 +1,22 @@
 ## ---------------------------------------------------------------
+function _setup_gitworker_local_part(;
+        url::AbstractString,
+        sys_root::AbstractString
+    )
+
+    mkpath(sys_root)
+
+     # globals
+     _set_url!(url)
+     _set_root!(sys_root)
+     _set_wutime!()
+ 
+     # initial setup
+     _reset_file_trakers!()
+
+end
+
+## ---------------------------------------------------------------
 # TODO: connect with config
 # init setup
 function setup_gitworker(;
@@ -6,13 +24,8 @@ function setup_gitworker(;
         sys_root::AbstractString
     )
 
-    # globals
-    _set_url!(url)
-    _set_root!(sys_root)
-    _set_wutime!()
-
-    # initial setup
-    _reset_file_trakers!()
+    # setup
+    _setup_gitworker_local_part(;url, sys_root)
     
     # sync
     setup_ios = [stdout]

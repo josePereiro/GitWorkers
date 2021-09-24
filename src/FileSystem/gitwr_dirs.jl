@@ -80,7 +80,7 @@ _gitworkers_homedir(ns...) = _gitwr_rootdir(".gitworkers", ns...)
 _format_url(url) = replace(url, r"[^a-zA-Z0-9-_]"=> "_")
 _urldir(ns...) = _gitworkers_homedir(_format_url(_get_url()), ns...)
 _rel_urlpath(path) = _relbasepath(path, _urldir())
-_local_urlpath(path) = _urldir(_relbasepath(path, _urldir()))
+_local_urlpath(path) = _urldir(_rel_urlpath(path))
 
 # ---------------------------------------------------------------
 _localdir(ns...) = _urldir(".local", ns...)

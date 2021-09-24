@@ -1,6 +1,5 @@
 function _relbasepath(path, startpath)
 	stoppath = basename(startpath)
-	!contains(path, stoppath) && return ""
 
 	relpath_ = ""
 	leftpath = path

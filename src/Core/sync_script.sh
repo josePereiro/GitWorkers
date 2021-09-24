@@ -44,8 +44,7 @@ _error () {
 	local msg="$1"
 	echo "error token: ${sh_error_token}"
 	echo "error: ${msg}"
-	# Test
-	# rm -frd "${sh_repodir}" # force clone next time
+	rm -frd "${sh_repodir}" # force clone next time
 	rm -frd "${sh_recovery_dir}" # clear recoveri_dir
 	exit
 }
@@ -116,7 +115,6 @@ if _is_push_mode; then
 	echo "soft pushing"
 	_check_root || _error "_check_root fails" 
 	rm -frd "${sh_gitignore}" || _error "rm -frd .gitignore" 
-	git -C "${sh_repodir}" status || _error "git status failed" 
 	git -C "${sh_repodir}" add -A || _error "add -A failed" 
 	git -C "${sh_repodir}" status || _error "git status failed"
 	git -C "${sh_repodir}" diff-index --quiet HEAD && _success # If nothing to commit _success
