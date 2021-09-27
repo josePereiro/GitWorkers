@@ -1,19 +1,18 @@
-function gw_pull()
+function gw_pull(;force_clonning = false, ios = [stdout])
 
     repodir = _repodir()
     url = _get_url()
     success_token = _gen_id()
     fail_token = _gen_id()
-    client_ios = [stdout]
 
     # pull
     _call_sync_script(;
         repodir, url, 
         pull = true,
-        force_clonning = false,
+        force_clonning,
         push = false,
         success_token, fail_token,
-        ios = client_ios, detach = false
+        ios, detach = false
     )
     return nothing
 end

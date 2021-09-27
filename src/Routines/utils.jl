@@ -70,3 +70,16 @@ function _clear_rts()
     _gwrm.(_uprepo_rtdir)
     _gwrm.(_uplocal_rtdir)
 end
+
+## ---------------------------------------------------------------
+macro _rtid()
+    quote
+        $(esc(:(__routine__.id)))
+    end
+end
+
+macro _rt_rtfile()
+    quote
+        $(esc(:(__routine__.rtfile)))
+    end
+end

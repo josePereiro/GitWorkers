@@ -1,3 +1,1 @@
-gw_clear_rts() = GitWorkers._repo_update() do
-    GitWorkers._clear_rts()
-end
+gw_clear_rts() = _repo_update(_clear_rts)

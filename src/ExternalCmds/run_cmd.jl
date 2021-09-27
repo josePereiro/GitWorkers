@@ -11,7 +11,7 @@ end
 _append(io::IO, x, xs...) = print(io, x, xs...)
 _append(fn::String, x, xs...) = open((io) -> print(io, x, xs...), fn, "a")
 
-_empty!(io::IO) = nothing
+_empty!(::IO) = nothing
 _empty!(fn::String) = open((io) -> print(io, ""), fn, "w")
 
 # ---------------------------------------------------------------
