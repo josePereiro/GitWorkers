@@ -12,7 +12,7 @@ end
 ## ------------------------------------------------------------------
 _save_import("GitWorkers")
 import GitWorkers.ArgParse
-import Serialization
+_save_import("Serialization")
 
 ## ------------------------------------------------------------------
 _rtargset = ArgParse.ArgParseSettings()

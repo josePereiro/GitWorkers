@@ -1,9 +1,9 @@
 ## ---------------------------------------------------------------
 function _reg_files_todel(path, paths...)
     file = _localdir(".todel", string(_gen_id(), ".todel"))
-    allpaths = String[_local_urlpath(path)]
+    allpaths = String[_native_urlpath(path)]
     for path_ in paths
-        push!(allpaths, _local_urlpath(path_))
+        push!(allpaths, _native_urlpath(path_))
     end
     serialize(file, allpaths)
 end

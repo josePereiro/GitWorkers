@@ -1,18 +1,15 @@
-function gw_pull(;force_clonning = false, ios = [stdout])
+function gw_pull(;force_clonning = false, deb = false)
 
-    repodir = _repodir()
-    url = _get_url()
-    success_token = _gen_id()
-    fail_token = _gen_id()
-
-    # pull
     _call_sync_script(;
-        repodir, url, 
+        repodir = _repodir(),
+        url = _get_url(),
         pull = true,
         force_clonning,
         push = false,
-        success_token, fail_token,
-        ios, detach = false
+        success_token = _gen_id(),
+        fail_token = _gen_id(),
+        ios = deb ? [stdout] : [],
+        detach = false
     )
     return nothing
 end

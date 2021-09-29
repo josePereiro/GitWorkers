@@ -19,6 +19,7 @@ end
 function _reset_server()
     _repo_update() do
         _send_killsig(getpid())
+        return true
     end
     proj = Base.active_project()
     script = _make_server_script(;sys_root = _get_root(), url = _get_url())

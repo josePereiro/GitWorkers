@@ -21,8 +21,6 @@ module GitWorkers
     include("Core/utils.jl")
     include("Core/reset_server.jl")
     
-    include("SysFiles/curriter.jl")
-    include("SysFiles/iterfrec.jl")
     include("SysFiles/killsig.jl")
     include("SysFiles/procs.jl")
     include("SysFiles/pushflag.jl")
@@ -56,13 +54,7 @@ module GitWorkers
     include("Server/server_loop.jl")
     include("Server/exit.jl")
     include("Server/sync_task_data.jl")
-    
-    include("Maintenance/gitignore.jl")
-    include("Maintenance/todel.jl")
-    include("Maintenance/gc_old_files.jl")
-    
-    include("Tasks/spawn_task.jl")
-    include("Tasks/tasks.jl")
+    include("Server/loopcontrol.jl")
     
     include("Events/FileTracker.jl")
     

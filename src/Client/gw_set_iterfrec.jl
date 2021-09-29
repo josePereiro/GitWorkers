@@ -4,7 +4,7 @@ function gw_set_iterfrec(itfrec::Real=_GITWR_DEFLT_ITERFREC; tout = 60.0)
 
         _set_pushflag()
         _set_iterfrec(itfrec)
-
+        return true
     end
 
     println("\nWaiting for responce...")

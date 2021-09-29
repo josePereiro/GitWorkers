@@ -12,7 +12,7 @@ function _server_loop()
     sync_msg = ""
     iterfrec = _get_iterfrec()
     last_push_time = 0.0
-    pull_out = ""
+    success = false
     push_out = ""
     
     # ---------------------------------------------------------------
@@ -21,33 +21,34 @@ function _server_loop()
 
         try
             # ------------------------------------------------------
-            # tokens
+            # iter tokens
             fail_token = _gen_id()
             success_token = _gen_id()
 
             # ------------------------------------------------------
-            # pull
+            # pull loop
             while true
-                _, pull_out = _call_sync_script(;
-                    repodir, url, 
-                    pull = true,
-                    force_clonning = false, 
-                    push = false,
+                success = _gw_pull(;
+                    repodir, url,
                     success_token, fail_token,
-                    ios = server_ios,
-                    detach = false
+                    force_clonning = false, 
+                    ios = server_ios
                 )
 
                 # iter control
-                iterfrec = _get_iterfrec()
-                elap_time = time() - last_push_time
-                (elap_time > iterfrec) && break
+                # iterfrec = _get_iterfrec()
+                # elap_time = time() - last_push_time
+                # _istime = (elap_time > iterfrec) 
+                # _istime && break                
+
+                # push flag
                 _check_pushflag() && break
 
-                println("\nJust listening, next iter at: ", round(max(0.0, iterfrec - elap_time)), " second(s)")
+                # println("\nJust listening, next iter at: ", round(max(0.0, iterfrec - elap_time)), " second(s)")
+                println("\nJust listening")
                 sleep(_GITWR_ITER_FRACWT)
             end
-            contains(pull_out, fail_token) && continue
+            !success && continue
 
             # ------------------------------------------------------
             # get iter
@@ -77,18 +78,14 @@ function _server_loop()
             # ------------------------------------------------------
             # push
             sync_msg = "Sync iter: $(iter) time :$(now())"
-            _, push_out = _call_sync_script(;
-                repodir, url, 
-                pull = false,
-                force_clonning = false,
-                push = true,
-                commit_msg = sync_msg,
-                success_token, fail_token,
-                ios = server_ios,
-                detach = false
+            success = _gw_push(;
+                commit_msg = sync_msg, 
+                repodir, url,
+                success_token, fail_token, 
+                ios
             )
-            !contains(push_out, success_token) && exit() # Test
-            contains(push_out, success_token) ? (last_push_time = time()) : continue
+            !success && exit() # Test
+            success ? (last_push_time = time()) : continue
 
             # ------------------------------------------------------
             # local routine

@@ -9,10 +9,10 @@
 		subpath = joinpath("Bla", "blo")
 		full = GitWorkers._urldir(subpath)
 		relfn = GitWorkers._rel_urlpath(full)
-		@test GitWorkers._local_urlpath(relfn) == full
+		@test GitWorkers._native_urlpath(relfn) == full
         
 		relfn = GitWorkers._rel_urlpath(subpath)
-		@test GitWorkers._local_urlpath(relfn) == full
+		@test GitWorkers._native_urlpath(relfn) == full
 
 	finally
 		rm(joinpath(sys_root, ".gitworkers"); recursive = true, force = true)

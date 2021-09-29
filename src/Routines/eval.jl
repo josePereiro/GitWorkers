@@ -9,6 +9,7 @@ function eval_rt(rtfile)
     
     sysroot = _get_root()
     url = _get_url()
+    urldir = _urldir()
     rtid = rtcmd.id
 
     cached_rtfile = _localver(rtfile) # This will be deleted on execution
@@ -21,7 +22,8 @@ function eval_rt(rtfile)
     if rtcmd.long
 
         julia = Base.julia_cmd()
-        jlcmd = Cmd(`$julia --startup-file=no -- $(scriptfile) $(sysroot) $(url) $(cached_rtfile) $(rtid)`; detach = false)
+        # TODO: connect with config for julia cmd
+        jlcmd = Cmd(`$julia --startup-file=no --project=$(urldir) -- $(scriptfile) $(sysroot) $(url) $(cached_rtfile) $(rtid)`; detach = false)
         # jlcmd = pipeline(jlcmd; stdout = outfile, stderr = errfile, append = true)
         jlcmd = pipeline(jlcmd; stdout = outfile, stderr = outfile, append = true)
         run(jlcmd; wait = false)

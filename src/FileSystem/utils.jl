@@ -19,14 +19,14 @@ function _rm(path)
 end
 
 function _gwrm(path)
-    path = _local_urlpath(path)
+    path = _native_urlpath(path)
     !ispath(path) && return
     _rm(path)
 end
 
 function _gwcp(src::AbstractString, dst::AbstractString)
-    src = _local_urlpath(src)
-    dst = _local_urlpath(dst)
+    src = _native_urlpath(src)
+    dst = _native_urlpath(dst)
     !ispath(src) && return
     dstdir = dirname(dst)
     !isdir(dstdir) && makedir(dstdir)
@@ -34,10 +34,17 @@ function _gwcp(src::AbstractString, dst::AbstractString)
 end
 
 function _gwmv(src::AbstractString, dst::AbstractString)
-    src = _local_urlpath(src)
-    dst = _local_urlpath(dst)
+    src = _native_urlpath(src)
+    dst = _native_urlpath(dst)
     !ispath(src) && return
     dstdir = dirname(dst)
     !isdir(dstdir) && makedir(dstdir)
     mv(src, dst; force = true)
+end
+
+function _mkpath(n, ns...)
+    path = joinpath(string(n), string.(ns)...)
+    dir = dirname(path)
+    !isdir(dir) && mkpath(dir)
+    return path
 end

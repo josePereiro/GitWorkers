@@ -19,12 +19,13 @@ end
 """
 macro gwspawn(expr)
     rtid = _gen_id()
-    _repo_update() do
+    _repo_update(; ios = []) do
 	
         _set_pushflag()
         _set_iterfrec(3.0)
         
         _serialize_repo_rt(rtid, expr; long=true)
+        return true
     end
 
     outfile = _repover(_out_rtlogfile(rtid))
