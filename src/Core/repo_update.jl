@@ -4,16 +4,16 @@ function _gw_pull(;
         success_token = _gen_id(),
         fail_token = _gen_id(),
         force_clonning = false,
-        ios = [stdout]
+        verb = true
     )
     
-    _, out = _call_sync_script(;
+    out = _call_sync_script(;
         repodir, url, 
         pull = true,
         force_clonning,
         push = false,
         success_token, fail_token,
-        ios, detach = false
+        verb
     )
     return contains(out, success_token)
 
@@ -25,17 +25,17 @@ function _gw_push(;
         url = _get_url(),
         success_token = _gen_id(),
         fail_token = _gen_id(),
-        ios = [stdout]
+        verb = true
     )
 
-    _, out = _call_sync_script(;
+    out = _call_sync_script(;
         commit_msg,
         repodir, url, 
         pull = false,
         force_clonning = false,
         push = true,
         success_token, fail_token,
-        ios, detach = false
+        verb
     )
     return contains(out, success_token)
 
@@ -44,10 +44,9 @@ end
 function _repo_update(upfun::Function;
         commit_msg = "Update at ($(now()))", 
         force_clonning = false,
-        deb = false
+        verb = false
     )
     
-    ios = deb ? [stdout] : []
     success = false
 
     # TODO: connect to config
@@ -55,7 +54,7 @@ function _repo_update(upfun::Function;
         
         # ------------------------------------------------------
         # pull
-        success = _gw_pull(; force_clonning, ios)
+        success = _gw_pull(; force_clonning, verb)
         !success && continue
 
         # ------------------------------------------------------
@@ -65,7 +64,7 @@ function _repo_update(upfun::Function;
         # ------------------------------------------------------
         # pull
         if upflag === true
-            success = _gw_push(;commit_msg, ios)
+            success = _gw_push(;commit_msg, verb)
             success && break
         end
 

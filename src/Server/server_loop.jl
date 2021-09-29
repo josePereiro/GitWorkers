@@ -8,12 +8,9 @@ function _server_loop()
 
     # ---------------------------------------------------------------
     # sync loop
-    server_ios = [stdout]
+    verb = true
     sync_msg = ""
-    iterfrec = _get_iterfrec()
-    last_push_time = 0.0
     success = false
-    push_out = ""
     
     # ---------------------------------------------------------------
     # SERVER LOOP
@@ -32,22 +29,18 @@ function _server_loop()
                     repodir, url,
                     success_token, fail_token,
                     force_clonning = false, 
-                    ios = server_ios
+                    verb
                 )
 
-                # iter control
-                # iterfrec = _get_iterfrec()
-                # elap_time = time() - last_push_time
-                # _istime = (elap_time > iterfrec) 
-                # _istime && break                
+                # loopcontrol
 
                 # push flag
                 _check_pushflag() && break
 
-                # println("\nJust listening, next iter at: ", round(max(0.0, iterfrec - elap_time)), " second(s)")
-                println("\nJust listening")
-                sleep(_GITWR_ITER_FRACWT)
+                println("\nJust listening, time: ", now())
+                _listen_wait()
             end
+            _reset_listen_wait()
             !success && continue
 
             # ------------------------------------------------------
@@ -58,47 +51,56 @@ function _server_loop()
             println("Server loop, iter: ", iter)
 
             # ------------------------------------------------------
-            # repo routine
-            !_check_standby_sig() && let
-                println("\nrunning repo routines")
-                _uprepo_rtdir = _repodir(_GITWR_UPREPO_RTDIR)
-                _eval_routines(_uprepo_rtdir)
-            end
+            # download data
+            _download_signals()
+            _download_tasks()
 
             # ------------------------------------------------------
-            # sync tasks
-            _sync_task_data()
+            # upload data
+            _upload_logs()
+            _upload_procs()
 
             # ------------------------------------------------------
-            # update sysfiles
-            _update_curriter()
-            _update_resetsig()
-            _update_killsigs()
+            # repo maintinance
+            _clear_pushflag()
+            _clear_repo_signals()
+            _clear_repo_tasks()
 
             # ------------------------------------------------------
             # push
+            _update_curriter()
             sync_msg = "Sync iter: $(iter) time :$(now())"
             success = _gw_push(;
                 commit_msg = sync_msg, 
                 repodir, url,
                 success_token, fail_token, 
-                ios
+                verb
             )
             !success && exit() # Test
-            success ? (last_push_time = time()) : continue
+            !success && continue
 
             # ------------------------------------------------------
-            # local routine
-            !_check_standby_sig() && let
-                println("\nrunning local routines")
-                _uplocal_rtdir = _repodir(_GITWR_UPLOCAL_RTDIR)
-                _eval_routines(_uplocal_rtdir)
-            end
+            # exec tasks
+            # println("\nrunning repo routines")
+            # ------------------------------------------------------
+            # repo routine
+            # !_check_standby_sig() && let
+            #     println("\nrunning repo routines")
+            #     _uprepo_rtdir = _repodir(_GITWR_UPREPO_RTDIR)
+            #     _eval_routines(_uprepo_rtdir)
+            # end
 
             # ------------------------------------------------------
-            # handle signals
+            # exec signals
             _exec_killsigs()
             _exec_resetsig()
+            
+            # ------------------------------------------------------
+            # sys maintinance
+            _reg_server_loop_proc()
+            _check_duplicated_server_main_proc()
+            _check_duplicated_server_loop_proc()
+            _clear_procs_regs()
 
 
         catch err

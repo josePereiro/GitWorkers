@@ -1,9 +1,9 @@
-function _waitfor_handler(file, fun; wt = 1.0, tout = 60.0, deb = false)
+function _waitfor_handler(file, fun; wt = 0.5, tout = 60.0, verb = false)
     val0 = fun(file)
     t0 = time()
     while true
         # pull
-        _gw_pull_and_send_pushflag(;deb)
+        _gw_pull_and_send_pushflag(;verb)
 
         val = fun(file)
         (val != val0) && return

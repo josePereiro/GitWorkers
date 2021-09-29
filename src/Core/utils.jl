@@ -22,6 +22,7 @@ _write_toml(fn; kwargs...) = _write_toml(fn, _dict(;kwargs...))
 
 _write_toml(fn, dat::Dict) = open(fn, "w") do io
     TOML.print(io, dat; sorted=true)
+    return fn
 end
 
 function _read_toml(fn)

@@ -1,6 +1,4 @@
-const _GITWR_LOGS_RTDIR = ".rtlogs"
-_out_rtlogfile(rtid) = _localdir(_GITWR_LOGS_RTDIR, string(rtid, ".out.log"))
-_err_rtlogfile(rtid) = _localdir(_GITWR_LOGS_RTDIR, string(rtid, ".err.log"))
+
 
 # ------------------------------------------------------------------
 function eval_rt(rtfile)
@@ -10,20 +8,19 @@ function eval_rt(rtfile)
     sysroot = _get_root()
     url = _get_url()
     urldir = _urldir()
-    rtid = rtcmd.id
+    taskid = rtcmd.id
 
     cached_rtfile = _localver(rtfile) # This will be deleted on execution
     _gwcp(rtfile, cached_rtfile)
 
-    outfile = _out_rtlogfile(rtid)
-    errfile = _err_rtlogfile(rtid)
+    outfile = _repo_tasklog(taskid)
     scriptfile = joinpath(@__DIR__, "routine_script.jl")
 
     if rtcmd.long
 
         julia = Base.julia_cmd()
         # TODO: connect with config for julia cmd
-        jlcmd = Cmd(`$julia --startup-file=no --project=$(urldir) -- $(scriptfile) $(sysroot) $(url) $(cached_rtfile) $(rtid)`; detach = false)
+        jlcmd = Cmd(`$julia --startup-file=no --project=$(urldir) -- $(scriptfile) $(sysroot) $(url) $(cached_rtfile) $(taskid)`; detach = false)
         # jlcmd = pipeline(jlcmd; stdout = outfile, stderr = errfile, append = true)
         jlcmd = pipeline(jlcmd; stdout = outfile, stderr = outfile, append = true)
         run(jlcmd; wait = false)
@@ -42,7 +39,7 @@ end
 # This is to prevent an overtimed execution
 function _eval_routines(rtdir)
     !isdir(rtdir) && return
-    rtfiles = readdir(rtdir; join = true, sort = false)
+    rtfiles = _gw_readdir(rtdir; join = true, sort = false)
     sort!(rtfiles; rev = true, by = mtime)
 
     for rtfile in rtfiles

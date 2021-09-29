@@ -18,19 +18,18 @@ end
     Capture the expression and push it
 """
 macro gwspawn(expr)
-    rtid = _gen_id()
-    _repo_update(; ios = []) do
+    taskid = _gen_id()
+    _repo_update(; verb = false ) do
 	
         _set_pushflag()
-        _set_iterfrec(3.0)
         
-        _serialize_repo_rt(rtid, expr; long=true)
+        _serialize_repo_rt(taskid, expr; long=true)
         return true
     end
 
-    outfile = _repover(_out_rtlogfile(rtid))
+    outfile = _repover(_repo_tasklog(taskid))
     try
-        println("\n\nFollowing task: ", rtid)
+        println("\n\nFollowing task: ", taskid)
         _follow_and_print(outfile; tout = typemax(Int))
     catch err
         (err isa InterruptException) && return

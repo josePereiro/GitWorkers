@@ -1,1 +1,1 @@
-gw_clear_rts(; deb = true) = _repo_update(_clear_rts; deb)
+gw_clear_rts(; verb = true) = _repo_update(() -> (_clear_rts(); true); verb)

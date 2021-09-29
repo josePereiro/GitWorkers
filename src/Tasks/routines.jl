@@ -10,12 +10,12 @@ _uprepo_rtfile(name) = _repodir(_GITWR_UPREPO_RTDIR, string(name, _GITWR_ROUTINE
 
 ## ------------------------------------------------------------------
 
-function _serialize_rt(rtid, ex::Expr, rtfile::String; long = true)
+function _serialize_rt(taskid, ex::Expr, rtfile::AbstractString; long = true)
     
     !Meta.isexpr(ex, :block) && error("A 'begin' block was expected. Ex: '@gitworker begin println(\"Hi\")' end")
 
     __routine__ = (;
-        id = rtid, 
+        id = taskid, 
         rtfile = _rel_urlpath(rtfile), 
     )
 
@@ -28,7 +28,7 @@ function _serialize_rt(rtid, ex::Expr, rtfile::String; long = true)
     end
 
     rtdat = (;
-        id = rtid, 
+        id = taskid, 
         rtfile = _rel_urlpath(rtfile),
         expr, 
         long
@@ -39,10 +39,10 @@ function _serialize_rt(rtid, ex::Expr, rtfile::String; long = true)
 end
 
 ## ------------------------------------------------------------------
-_serialize_repo_rt(rtid, expr::Expr; kwargs...) = _serialize_rt(rtid, expr, _uprepo_rtfile(rtid); kwargs...)
+_serialize_repo_rt(taskid, expr::Expr; kwargs...) = _serialize_rt(taskid, expr, _uprepo_rtfile(taskid); kwargs...)
 _serialize_repo_rt(expr::Expr; kwargs...) = _serialize_repo_rt(_gen_id(), expr; kwargs...)
 
-_serialize_local_rt(rtid, expr::Expr; kwargs...) = _serialize_rt(rtid, expr, _uplocal_rtfile(rtid); kwargs...)
+_serialize_local_rt(taskid, expr::Expr; kwargs...) = _serialize_rt(taskid, expr, _uplocal_rtfile(taskid); kwargs...)
 _serialize_local_rt(expr::Expr; kwargs...) = _serialize_local_rt(_gen_id(), expr; kwargs...)
 
 # outfile = _rel_urlpath(outfile), 

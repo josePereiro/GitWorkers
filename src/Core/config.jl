@@ -19,7 +19,7 @@
 #     return config_dict
 # end
 
-# function _save_config!(kstr::String, val)
+# function _save_config!(kstr::AbstractString, val)
 #     config_dict = _load_config()
 #     ks = split(kstr, ".")
 #     ki0 = firstindex(ks)
@@ -40,7 +40,7 @@
 #     !isfile(config_file) ? Dict{String, Any}() : TOML.parsefile(config_file)
 # end
 
-# function _load_config(kstr::String)
+# function _load_config(kstr::AbstractString)
 #     config = _load_config()
 #     ks = split(kstr, ".")
 #     for k in ks
@@ -49,7 +49,7 @@
 #     return config
 # end
 
-# function _load_config!(kstr::String, dft)
+# function _load_config!(kstr::AbstractString, dft)
 #     config_dict = _load_config()
 #     ks = split(kstr, ".")
 #     ki0 = firstindex(ks)
@@ -69,7 +69,7 @@
 
 # _has_config() = isfile(_gitwr_configfile())
 
-# function _has_config(kstr::String)
+# function _has_config(kstr::AbstractString)
 #     !_has_config() && return false
     
 #     config_dict = _load_config()

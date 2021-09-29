@@ -8,7 +8,7 @@ sys_root (root)
     |        |        |------ Manifest.toml                            
     |        |        |------ .local                            
     |        |        |         |------ local.config                    
-    |        |        |         |------ .logs (cp to repo, persistant)
+    |        |        |         |------ .logs (merge to repo, persistant)
     |        |        |         |         |------ log1
     |        |        |         |         |------ log2
     |        |        |         |         |
@@ -72,7 +72,6 @@ sys_root (root)
     |        |        |         |         .  
     |        |        |         |
     |        |        |         |------ .loopcontrol (persistant)
-    |        |        |         |         |------ iterfrec
     |        |        |         |         |------ curriter
     |        |        |         |         |------ pushflag (transcient)
     |        |        |         |         |
@@ -109,6 +108,7 @@ _localdir(ns...) = _urldir(".local", ns...)
 _localver(path) = _mkpath(replace(path, _repodir() => _localdir()))
 _local_logsdir(ns...) = _localdir(".logs", ns...)
 _local_sigdir(ns...) = _localdir(".signals", ns...)
+_local_procsdir(ns...) = _localdir(".procs", ns...)
 _local_tasksdir(ns...) = _localdir(".tasks", ns...)
 _local_datadir(ns...) = _localdir(".data", ns...)
 

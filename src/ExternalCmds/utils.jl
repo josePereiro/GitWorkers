@@ -1,7 +1,7 @@
 # getpid(proc)
 function force_kill(pid::Integer)
     try
-        _run(`kill -SIGKILL $pid`)
+        run(`kill -SIGKILL $pid`)
         return true
         catch; return false
     end

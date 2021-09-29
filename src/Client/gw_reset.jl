@@ -1,12 +1,11 @@
 ## ---------------------------------------------------------------
 # reset
-function gw_reset_server(;update = false, deb = false)
+function gw_reset_server(;update = false, verb = false)
 	
-	ios = deb ? [stdout] : []
-	_repo_update(;ios) do
+	_repo_update(;verb) do
 		
 		_set_pushflag()
-		_send_resetsig(;update)
+		_set_resetsig(;update)
 		
 		return true
 	end

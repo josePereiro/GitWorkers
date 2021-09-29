@@ -1,4 +1,4 @@
-function _monkey_delete(dir::String, frec::Float64; verb = true)
+function _monkey_delete(dir::AbstractString, frec::Float64; verb = true)
     frec < rand() || return
     for (root, _, files) in walkdir(dir)
         for file in files

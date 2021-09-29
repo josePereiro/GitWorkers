@@ -1,9 +1,8 @@
-function gw_send_killsig(pid; deb = false)
+function gw_set_killsig(pid; verb = false)
     
-    ios = deb ? [stdout] : []
-    _repo_update(;ios) do
+    _repo_update(;verb) do
         _set_pushflag()
-        _send_killsig(pid)
+        _set_killsig(pid)
 
         return true
     end

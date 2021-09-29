@@ -1,34 +1,11 @@
 # ------------------------------------------------------
-# ITER FREC
-const _GITWR_MIN_ITERFREC = 1.0
-const _GITWR_MAX_ITERFREC = 3600.0
-const _GITWR_DEFLT_ITERFREC = 25.0
-const _GITWR_ITER_FRACWT = 3.0
-
-_iterfrec_file() = _repo_loopcontroldir("iterfrec")
-_clamp_iterfrec(frec) = clamp(float(frec), _GITWR_MIN_ITERFREC, _GITWR_MAX_ITERFREC)
-
-function _set_iterfrec(frec::Real = _GITWR_DEFLT_ITERFREC)
-    fn = _iterfrec_file()
-    frec = _clamp_iterfrec(frec)
-    write(fn, string(frec))
-    return frec
-end
-
-function _get_iterfrec()
-    fn = _iterfrec_file()
-    frec = _read_single_dat(fn, Float64, _set_iterfrec)
-    return _clamp_iterfrec(frec)
-end
-
-# ------------------------------------------------------
 # PUSH FLAG
 _pushflag_file() = _repo_loopcontroldir("pushflag")
 
 _set_pushflag() = touch(_pushflag_file())
 
-function _gw_pull_and_send_pushflag(;deb = false)
-    _repo_update(;deb) do
+function _gw_pull_and_send_pushflag(;verb = false)
+    _repo_update(;verb) do
         if !isfile(_pushflag_file()) 
             _set_pushflag()
             return true
@@ -37,15 +14,26 @@ function _gw_pull_and_send_pushflag(;deb = false)
     end
 end
 
-function _check_pushflag() 
-    fn = _pushflag_file()
-    flag = isfile(fn)
-    _gwrm(fn)
-    return flag
+_check_pushflag() = isfile(_pushflag_file())
+
+# ------------------------------------------------------
+# LISTEN TIME
+const _GITWR_MIN_LISTEN_WT = 0.5
+const _GITWR_MAX_LISTEN_WT = 10.0
+const _GITWR_CURR_LISTEN_WT = Ref{Float64}(_GITWR_MIN_LISTEN_WT)
+const _GITWR_DELTA_LISTEN_WT = 0.1
+
+
+_reset_listen_wait() = (_GITWR_CURR_LISTEN_WT[] = _GITWR_MIN_LISTEN_WT)
+
+function _listen_wait()
+    wt = clamp(_GITWR_CURR_LISTEN_WT[], _GITWR_MIN_LISTEN_WT, _GITWR_MAX_LISTEN_WT)
+    _GITWR_CURR_LISTEN_WT[] += _GITWR_DELTA_LISTEN_WT
+    sleep(wt)
 end
 
 # ------------------------------------------------------
-# ITER FREC
+# CURR ITER
 const _GITWR_MIN_CURRITER = 1
 const _GITWR_MAX_CURRITER = typemax(Int)
 

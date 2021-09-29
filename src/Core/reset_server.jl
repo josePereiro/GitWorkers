@@ -18,7 +18,7 @@ end
 
 function _reset_server()
     _repo_update() do
-        _send_killsig(getpid())
+        _set_killsig(getpid())
         return true
     end
     proj = Base.active_project()

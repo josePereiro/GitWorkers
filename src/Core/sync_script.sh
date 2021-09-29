@@ -11,15 +11,15 @@ sh_url="$2"
 sh_op_mode="$3" 
 sh_commit_msg="$4" 
 sh_success_token="$5" 
-sh_fail_token="$6" 
+sh_error_token="$6" 
 
-# deb
+# verb
 # echo ${sh_repodir}
 # echo ${sh_url}
 # echo ${sh_op_mode}
 # echo ${sh_commit_msg}
 # echo ${sh_success_token}
-# echo ${sh_fail_token}
+# echo ${sh_error_token}
 
 # ---------------------------------------------------------------------------------------
 # variables 

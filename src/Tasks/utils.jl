@@ -12,7 +12,7 @@ function _clear_todel_files()
     todeldir = _localdir(".todel")
     !isdir(todeldir) && return
 
-    for todelfile in readdir(todeldir; join = true)
+    for todelfile in _gw_readdir(todeldir; join = true)
         !endswith(todelfile, ".todel")  && continue
         paths = deserialize(todelfile)
         for path in paths
@@ -42,7 +42,7 @@ function _clear_seek_and_destroy(; exit = false)
     sddir = _localdir(".seek_and_destroy")
     !isdir(sddir) && return
 
-    for sdfile in readdir(sddir; join = true)
+    for sdfile in _gw_readdir(sddir; join = true)
         !endswith(sdfile, ".seek_and_destroy")  && continue
         ids = deserialize(sdfile)
         for id in ids
@@ -57,11 +57,11 @@ end
 
 ## ---------------------------------------------------------------
 const _GITWR_RTDATA_DIR = ".rtdat"
-_rtdata_file(rtid, name) = _localdir(_GITWR_RTDATA_DIR, string(rtid, ".", name))
+_rtdata_file(taskid, name) = _localdir(_GITWR_RTDATA_DIR, string(taskid, ".", name))
 
-_save_rtdata(rtid, name, dat) = serialize(_rtdata_file(rtid, name), dat)
-_load_rtdata(rtid, name, dfl = nothing) = 
-    (fn = _rtdata_file(rtid, name); isfile(fn) ? deserialize(fn, dat) : dfl)
+_save_rtdata(taskid, name, dat) = serialize(_rtdata_file(taskid, name), dat)
+_load_rtdata(taskid, name, dfl = nothing) = 
+    (fn = _rtdata_file(taskid, name); isfile(fn) ? deserialize(fn, dat) : dfl)
 
 ## ---------------------------------------------------------------
 function _clear_rts()
@@ -83,3 +83,5 @@ macro _rt_rtfile()
         $(esc(:(__routine__.rtfile)))
     end
 end
+
+## ---------------------------------------------------------------

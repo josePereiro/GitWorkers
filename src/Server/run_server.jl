@@ -6,8 +6,27 @@ function run_server(;
     # ---------------------------------------------------------------
     # SETUP
     setup_gitworker(;url, sys_root)
+    
+    # ---------------------------------------------------------------
+    # check
+    _reg_server_main_proc()
+    _clear_procs_regs()
+    _check_duplicated_server_main_proc()
 
     # ---------------------------------------------------------------
+    # Server Os
+    _GW_ISRUNNING = true
+    @async while _GW_ISRUNNING
+        # handle proc reg
+        _reg_server_main_proc()
+        _check_duplicated_server_main_proc()
+        _clear_procs_regs()
+
+        sleep(10.0)
+    end
+
+    # ---------------------------------------------------------------
+    # make process resiliant
     while true
     
         try
@@ -16,9 +35,10 @@ function run_server(;
             println("\n\n")
             @info("Spawing server loop")
             println("\n\n")
-            urldir = _urldir()
+            projdir = pathof(GitWorkers)
             script_path = joinpath(@__DIR__, "server_loop_script.jl")
-            jlcmd = Cmd(`julia --project=$(urldir) --startup-file=no -- $(script_path) --sys-root=$(sys_root) --url=$(url)`)
+            jlcmd = Base.julia_cmd()
+            jlcmd = Cmd(`$(jlcmd) --project=$(projdir) --startup-file=no -- $(script_path) $(sys_root) $(url)`)
             jlcmd = pipeline(jlcmd, stdout=stdout, stderr=stdout)
             run(jlcmd; wait = true)
 
@@ -31,5 +51,9 @@ function run_server(;
         end
 
     end
+
+    # ---------------------------------------------------------------
+    _GW_ISRUNNING = false
+    exit()
     
 end

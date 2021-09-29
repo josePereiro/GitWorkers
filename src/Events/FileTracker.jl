@@ -10,14 +10,14 @@ function _reset_file_trakers!()
     empty!(_FILE_TRACKER_CONTENT_HASH_DB)
 end
 
-function _reset_file_trakers!(file::String)
+function _reset_file_trakers!(file::AbstractString)
     delete!(_FILE_TRACKER_MTIME_UTILITY_DB_, file)
     delete!(_FILE_TRACKER_MTIME_DB, file)
     delete!(_FILE_TRACKER_SIZE_DB, file)
     delete!(_FILE_TRACKER_CONTENT_HASH_DB, file)
 end
 
-function _event_handler!(userfun::Function, file::String, event::Function, new_datfun::Function, DB, dbdef, dofirst)
+function _event_handler!(userfun::Function, file::AbstractString, event::Function, new_datfun::Function, DB, dbdef, dofirst)
     
     file = abspath(file)
     !isfile(file) && (delete!(DB, file); return false)
@@ -35,10 +35,10 @@ end
 
 _default_event(old_, new_) = (old_ != new_)
 
-_on_mtime_event(fun::Function, file::String; event = _default_event, dofirst = false) =
+_on_mtime_event(fun::Function, file::AbstractString; event = _default_event, dofirst = false) =
     _event_handler!(fun, file, event, mtime, _FILE_TRACKER_MTIME_DB, -1.0, dofirst)
 
-_on_size_event(fun::Function, file::String; event = _default_event, dofirst = false) =
+_on_size_event(fun::Function, file::AbstractString; event = _default_event, dofirst = false) =
     _event_handler!(fun, file, event, filesize, _FILE_TRACKER_SIZE_DB, -1.0, dofirst)
     
 function _file_content_hash(file) 
@@ -49,7 +49,7 @@ function _file_content_hash(file)
     return hash_
 end
 
-function _on_content_event(fun::Function, file::String; event = _default_event, dofirst = false)
+function _on_content_event(fun::Function, file::AbstractString; event = _default_event, dofirst = false)
     # check if mtime changes (performance)
     _event_handler!(file, _default_event, mtime, _FILE_TRACKER_MTIME_UTILITY_DB_, -1.0, true) do
         _event_handler!(fun, file, event, _file_content_hash, _FILE_TRACKER_CONTENT_HASH_DB, UInt64(0.0), dofirst)

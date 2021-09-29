@@ -6,35 +6,31 @@ _SYNC_SCRIPT_FORCE_CLONE_MODE = "FORCE_CLONE"
 _SYNC_SCRIPT_FORCE_CLONE_AND_PUSH_MODE = "FORCE_CLONE_AND_PUSH"
 _SYNC_SCRIPT_PUSH_MODE = "PUSH"
 _SYNC_SCRIPT_NO_OP_MODE = "NO_OP"
-
-## ---------------------------------------------------------------
-# TODO: create script Template to handle custom 'git' commands
-const _SYNC_SCRIPT_FILE = joinpath(dirname(pathof(GitWorkers)), "Core", "sync_script.sh")
-
 ## ---------------------------------------------------------------
 function _call_sync_script(
         repodir, url, op_mode,
         commit_msg, success_token, fail_token; 
-        ios = [stdout], detach = false
+        verb = true
     )
-
+    # TODO: create script Template to handle custom 'git' commands
+    sync_script = joinpath(@__DIR__, "sync_script.sh")
     cmd = Cmd([
-        "bash", _SYNC_SCRIPT_FILE, repodir, url, 
+        "bash", sync_script, repodir, url, 
         op_mode, commit_msg, success_token, fail_token
     ])
-    _run(cmd; ios, detach)
-    
+    _, out = ExternalCmds.run_cmd(cmd; ios = verb ? [stdout] : [])
+    return out
 end
 
 ## ---------------------------------------------------------------
 function _call_sync_script(; 
         repodir, url, 
         commit_msg = "", 
-        force_clonning = false,
         pull = false, 
+        force_clonning = false,
         push = false,
         success_token, fail_token,
-        ios = [stdout], detach = false
+        verb = true
     )
     if (pull && !push && !force_clonning)
         op_mode = _SYNC_SCRIPT_PULL_OR_CLONE_MODE
@@ -53,7 +49,7 @@ function _call_sync_script(;
     _call_sync_script(
         repodir, url, op_mode,
         commit_msg, success_token, fail_token; 
-        ios, detach
+        verb
     )
 
 end
