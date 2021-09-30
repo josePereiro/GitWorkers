@@ -1,58 +1,42 @@
-
-
 # ------------------------------------------------------------------
-function eval_rt(rtfile)
+function _spawn_long_task(taskid, taskfile)
 
-    rtcmd = deserialize(rtfile)
-    
+    # setup
     sysroot = _get_root()
     url = _get_url()
-    urldir = _urldir()
-    taskid = rtcmd.id
+    # Connect proj with config
+    projdir = Base.active_project()
 
-    cached_rtfile = _localver(rtfile) # This will be deleted on execution
-    _gwcp(rtfile, cached_rtfile)
+    # log
+    logfile = _local_tasklog(taskid)
+    scriptfile = joinpath(@__DIR__, "long_task_script.jl")
 
-    outfile = _repo_tasklog(taskid)
-    scriptfile = joinpath(@__DIR__, "routine_script.jl")
+    # TODO: connect with config for julia cmd
+    julia = Base.julia_cmd()
+    jlcmd = Cmd(`$julia --startup-file=no --project=$(projdir) -- $(scriptfile) $(taskid) $(taskfile) $(sysroot) $(url)`; detach = false)
+    jlcmd = pipeline(jlcmd; stdout = logfile, stderr = logfile, append = true)
+    run(jlcmd; wait = false)
 
-    if rtcmd.long
+    return nothing
 
-        julia = Base.julia_cmd()
-        # TODO: connect with config for julia cmd
-        jlcmd = Cmd(`$julia --startup-file=no --project=$(urldir) -- $(scriptfile) $(sysroot) $(url) $(cached_rtfile) $(taskid)`; detach = false)
-        # jlcmd = pipeline(jlcmd; stdout = outfile, stderr = errfile, append = true)
-        jlcmd = pipeline(jlcmd; stdout = outfile, stderr = outfile, append = true)
-        run(jlcmd; wait = false)
-        _gwrm(rtfile)
-
-    else
-        flag = GitWorkers.eval(rtcmd.rtexpr)
-        return flag
-    end
 end
 
+function _spawn_long_tasks()
 
-# ------------------------------------------------------------------
-# TODO: make a system that allows to run just a partial set of routines
-# but remembers the next time and 'ensures' all routines are finally run.
-# This is to prevent an overtimed execution
-function _eval_routines(rtdir)
-    !isdir(rtdir) && return
-    rtfiles = _gw_readdir(rtdir; join = true, sort = false)
-    sort!(rtfiles; rev = true, by = mtime)
+    taskfiles = _readdir(_local_tasksdir(); join = true)
+    for taskfile in taskfiles
 
-    for rtfile in rtfiles
-        !_is_rtfile(rtfile) && continue
+        # Check
+        taskid, _ = _parse_long_task_name(taskfile)
+        isempty(taskid) && (rm(taskfile; force = true); return)
 
         try
-            flag = eval_rt(rtfile)
-            flag === :EXIT && return
-        
+            _spawn_long_task(taskid, taskfile)
         catch err
-            err isa InterruptException && rethrow()
-            @warn("ERROR", err)
-            rethrow(err) # Test
+            print("\n\n")
+            GitWorkers._printerr(err)
+            print("\n\n")
         end
     end
+    
 end

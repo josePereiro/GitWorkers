@@ -4,12 +4,8 @@ _touch_dummy() = write(_dummy_file(), _gen_id())
 """
     print the err text
 """
-function printerr(io::IO, err; max_len = 10000)
-    s = sprint(showerror, err, catch_backtrace())
-    print(io, length(s) > max_len ? s[1:max_len] * "\n[...]" : s)
-end
-printerr(err; max_len = 10000) = printerr(stdout, err; max_len)
-
+_printerr(io::IO, err) = print(io, sprint(showerror, err, catch_backtrace()))
+_printerr(err) = _printerr(stdout, err)
 
 function _dict(d = Dict{String, Any}(); kwargs...) 
 	for (k, v) in kwargs

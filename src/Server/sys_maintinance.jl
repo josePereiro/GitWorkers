@@ -12,7 +12,7 @@ end
 _check_duplicated_server_main_proc() = _check_no_proc_running(_GITGW_SERVER_MAIN_PROC_TAG, 1)
 _check_duplicated_server_loop_proc() = _check_no_proc_running(_GITGW_SERVER_LOOP_PROC_TAG, 1)
 
-function _clear_procs_regs()
+function _clear_invalid_procs_regs()
     for procreg in _readdir(_local_procsdir(); join = true)
         !_validate_proc(procreg) && _rm(procreg)
     end

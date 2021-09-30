@@ -1,5 +1,5 @@
 ## ------------------------------------------------------------------
-# imports
+# IMPORT
 # This is suppost to be run in an enviroment that has GitWorkers installed
 # I'll use the server environment
 try; import GitWorkers
@@ -12,33 +12,27 @@ import GitWorkers
 import GitWorkers.Serialization
 
 ## ------------------------------------------------------------------
-# Args
+# ARGS
 const _GW_TASKID = ARGS[1]
 const _GW_TASK_FILE = ARGS[2]
 const _GW_SYS_ROOT = ARGS[3]
 const _GW_REMOTE_URL = ARGS[4]
 
 ## ------------------------------------------------------------------
-# setup worker
+# atexit
+atexit() do
+    rm(_GW_TASK_FILE; force = true)
+end
+
+## ------------------------------------------------------------------
+# SETUP
 GitWorkers._setup_gitworker_local_part(;
     url = _GW_REMOTE_URL, sys_root = _GW_SYS_ROOT
 )
 
 ## ------------------------------------------------------------------
 # TASK OS
-_GW_TASK_RUNNING = true
-@async while _GW_TASK_RUNNING
-    
-    # REG PROC
-    GitWorkers._reg_proc(getpid(); desc = _GW_TASKID)
-
-    # FLUSH
-    flush(stdout)
-    flush(stderr)
-
-    # WAIT
-    sleep(5.0)
-end
+@async GitWorkers._run_log_task_os(_GW_TASKID)
 
 ## ------------------------------------------------------------------
 # WELCOME
@@ -48,12 +42,18 @@ println("task id: ", _GW_TASKID)
 println("\n\n")
 
 ## ------------------------------------------------------------------
-# eval expr
-_rtcmd = GitWorkers.Serialization.deserialize(_GW_TASK_FILE)
-@sync GitWorkers.eval(_rtcmd.expr)
-
-## ------------------------------------------------------------------
-_GW_TASK_RUNNING = false
+# EVAL EXPRS
+try 
+    _GW_TASK_CMD = Serialization.deserialize(_GW_TASK_FILE)
+    rm(_GW_TASK_FILE; force = true)
+    @sync GitWorkers.eval(_GW_TASK_CMD.expr)
+catch err
+    print("\n\n")
+    GitWorkers._printerr(err)
+    print("\n\n")
+finally
+    rm(_GW_TASK_FILE; force = true)
+end
 
 ## ------------------------------------------------------------------
 # FINISHED
@@ -63,7 +63,7 @@ println("task id: ", _GW_TASKID)
 println("\n\n")
 
 ## ------------------------------------------------------------------
-# insist
+# INSIST FLUSHING
 for _ in 1:10
     flush(stdout)
     flush(stderr)

@@ -22,15 +22,15 @@ macro gw_spawn(expr)
     _repo_update(; verb = false ) do
 	
         _set_pushflag()
-        
-        _serialize_repo_rt(taskid, expr; long=true)
+        _set_long_task(taskid, expr)
         return true
     end
 
-    outfile = _repover(_repo_tasklog(taskid))
+    logfile = _repo_tasklog(taskid)
     try
-        println("\n\nFollowing task: ", taskid)
-        _follow_and_print(outfile; tout = typemax(Int))
+        @info("Following task: ", taskid, logfile)
+        # HERE: Fix this is not printing
+        _follow_and_print(logfile; tout = typemax(Int), wt = 2.0)
     catch err
         (err isa InterruptException) && return
         rethrow(err)

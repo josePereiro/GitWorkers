@@ -8,11 +8,11 @@
 # )
 
 # ## ---------------------------------------------------------------
-# _gitwr_configfile() = joinpath(_urldir(), ".gitworker.config.toml")
+# _gw_configfile() = joinpath(_urldir(), ".gitworker.config.toml")
 
 # ## ---------------------------------------------------------------
 # function _save_config(config_dict::Dict; verb=false)
-#     config_file = _gitwr_configfile()
+#     config_file = _gw_configfile()
 #     open(config_file, "w") do io
 #         TOML.print(io, config_dict; sorted=true)
 #     end
@@ -36,7 +36,7 @@
 
 # ## ---------------------------------------------------------------
 # function _load_config()
-#     config_file = _gitwr_configfile()
+#     config_file = _gw_configfile()
 #     !isfile(config_file) ? Dict{String, Any}() : TOML.parsefile(config_file)
 # end
 
@@ -67,7 +67,7 @@
 # _config_haskey(config::Dict, k) = haskey(config, k)
 # _config_haskey(config, k) = false
 
-# _has_config() = isfile(_gitwr_configfile())
+# _has_config() = isfile(_gw_configfile())
 
 # function _has_config(kstr::AbstractString)
 #     !_has_config() && return false

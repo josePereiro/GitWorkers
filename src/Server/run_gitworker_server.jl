@@ -10,7 +10,7 @@ function run_gitworker_server(;
     # ---------------------------------------------------------------
     # check
     _reg_server_main_proc()
-    _clear_procs_regs()
+    _clear_invalid_procs_regs()
     _check_duplicated_server_main_proc()
 
     # ---------------------------------------------------------------
@@ -20,7 +20,7 @@ function run_gitworker_server(;
         # handle proc reg
         _reg_server_main_proc()
         _check_duplicated_server_main_proc()
-        _clear_procs_regs()
+        _clear_invalid_procs_regs()
 
         sleep(10.0)
     end
@@ -35,7 +35,7 @@ function run_gitworker_server(;
             println("\n\n")
             @info("Spawing server loop")
             println("\n\n")
-            projdir = pathof(GitWorkers)
+            projdir = Base.active_project()
             script_path = joinpath(@__DIR__, "server_loop_script.jl")
             jlcmd = Base.julia_cmd()
             jlcmd = Cmd(`$(jlcmd) --project=$(projdir) --startup-file=no -- $(script_path) $(sys_root) $(url)`)
@@ -45,7 +45,7 @@ function run_gitworker_server(;
         catch err
             (err isa InterruptException) && exit()
             print("\n\n")
-            printerr(err)
+            _printerr(err)
             print("\n\n")
             rethrow(err) # Test
         end

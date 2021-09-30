@@ -1,25 +1,25 @@
 # # ---------------------------------------------------------------
 # # transient data un-synchronized with upstream
-# const _GITWR_TEMPDIR_NAME = ".temp"
+# const _GW_TEMPDIR_NAME = ".temp"
 
-# function _gitwr_tempdir() 
-#     dir = _urldir(_GITWR_TEMPDIR_NAME)
+# function _gw_tempdir() 
+#     dir = _urldir(_GW_TEMPDIR_NAME)
 #     !isdir(dir) && mkpath(dir)
 #     return dir
 # end
-# _gitwr_tempdir(n, ns...) = joinpath(_gitwr_tempdir(), string(n), string.(ns)...)
+# _gw_tempdir(n, ns...) = joinpath(_gw_tempdir(), string(n), string.(ns)...)
 
-# function _gitwr_tempfile()
+# function _gw_tempfile()
 #     while true
-#         file = _gitwr_tempdir(_gen_id())
+#         file = _gw_tempdir(_gen_id())
 #         !isfile(file) && return file
 #     end
 # end
 
-# _del_gitwr_tempfiles() = rm(_gitwr_tempdir(); recursive = true, force = true)
+# _del_gw_tempfiles() = rm(_gw_tempdir(); recursive = true, force = true)
 
-# function _ls_gitwr_tempdir()
-#     dir = _gitwr_tempdir()
+# function _ls_gw_tempdir()
+#     dir = _gw_tempdir()
 #     println.(isdir(dir) ? readdir(dir) : String[])
 #     return nothing
 # end

@@ -6,6 +6,10 @@ function _server_loop()
     repodir = _repodir()
     url = _get_url()
 
+    ## ------------------------------------------------------------------
+    # OS
+    @async _run_server_loop_os()
+
     # ---------------------------------------------------------------
     # sync loop
     verb = true
@@ -33,11 +37,10 @@ function _server_loop()
                 )
 
                 # loopcontrol
-
                 # push flag
                 _check_pushflag() && break
 
-                println("\nJust listening, time: ", now())
+                # wait
                 _listen_wait()
             end
             _reset_listen_wait()
@@ -76,12 +79,12 @@ function _server_loop()
                 success_token, fail_token, 
                 verb
             )
-            !success && exit() # Test
             !success && continue
 
             # ------------------------------------------------------
             # exec tasks
             println("\nexec tasks")
+            _spawn_long_tasks()
 
             # ------------------------------------------------------
             # exec signals
@@ -91,18 +94,18 @@ function _server_loop()
             # ------------------------------------------------------
             # sys maintinance
             _reg_server_loop_proc()
+            _clear_invalid_procs_regs()
             _check_duplicated_server_main_proc()
             _check_duplicated_server_loop_proc()
-            _clear_procs_regs()
-
 
         catch err
+            err isa InterruptException && rethrow(err)
+            print("\n\n")
+            _printerr(err)
+            print("\n\n")
+            
+            # Dev
             rethrow(err)
-            # err isa InterruptException && rethrow(err)
-            printerr(err)
-            # println()
-            # Test
-            # rethrow(err) 
         end
 
         # loop control

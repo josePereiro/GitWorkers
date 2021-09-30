@@ -90,11 +90,11 @@ sys_root (root)
 
 # ---------------------------------------------------------------
 # the dirpath od the home
-_gitwr_rootdir(ns...) = _mkpath(abspath(_get_root()), ns...)
+_gw_rootdir(ns...) = _mkpath(abspath(_get_root()), ns...)
 
 # ---------------------------------------------------------------
 # the home of GitWorkers
-_gitworkers_homedir(ns...) = _gitwr_rootdir(".gitworkers", ns...)
+_gitworkers_homedir(ns...) = _gw_rootdir(".gitworkers", ns...)
 
 # ---------------------------------------------------------------
 # the root of the repo

@@ -1,5 +1,5 @@
-const _GITWR_SYSFILES_DIR = ".sysfiles"
-_sysdir(ns...) = _repodir(_GITWR_SYSFILES_DIR, ns...)
+const _GW_SYSFILES_DIR = ".sysfiles"
+_sysdir(ns...) = _repodir(_GW_SYSFILES_DIR, ns...)
 
 # ------------------------------------------------------
 function _read_single_dat(fn, T, dflfun::Function)

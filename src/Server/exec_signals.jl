@@ -22,8 +22,9 @@ function _update_proj()
         # TODO: manage runtime Project
         # Pkg.activate(_urldir())
         # Pkg.add("GitWorkers")
+        @show Base.active_project()
         Pkg.update("GitWorkers")
-    catch err; end
+    catch err; @error(err); end
 end
 
 # ------------------------------------------------------

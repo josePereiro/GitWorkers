@@ -18,4 +18,4 @@ _waitfor_content_change(file; kwargs...) =
 _waitfor_size_change(file; kwargs...) = 
     _waitfor_handler(file, filesize; kwargs...)
 
-_waitfor_till_next_iter(; kwargs...) = _waitfor_content_change(_curriter_sysfile(); kwargs...)
+_waitfor_till_next_iter(; kwargs...) = _waitfor_content_change(_curriter_file(); kwargs...)

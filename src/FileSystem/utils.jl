@@ -52,7 +52,7 @@ function _gw_mvfiles(srcdir::AbstractString, dstdir::AbstractString)
     dstdir = _native_urlpath(dstdir)
     !isdir(srcdir) && return
     isfile(dstdir) && return
-    !isdir(dstdir) && _mkpath(dstdir)
+    !isdir(dstdir) && mkpath(dstdir)
     for file in readdir(srcdir)
         src = joinpath(srcdir, file)
         dest = joinpath(dstdir, file)
@@ -66,7 +66,7 @@ end
 function _mergedirs(srcdir::AbstractString, dstdir::AbstractString)
     !isdir(srcdir) && return
     isfile(dstdir) && return
-    !isdir(dstdir) && _mkpath(dstdir)
+    !isdir(dstdir) && mkpath(dstdir)
     for name in readdir(srcdir)
         src = joinpath(srcdir, name)
         dest = joinpath(dstdir, name)

@@ -4,7 +4,7 @@ function gw_ping(;tout = 60.0, verb = false)
     
     # wait
     try
-        _waitfor_till_next_iter(;tout)
+        _waitfor_till_next_iter(;tout, verb)
         remote = _get_url()
         msg = string("Ping in ", round(time() - t0; sigdigits = 3), " secund(s)")
         curriter = _get_curriter()

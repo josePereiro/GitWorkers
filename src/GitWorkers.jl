@@ -41,14 +41,15 @@ module GitWorkers
     include("Signals/killsig.jl")
     include("Signals/resetsig.jl")
 
-    include("Tasks/utils.jl")
-    include("Tasks/routines.jl")
-    include("Tasks/task_logs.jl")
+    include("Tasks/long_task_os.jl")
+    include("Tasks/long_tasks.jl")
+    include("Tasks/set_long_task.jl")
     include("Tasks/spawn_long_task.jl")
-    include("Tasks/routines_templates.jl")
+    include("Tasks/task_logs.jl")
+    include("Tasks/utils.jl")
     
     include("FileSystem/utils.jl")
-    include("FileSystem/gitwr_dirs.jl")
+    include("FileSystem/dirs.jl")
     include("FileSystem/filter_gitwr.jl")
     
     include("Server/procs.jl")
@@ -59,9 +60,9 @@ module GitWorkers
     include("Server/upload_data.jl")
     include("Server/exec_signals.jl")
     include("Server/download_data.jl")
-    include("Server/spawn_long_task.jl")
     include("Server/sys_maintinance.jl")
     include("Server/repo_maintinance.jl")
+    include("Server/server_loop_os.jl")
 
     export run_gitworker_server
     
