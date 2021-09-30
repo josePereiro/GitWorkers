@@ -81,14 +81,7 @@ function _server_loop()
 
             # ------------------------------------------------------
             # exec tasks
-            # println("\nrunning repo routines")
-            # ------------------------------------------------------
-            # repo routine
-            # !_check_standby_sig() && let
-            #     println("\nrunning repo routines")
-            #     _uprepo_rtdir = _repodir(_GITWR_UPREPO_RTDIR)
-            #     _eval_routines(_uprepo_rtdir)
-            # end
+            println("\nexec tasks")
 
             # ------------------------------------------------------
             # exec signals

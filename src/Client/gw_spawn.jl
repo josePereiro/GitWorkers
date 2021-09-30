@@ -17,7 +17,7 @@ end
 """
     Capture the expression and push it
 """
-macro gwspawn(expr)
+macro gw_spawn(expr)
     taskid = _gen_id()
     _repo_update(; verb = false ) do
 	

@@ -6,7 +6,7 @@ function _make_server_script(;sys_root, url)
 
     rm("$(file)"; force = true)
 
-    GitWorkers.run_server(; sys_root = "$(sys_root)", url = "$(url)")
+    GitWorkers.run_gitworker_server(; sys_root = "$(sys_root)", url = "$(url)")
 
     """
 

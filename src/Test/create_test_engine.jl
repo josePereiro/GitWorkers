@@ -32,7 +32,7 @@ function _create_test_engine(testdir; clear_repos = true, clear_scripts = false)
             "using GitWorkers", 
             "",
             "## ---------------------------------------------------------------",
-            "GitWorkers.run_server(;",
+            "GitWorkers.run_gitworker_server(;",
                 """\tsys_root = "$(server_root)",""",
                 """\turl = "$(url)",""",
             ")"

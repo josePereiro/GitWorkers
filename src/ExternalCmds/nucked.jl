@@ -5,7 +5,7 @@ let
     ## ------------------------------------------------------------------------
     depth = 5
     nuked_dir = "/Users/Pereiro/.gitworker/nuked"
-    url = "https://github.com/josePereiro/GitshDevRepo"
+    url = "https://github.com/josePereiro/Example.jl"
 
     # git config receive.denyNonFastForwards false
 
@@ -66,7 +66,7 @@ let
         ["git", "-C", nuked_dir, "commit", "-am", msg]
     )); wait=true)
 
-    target_b = "main"
+    target_b = "master"
     run(Cmd(string.(
         ["git", "-C", nuked_dir, "branch", "-D", target_b]
     )); wait=true)

@@ -46,7 +46,7 @@ _error () {
 	echo "error: ${msg}"
 	rm -frd "${sh_repodir}" # force clone next time
 	rm -frd "${sh_recovery_dir}" # clear recoveri_dir
-	exit
+	exit 1
 }
 _check_root () {
 	local reporoot="$(git -C "${sh_repodir}" rev-parse --show-toplevel)"

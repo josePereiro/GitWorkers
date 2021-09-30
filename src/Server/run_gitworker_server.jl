@@ -1,4 +1,4 @@
-function run_server(;
+function run_gitworker_server(;
         url::AbstractString,
         sys_root::AbstractString = homedir()
     )

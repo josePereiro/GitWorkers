@@ -116,3 +116,11 @@ _readdir(dir; join::Bool = false, sort::Bool = true) =
 
 _gw_readdir(dir; join::Bool = false, sort::Bool = true) = 
         _readdir(_native_urlpath(dir); join, sort)
+
+function _foldersize(dir)
+    size = 0
+    for (root, _, files) in walkdir(dir)
+        size += sum(filesize.(joinpath.(root, files)))
+    end
+    return size
+end
