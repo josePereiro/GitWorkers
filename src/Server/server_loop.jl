@@ -41,7 +41,7 @@ function _server_loop()
                 _check_pushflag() && break
 
                 # UP test
-                println("\n\n Hiiiiiii \n\")
+                println("\n\n Hiiiiiii \n\n")
 
                 # wait
                 _listen_wait()
