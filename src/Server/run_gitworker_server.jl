@@ -47,7 +47,6 @@ function run_gitworker_server(;
             print("\n\n")
             _printerr(err)
             print("\n\n")
-            rethrow(err) # Test
         end
 
     end
