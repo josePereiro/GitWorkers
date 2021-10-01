@@ -4,9 +4,9 @@ function _waitfor_handler(file, fun; wt = 0.5, tout = 60.0, verb = false)
     while true
         # pull
         _gw_pull_and_send_pushflag(;verb)
-
+        
         val = fun(file)
-        (val != val0) && return
+        (val != val0) && break
         ((time() - t0) > tout) && error("No response, time out: ", tout)
         sleep(wt)
     end

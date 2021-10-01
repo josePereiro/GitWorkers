@@ -14,14 +14,15 @@ import GitWorkers.Serialization
 ## ------------------------------------------------------------------
 # ARGS
 const _GW_TASKID = ARGS[1]
-const _GW_TASK_FILE = ARGS[2]
+const _GW_EXPR_FILE = ARGS[2]
 const _GW_SYS_ROOT = ARGS[3]
 const _GW_REMOTE_URL = ARGS[4]
 
 ## ------------------------------------------------------------------
 # atexit
 atexit() do
-    rm(_GW_TASK_FILE; force = true)
+    println("\n\n\nAt exit\n\n\n")
+    GitWorkers._rm(_GW_EXPR_FILE)
 end
 
 ## ------------------------------------------------------------------
@@ -44,15 +45,15 @@ println("\n\n")
 ## ------------------------------------------------------------------
 # EVAL EXPRS
 try 
-    _GW_TASK_CMD = Serialization.deserialize(_GW_TASK_FILE)
-    rm(_GW_TASK_FILE; force = true)
-    @sync GitWorkers.eval(_GW_TASK_CMD.expr)
+    _GW_TASK_EXPR = Serialization.deserialize(_GW_EXPR_FILE)
+    GitWorkers._rm(_GW_EXPR_FILE)
+    @sync GitWorkers.eval(_GW_TASK_EXPR)
 catch err
     print("\n\n")
     GitWorkers._printerr(err)
     print("\n\n")
 finally
-    rm(_GW_TASK_FILE; force = true)
+    GitWorkers._rm(_GW_EXPR_FILE)
 end
 
 ## ------------------------------------------------------------------

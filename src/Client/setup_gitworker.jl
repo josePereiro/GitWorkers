@@ -21,7 +21,7 @@ end
 # init setup
 function setup_gitworker(;
         url::AbstractString,
-        sys_root::AbstractString,
+        sys_root::AbstractString = homedir(),
         force_clonning = false
     )
 

@@ -9,12 +9,19 @@ function _spawn_long_task(taskid, taskfile)
 
     # log
     logfile = _local_tasklog(taskid)
-    scriptfile = joinpath(@__DIR__, "long_task_script.jl")
 
+    # unregister task
+    raskcmd = deserialize(taskfile)
+    _rm(taskfile)
+    exprfile = _local_expr_file(taskid)
+    serialize(exprfile, raskcmd.expr)
+    
     # TODO: connect with config for julia cmd
+    scriptfile = joinpath(@__DIR__, "long_task_script.jl")
     julia = Base.julia_cmd()
-    jlcmd = Cmd(`$julia --startup-file=no --project=$(projdir) -- $(scriptfile) $(taskid) $(taskfile) $(sysroot) $(url)`; detach = false)
+    jlcmd = Cmd(`$julia --startup-file=no --project=$(projdir) -- $(scriptfile) $(taskid) $(exprfile) $(sysroot) $(url)`; detach = false)
     jlcmd = pipeline(jlcmd; stdout = logfile, stderr = logfile, append = true)
+    println("\n\n", "spawing task ", taskid, "\n\n")
     run(jlcmd; wait = false)
 
     return nothing
@@ -28,7 +35,10 @@ function _spawn_long_tasks()
 
         # Check
         taskid, _ = _parse_long_task_name(taskfile)
-        isempty(taskid) && (rm(taskfile; force = true); return)
+        if isempty(taskid) 
+            rm(taskfile; force = true)
+            return
+        end
 
         try
             _spawn_long_task(taskid, taskfile)

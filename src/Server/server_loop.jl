@@ -79,12 +79,13 @@ function _server_loop()
                 success_token, fail_token, 
                 verb
             )
-            !success && continue
 
             # ------------------------------------------------------
             # exec tasks
-            println("\nexec tasks")
-            _spawn_long_tasks()
+            if success
+                println("\nexec tasks")
+                _spawn_long_tasks()
+            end
 
             # ------------------------------------------------------
             # exec signals
