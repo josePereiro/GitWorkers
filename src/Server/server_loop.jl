@@ -40,9 +40,6 @@ function _server_loop()
                 # push flag
                 _check_pushflag() && break
 
-                # UP test
-                println("\n\n Hiiiiiii \n\n")
-
                 # wait
                 _listen_wait()
             end
