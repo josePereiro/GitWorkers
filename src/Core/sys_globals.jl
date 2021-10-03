@@ -2,7 +2,7 @@
 const _SYSTEM_GLOBALS = Dict{String, Any}()
 
 function _get_global(k)
-    !haskey(_SYSTEM_GLOBALS, k) && error("global '$k' not set. To start a client uses `setup_gitworker` and to start a server use `run_gitworker_server`")
+    !haskey(_SYSTEM_GLOBALS, k) && error("global '$k' not set. To start a client uses `gw_setup_client` and to start a server use `run_gitworker_server`")
     _SYSTEM_GLOBALS[k]
 end
 

@@ -5,7 +5,7 @@ function run_gitworker_server(;
 
     # ---------------------------------------------------------------
     # SETUP
-    setup_gitworker(;url, sys_root)
+    gw_setup_client(;url, sys_root)
     
     # ---------------------------------------------------------------
     # check
@@ -41,7 +41,7 @@ function run_gitworker_server(;
             jlcmd = Cmd(`$(jlcmd) --project=$(projdir) --startup-file=no -- $(script_path) $(sys_root) $(url)`)
             jlcmd = pipeline(jlcmd, stdout=stdout, stderr=stdout)
             run(jlcmd; wait = true)
-
+            
         catch err
             (err isa InterruptException) && exit()
             print("\n\n")

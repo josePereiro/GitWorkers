@@ -13,7 +13,7 @@
 #     !isdir(todeldir) && return
 
 #     for todelfile in _gw_readdir(todeldir; join = true)
-#         !endswith(todelfile, ".todel")  && continue
+#         !_endswith(todelfile, ".todel")  && continue
 #         paths = deserialize(todelfile)
 #         for path in paths
 #             _gwrm.(path)
@@ -43,7 +43,7 @@
 #     !isdir(sddir) && return
 
 #     for sdfile in _gw_readdir(sddir; join = true)
-#         !endswith(sdfile, ".seek_and_destroy")  && continue
+#         !_endswith(sdfile, ".seek_and_destroy")  && continue
 #         ids = deserialize(sdfile)
 #         for id in ids
 #             _walkdown_urldir() do path

@@ -1,5 +1,5 @@
 ## ---------------------------------------------------------------
-function _setup_gitworker_local_part(;
+function _gw_setup_client_local_part(;
         url::AbstractString,
         sys_root::AbstractString
     )
@@ -16,17 +16,21 @@ function _setup_gitworker_local_part(;
 
 end
 
+# Compat with old versions
+# TODO: remove when stable
+_setup_gitworker_local_part = _gw_setup_client_local_part
+ 
 ## ---------------------------------------------------------------
 # TODO: connect with config
 # init setup
-function setup_gitworker(;
+function gw_setup_client(;
         url::AbstractString,
         sys_root::AbstractString = homedir(),
         force_clonning = false
     )
 
     # setup
-    _setup_gitworker_local_part(;url, sys_root)
+    _gw_setup_client_local_part(;url, sys_root)
 
     _repo_update(() -> (_touch_dummy(); true);
         commit_msg = "Sync at ($(now()))", 

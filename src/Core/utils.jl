@@ -38,3 +38,32 @@ function _has_content(fn; kwargs...)
     end
     return true
 end
+
+_endswith(text, suffix) = endswith(string(text), string(suffix))
+
+function _print_file(file, c0 = 1, c1 = typemax(Int); buffsize = 500)
+    c = 1
+    bi = 0
+    buff = Vector{Char}(undef, buffsize)
+    open(file) do io
+        while !eof(io)
+            ch = read(io, Char)
+            c += 1
+
+            (c < c0) && continue
+            (c >= c1) && break
+
+            bi += 1
+            buff[bi] = ch
+            if (bi == buffsize)
+                print(join(buff))
+                bi = 0
+            end
+        end
+        
+        if bi > 0
+            print(join(buff[1:bi]))
+        end
+    end
+    return c
+end

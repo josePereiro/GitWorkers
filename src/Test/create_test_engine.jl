@@ -17,7 +17,7 @@ function _create_test_engine(testdir; clear_repos = true, clear_scripts = false)
             "# GitWorkers._create_test_engine(@__DIR__)",
             "",
             "## ---------------------------------------------------------------",
-            "GitWorkers.setup_gitworker(;",
+            "GitWorkers.gw_setup_client(;",
                 """\tsys_root = "$(client_root)",""",
                 """\turl = "$(url)",""",
             ")"

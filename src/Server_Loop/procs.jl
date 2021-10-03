@@ -2,7 +2,7 @@
 # REGISTER PROC
 const _GITGW_PROCREG_EXT = ".proc"
 _procreg_name(pid, tag) = string(pid, ".", tag, _GITGW_PROCREG_EXT)
-_is_procreg_file(fn) = endswith(fn, _GITGW_PROCREG_EXT)
+_is_procreg_file(fn) = _endswith(fn, _GITGW_PROCREG_EXT)
 function _parse_procreg_name(fn) 
     !_is_procreg_file(fn) && return ("", "", "")
     split_ = split(basename(fn), ".")
@@ -22,12 +22,14 @@ function _reg_proc(pid::Integer, tag::AbstractString;
     return !isfile(fn) && _write_toml(fn; pid, tag, lstart, kwargs...)
 end
 
-function _find_proc(pid)
+function _find_procreg(pid, tag = ""; procsdir = _local_procsdir())
     pid = string(pid)
-    for procreg in _readdir(_local_procsdir(); join = true)
-        pidi, tag, _ = _parse_procreg_name(procreg) 
-        (pid == pidi) && return procreg
+    for procreg in _readdir(procsdir; join = true)
+        pidi, tagi, _ = _parse_procreg_name(procreg)
+        isempty(tag) && (tagi = tag) # ignore tag
+        (pid == pidi) && (tag == tagi) && return procreg
     end
+    return ""
 end
 
 # validate if a proc is active and is registered

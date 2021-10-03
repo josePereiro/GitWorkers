@@ -2,7 +2,6 @@ module GitWorkers
     
     import LibGit2
     import TOML
-    # import ArgParse
     import Pkg
 
     using FilesTreeTools
@@ -10,18 +9,25 @@ module GitWorkers
     using Serialization
     import ExternalCmds
 
-
+    include("Client/gw_curr_iter.jl")
+    include("Client/gw_follow.jl")
+    include("Client/gw_last_task.jl")
     include("Client/gw_spawn.jl")
     include("Client/gw_push.jl")
     include("Client/gw_ping.jl")
     include("Client/gw_pull.jl")
     include("Client/gw_reset_server.jl")
-    include("Client/gw_clear_rts.jl")
-    include("Client/setup_gitworker.jl")
+    include("Client/gw_running_procs.jl")
+    include("Client/gw_setup_client.jl")
+    include("Client/gw_test_task.jl")
     include("Client/gw_send_killsig.jl")
 
-    export setup_gitworker, 
-        gw_spawn, 
+    export gw_setup_client, 
+        @gw_spawn, gw_follow,
+        gw_running_procs,
+        gw_curr_iter,
+        gw_last_task, 
+        gw_test_task,
         gw_push, gw_ping, gw_pull, 
         gw_reset_server, gw_clear_rts, gw_send_killsig
 
@@ -30,6 +36,7 @@ module GitWorkers
     include("Core/utils.jl")
     include("Core/config.jl")
     include("Core/gen_id.jl")
+    include("Core/kill_sysproc.jl")
     include("Core/sys_globals.jl")
     include("Core/repo_update.jl")
     include("Core/sync_script.jl")
@@ -52,17 +59,18 @@ module GitWorkers
     include("FileSystem/dirs.jl")
     include("FileSystem/filter_gitwr.jl")
     
-    include("Server/procs.jl")
-    include("Server/atexit.jl")
-    include("Server/run_gitworker_server.jl")
-    include("Server/server_loop.jl")
-    include("Server/loopcontrol.jl")
-    include("Server/upload_data.jl")
-    include("Server/exec_signals.jl")
-    include("Server/download_data.jl")
-    include("Server/sys_maintinance.jl")
-    include("Server/repo_maintinance.jl")
-    include("Server/server_loop_os.jl")
+    include("Server_Loop/atexit.jl")
+    include("Server_Loop/download_data.jl")
+    include("Server_Loop/exec_signals.jl")
+    include("Server_Loop/loop_control.jl")
+    include("Server_Loop/procs.jl")
+    include("Server_Loop/repo_maintinance.jl")
+    include("Server_Loop/server_loop_os.jl")
+    include("Server_Loop/server_loop.jl")
+    include("Server_Loop/sys_maintinance.jl")
+    include("Server_Loop/upload_data.jl")
+    
+    include("Server_Master/run_gitworker_server.jl")
 
     export run_gitworker_server
     
@@ -74,7 +82,7 @@ module GitWorkers
     include("Test/create_test_engine.jl")
 
     function __init__()
-        !Sys.isunix() && error("Non-unix system are not yet supported!")
+        !Sys.isunix() && error("Non-unix systems are not yet supported!")
     end
     
 end

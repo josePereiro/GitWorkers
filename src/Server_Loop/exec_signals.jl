@@ -7,12 +7,7 @@ function _exec_killsigs()
         pid = get(sigdat, "pid", "")
         unsave = get(sigdat, "unsave", false)
 
-        # find reg
-        proc = _find_proc(pid)
-
-        if unsave || _validate_proc(proc) 
-            force_kill(pid)
-        end
+        _kill_proc(pid; unsafe)
     end
 end
 

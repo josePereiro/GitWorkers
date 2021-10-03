@@ -3,7 +3,7 @@
     sys_root = tempdir()
 	url = "github.com/repo"
 
-	GitWorkers._setup_gitworker_local_part(;url, sys_root)
+	GitWorkers._gw_setup_client_local_part(;url, sys_root)
 	try
 
 		subpath = joinpath("Bla", "blo")

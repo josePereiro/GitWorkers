@@ -1,9 +1,33 @@
-function gw_set_killsig(pid; verb = false)
+function gw_send_killsig(pid; unsafe = false, verb = false, tout = 120)
     
-    _repo_update(;verb) do
-        _set_pushflag()
-        _set_killsig(pid)
+    try; 
+        while true
+            println("-"^60)
+            println("Killing proc: ", pid)
+            _gw_running_procs(;verb, tout)
+            
+            # check
+            procreg = _find_procreg(pid; procsdir = _repo_procsdir())
+            if isempty(procreg)
+                println("Process ", pid, " is dead!!! RIP")
+                return
+            end
 
-        return true
+            # TODO: Use killsignal
+            # send signal
+            println("Sending signal\n")
+            expr = quote
+                begin
+                    if $(unsafe) || GitWorkers._validate_proc($(procreg))
+                        GitWorkers.force_kill($(pid))
+                    end
+                end
+            end
+            _gw_spawn(expr; verb, follow = false)
+            println("Signal sended\n\n")
+        end
+    catch err
+        (err isa InterruptException) && return
+        rethrow(err)
     end
 end
