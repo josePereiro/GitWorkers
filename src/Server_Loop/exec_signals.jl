@@ -5,7 +5,7 @@ function _exec_killsigs()
         # read signal
         sigdat = _read_toml(killsig)
         pid = get(sigdat, "pid", "")
-        unsave = get(sigdat, "unsave", false)
+        unsafe = get(sigdat, "unsave", false)
 
         _kill_proc(pid; unsafe)
     end
