@@ -2,7 +2,7 @@
 function _gw_spawn(expr; verb = false, follow = true, tout = 120.0, wt = 3.0)
 
     taskid = _gen_id()
-    _repo_update(; verb = true) do
+    _repo_update(; verb) do
 	
         _set_pushflag()
         _set_long_task(taskid, expr)
