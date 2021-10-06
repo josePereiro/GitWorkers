@@ -17,3 +17,6 @@ function _clear_invalid_procs_regs()
         !_validate_proc(procreg) && _rm(procreg)
     end
 end
+
+_clear_local_signals() = _rm(_local_sigdir())
+_clear_local_tasks() = _rm(_local_tasksdir())

@@ -36,6 +36,12 @@ function _server_loop()
                     verb
                 )
 
+                # ------------------------------------------------------
+                # sys maintinance
+                _clear_local_signals()
+                _clear_local_tasks()
+                
+                # ------------------------------------------------------
                 # loopcontrol
                 # push flag
                 _check_pushflag() && break

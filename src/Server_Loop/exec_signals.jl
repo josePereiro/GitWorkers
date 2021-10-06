@@ -19,7 +19,12 @@ function _update_proj()
         # Pkg.add("GitWorkers")
         @show Base.active_project()
         Pkg.update("GitWorkers")
-    catch err; @error(err); end
+    catch err
+        # TODO: log this
+        print("\n\n")
+        _printerr(err)
+        print("\n\n")
+    end
 end
 
 # ------------------------------------------------------
