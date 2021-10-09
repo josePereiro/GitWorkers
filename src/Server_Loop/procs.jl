@@ -9,8 +9,8 @@ function _parse_procreg_name(fn)
     (length(split_) == 3) ? split_ : ("", "", "")
 end
 
-_local_procreg(pid, tag) = _local_procsdir(_procreg_name(pid, tag))
-_repo_procreg(pid, tag) = _repo_procsdir(_procreg_name(pid, tag))
+_local_procreg(pid, tag) = _local_procs_dir(_procreg_name(pid, tag))
+_repo_procreg(pid, tag) = _repo_procs_dir(_procreg_name(pid, tag))
 
 _is_reg(pid, tag) = isfile(_local_procreg(pid, tag))
 
@@ -22,7 +22,7 @@ function _reg_proc(pid::Integer, tag::AbstractString;
     return !isfile(fn) && _write_toml(fn; pid, tag, lstart, kwargs...)
 end
 
-function _find_procreg(pid, tag = ""; procsdir = _local_procsdir())
+function _find_procreg(pid, tag = ""; procsdir = _local_procs_dir())
     pid = string(pid)
     for procreg in _readdir(procsdir; join = true)
         pidi, tagi, _ = _parse_procreg_name(procreg)

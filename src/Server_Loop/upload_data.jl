@@ -1,8 +1,8 @@
 function _upload_logs()
     
     # logs
-    _local_logs = _local_logsdir()
-    _repo_logs = _repo_logsdir()
+    _local_logs = _local_tasks_outs_dir()
+    _repo_logs = _repo_tasks_outs_dir()
     !isdir(_local_logs) && return
     !isdir(_repo_logs) && mkpath(_repo_logs)
 
@@ -22,4 +22,4 @@ function _upload_logs()
 
 end
 
-_upload_procs() = _syncdirs(_local_procsdir(), _repo_procsdir())
+_upload_procs() = _syncdirs(_local_procs_dir(), _repo_procs_dir())

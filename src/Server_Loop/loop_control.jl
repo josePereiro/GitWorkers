@@ -1,6 +1,6 @@
 # ------------------------------------------------------
 # PUSH FLAG
-_pushflag_file() = _repo_loopcontroldir("pushflag")
+_pushflag_file() = _repo_loop_control_dir("pushflag")
 
 _set_pushflag() = touch(_pushflag_file())
 
@@ -37,7 +37,7 @@ end
 const _GW_MIN_CURRITER = 1
 const _GW_MAX_CURRITER = typemax(Int)
 
-_curriter_file() = _repo_loopcontroldir("curriter")
+_curriter_file() = _repo_loop_control_dir("curriter")
 _clamp_curriter(it) = clamp(round(Int, it), _GW_MIN_CURRITER, _GW_MAX_CURRITER)
 
 function _set_curriter(it::Real = _GW_MIN_CURRITER)

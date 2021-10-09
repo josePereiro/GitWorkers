@@ -12,7 +12,7 @@ function _gw_running_procs(;verb = false, tout = 120)
 	
 	# print task procs
 	println("Running processes\n")
-	for file in _readdir(_repo_procsdir(); join = true)
+	for file in _readdir(_repo_procs_dir(); join = true)
 		!_is_procreg_file(file) && return
 		println("proc: ", basename(file))
 		println(read(file, String))

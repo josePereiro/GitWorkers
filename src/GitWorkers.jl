@@ -3,11 +3,11 @@ module GitWorkers
     import LibGit2
     import TOML
     import Pkg
+    import ExternalCmds
 
-    using FilesTreeTools
     using Dates
     using Serialization
-    import ExternalCmds
+    using LoggingExtras
 
     include("Client/gw_curr_iter.jl")
     include("Client/gw_follow.jl")
@@ -41,7 +41,7 @@ module GitWorkers
     include("Core/repo_update.jl")
     include("Core/sync_script.jl")
     include("Core/nuke_script.jl")
-    include("Core/reset_server.jl")
+    include("Core/logging.jl")
     
     include("Signals/procs.jl")
     include("Signals/utils.jl")
@@ -52,12 +52,10 @@ module GitWorkers
     include("Tasks/long_tasks.jl")
     include("Tasks/set_long_task.jl")
     include("Tasks/spawn_long_task.jl")
-    include("Tasks/task_logs.jl")
-    include("Tasks/utils.jl")
+    include("Tasks/task_out.jl")
     
     include("FileSystem/utils.jl")
-    include("FileSystem/dirs.jl")
-    include("FileSystem/filter_gitwr.jl")
+    include("FileSystem/gw_dirtree.jl")
     
     include("Server_Loop/atexit.jl")
     include("Server_Loop/download_data.jl")
@@ -70,7 +68,7 @@ module GitWorkers
     include("Server_Loop/sys_maintinance.jl")
     include("Server_Loop/upload_data.jl")
     
-    include("Server_Master/run_gitworker_server.jl")
+    include("Server_Main/run_gitworker_server.jl")
 
     export run_gitworker_server
     

@@ -19,7 +19,7 @@ end
 function _follow_task(taskid; tout = 120.0, wt = 2.0, c0 = 0)
     isempty(taskid) && return
 
-    logfile = _repo_tasklog(taskid)
+    logfile = _repo_task_outfile(taskid)
     try
 
         println("\n")

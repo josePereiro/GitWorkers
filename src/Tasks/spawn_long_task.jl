@@ -8,7 +8,7 @@ function _spawn_long_task(taskid, taskfile)
     projdir = Base.active_project()
 
     # log
-    logfile = _local_tasklog(taskid)
+    logfile = _local_task_outfile(taskid)
 
     # unregister task
     raskcmd = deserialize(taskfile)
@@ -30,7 +30,7 @@ end
 
 function _spawn_long_tasks()
 
-    taskfiles = _readdir(_local_tasksdir(); join = true)
+    taskfiles = _readdir(_local_tasks_cmds_dir(); join = true)
     for taskfile in taskfiles
 
         # Check

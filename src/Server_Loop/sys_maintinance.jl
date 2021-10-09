@@ -1,5 +1,5 @@
 function _check_no_proc_running(hint, n)
-    serverprocs = _findin(_local_procsdir()) do file
+    serverprocs = _filterdir(_local_procs_dir()) do file
         _is_procreg_file(file) && contains(file, hint)
     end
     noprocs = length(serverprocs)
@@ -13,10 +13,10 @@ _check_duplicated_server_main_proc() = _check_no_proc_running(_GITGW_SERVER_MAIN
 _check_duplicated_server_loop_proc() = _check_no_proc_running(_GITGW_SERVER_LOOP_PROC_TAG, 1)
 
 function _clear_invalid_procs_regs()
-    for procreg in _readdir(_local_procsdir(); join = true)
+    for procreg in _readdir(_local_procs_dir(); join = true)
         !_validate_proc(procreg) && _rm(procreg)
     end
 end
 
-_clear_local_signals() = _rm(_local_sigdir())
-_clear_local_tasks() = _rm(_local_tasksdir())
+_clear_local_signals() = _rm(_local_signals_dir())
+_clear_local_tasks() = _rm(_local_tasks_cmds_dir())

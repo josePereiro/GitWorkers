@@ -1,3 +1,3 @@
-_download_signals() = _mergedirs(_repo_sigdir(), _local_sigdir())
+_download_signals() = _mergedirs(_repo_signals_dir(), _local_signals_dir())
 
-_download_tasks() = _mergedirs(_repo_tasksdir(), _local_tasksdir())
+_download_tasks() = _mergedirs(_repo_tasks_cmds_dir(), _local_tasks_cmds_dir())

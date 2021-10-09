@@ -1,10 +1,12 @@
 _dummy_file() = _repodir(".dummy")
 _touch_dummy() = write(_dummy_file(), _gen_id())
 
+_err_str(err) = sprint(showerror, err, catch_backtrace())
+
 """
     print the err text
 """
-_printerr(io::IO, err) = print(io, sprint(showerror, err, catch_backtrace()))
+_printerr(io::IO, err) = print(io, _err_str(err))
 _printerr(err) = _printerr(stdout, err)
 
 function _dict(d = Dict{String, Any}(); kwargs...) 

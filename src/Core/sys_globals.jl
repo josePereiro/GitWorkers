@@ -12,7 +12,7 @@ _get_url() = _get_global("url")
 _set_url!(url) = (_SYSTEM_GLOBALS["url"] = url)
 
 _get_root() = _get_global("root")
-_set_root!(home) = (_SYSTEM_GLOBALS["root"] = home)
+_set_root!(root) = (_SYSTEM_GLOBALS["root"] = root)
 
 _set_wutime!(wutime) = (_SYSTEM_GLOBALS["wutime"] = wutime)
 _set_wutime!() = _set_wutime!(time())

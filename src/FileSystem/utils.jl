@@ -124,3 +124,8 @@ function _foldersize(dir)
     end
     return size
 end
+
+function _filterdir(f::Function, dir; join = false, sort = true)
+    !isdir(dir) && String[]
+    filter(f, _readdir(dir; join, sort))
+end

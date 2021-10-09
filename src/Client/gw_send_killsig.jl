@@ -7,7 +7,7 @@ function gw_send_killsig(pid; unsafe = false, verb = false, tout = 120)
             _gw_running_procs(;verb, tout)
             
             # check
-            procreg = _find_procreg(pid; procsdir = _repo_procsdir())
+            procreg = _find_procreg(pid; procsdir = _repo_procs_dir())
             if isempty(procreg)
                 println("Process ", pid, " is dead!!! RIP")
                 return

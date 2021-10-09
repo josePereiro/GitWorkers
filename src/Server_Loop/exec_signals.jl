@@ -1,6 +1,6 @@
 # ------------------------------------------------------
 function _exec_killsigs()
-    killsigs = _findin(_is_killsig_name, _local_sigdir(); join = true)
+    killsigs = _filterdir(_is_killsig_name, _local_signals_dir(); join = true)
     for killsig in killsigs
         # read signal
         sigdat = _read_toml(killsig)
