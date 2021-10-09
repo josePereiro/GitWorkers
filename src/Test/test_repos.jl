@@ -1,4 +1,3 @@
-# git remote add other /path/to/other/repository
 function _create_test_repos(testdir)
     
     # home dirs

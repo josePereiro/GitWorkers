@@ -1,7 +1,10 @@
-# getpid(proc)
-function force_kill(pid::Integer)
+_try_getpid(proc) = try; getpid(proc) catch; return -1 end
+
+function _force_kill(pid)
+    pid = string(pid)
+    pid == "-1" && return false
     try
-        run(`kill -SIGKILL $pid`)
+        run(`kill -SIGKILL $(pid)`)
         return true
         catch; return false
     end

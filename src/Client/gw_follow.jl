@@ -3,6 +3,7 @@ function _follow_and_print(file; tout = 120.0, wt = 2.0, c0 = 0)
 
     lc = c0
     
+    # TODO: stop when task procreg is removed
     while true
 
         if isfile(file)

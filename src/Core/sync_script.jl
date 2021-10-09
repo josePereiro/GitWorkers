@@ -19,6 +19,7 @@ function _call_sync_script(
         op_mode, commit_msg, success_token, fail_token, clonning_token
     ])
 
+    # call script
     out = ""
     allowed = (err) -> (err isa InterruptException)
     _ignoring_errors(;allowed) do

@@ -50,8 +50,24 @@ _error () {
 	exit 1
 }
 _check_root () {
-	local reporoot="$(git -C "${sh_repodir}" rev-parse --show-toplevel)"
-	[ -d "${reporoot}" ] && [ "${reporoot}" != "${sh_repodir}" ] && _error "unexpected repo root"
+	local realroot="$(git -C "${sh_repodir}" rev-parse --show-toplevel)"
+	local realdummy="${realroot}/.git/._gw_sync_dummy"
+	local refdummy="${sh_repodir}/.git/._gw_sync_dummy"
+
+	if [ -d "${realroot}/.git" ]; then
+		rm -f "${refdummy}"
+
+		# I create a dummy using the refpath and then check if it exists in the real
+		touch "${refdummy}"
+		if [ -f "${realdummy}" ]; then
+			rm -f "${refdummy}"
+			return 0
+		else
+			rm -f "${refdummy}"
+			_error "unexpected repo root, expected: ${sh_repodir}, found: ${realroot}"
+		fi
+	fi
+	rm -f "${refdummy}"
 	return 0
 }
 _is_force_clone_mode () {

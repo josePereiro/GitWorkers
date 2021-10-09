@@ -39,7 +39,7 @@ module GitWorkers
     include("Core/utils.jl")
     include("Core/config.jl")
     include("Core/gen_id.jl")
-    include("Core/kill_sysproc.jl")
+    include("Core/sysproc.jl")
     include("Core/sys_globals.jl")
     include("Core/repo_update.jl")
     include("Core/sync_script.jl")

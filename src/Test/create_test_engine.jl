@@ -1,9 +1,9 @@
 ## ---------------------------------------------------------------
 function _create_test_engine(testdir; clear_repos = true, clear_scripts = false)
-    repodir = joinpath(testdir, "repos")
-    clear_repos && _rm(repodir)
-    mkpath(repodir)
-    url, client_root, server_root = _create_test_repos(repodir)
+    reposdir = joinpath(testdir, "repos")
+    clear_repos && _rm(reposdir)
+    mkpath(reposdir)
+    url, client_root, server_root = _create_test_repos(reposdir)
 
     # client script
     client_script = joinpath(testdir, "client.jl")

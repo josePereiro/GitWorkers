@@ -1,6 +1,5 @@
-@testset "FileSystem" begin
-    
-    sys_root = tempdir()
+let	
+	sys_root = joinpath(tempdir(), "gitworkers_testland")
 	url = "github.com/repo"
 
 	GitWorkers._local_setup(;sys_root, url)
@@ -10,12 +9,12 @@
 		full = GitWorkers._urldir(subpath)
 		relfn = GitWorkers._rel_urlpath(full)
 		@test GitWorkers._native_urlpath(relfn) == full
-        
+		
 		relfn = GitWorkers._rel_urlpath(subpath)
 		@test GitWorkers._native_urlpath(relfn) == full
 
 	finally
-		rm(joinpath(sys_root, ".gitworkers"); recursive = true, force = true)
+		rm(sys_root; recursive = true, force = true)
 	end
 
 end

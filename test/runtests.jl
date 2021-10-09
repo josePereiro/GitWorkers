@@ -3,5 +3,12 @@ using Test
 
 @testset "GitWorkers.jl" begin
     
-    include("FileSystem_tests.jl")
+    @testset "FileSystem" begin
+        include("FileSystem_tests.jl")
+    end
+    
+    @testset "TaskTest" begin
+        include("task_tests.jl")
+    end
+
 end

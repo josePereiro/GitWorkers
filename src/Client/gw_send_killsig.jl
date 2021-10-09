@@ -19,7 +19,7 @@ function gw_send_killsig(pid; unsafe = false, verb = false, tout = 120)
             expr = quote
                 begin
                     if $(unsafe) || GitWorkers._validate_proc($(procreg))
-                        GitWorkers.force_kill($(pid))
+                        GitWorkers._force_kill($(pid))
                     end
                 end
             end
