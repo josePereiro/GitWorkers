@@ -17,10 +17,10 @@ function _create_test_repos(testdir)
     # setup gitwr
     url = string("file://", upstream_repo)
     @info("setting up client")
-    gw_setup_client(;url, sys_root = client_root)
+    gw_setup_client(;sys_root = client_root, url)
     println("\n")
     @info("setting up server")
-    gw_setup_client(;url, sys_root = server_root)
+    gw_setup_client(;sys_root = server_root, url)
     println("\n")
 
     return url, client_root, server_root

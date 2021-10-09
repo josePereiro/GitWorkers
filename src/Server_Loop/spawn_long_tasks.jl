@@ -7,7 +7,13 @@ function _spawn_long_tasks()
         taskid, _ = _parse_long_task_name(taskfile)
         if isempty(taskid) 
             rm(taskfile; force = true)
-            return
+            continue
+        end
+
+        _with_server_loop_logger() do
+            print("\n\n")
+            @info("Spawing task", looppid = getpid(), taskid, time = now())
+            print("\n\n")
         end
 
         try

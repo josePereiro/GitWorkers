@@ -3,6 +3,15 @@ gitworkers_structure() =
 """"
 sys_root (root)
     |------- .gitworkers (home)
+    |        |------- .gitworker-deamon
+    |        |        |------ deamon.toml
+    |        |        |------ .deamon-logs
+    |        |        |         |------ log1                
+    |        |        |
+    |        |        .
+    |        |        .
+    |        |        .
+    |        |
     |        |------- urldir 1                                  
     |        |        |------ Project.toml                            
     |        |        |------ Manifest.toml                            
@@ -112,6 +121,13 @@ _rel_urlpath(path) = _relbasepath(path, _urldir())
 _native_urlpath(path) = _urldir(_rel_urlpath(path))
 
 # ---------------------------------------------------------------
+# deamon
+_deamondir(ns...) = _gitworkers_homedir(".gitworker-deamon", ns...)
+_deamon_procs_dir(ns...) = _deamondir(".deamon-procs", ns...)
+_deamon_logs_dir(ns...) = _deamondir(".deamon-logs", ns...)
+
+# ---------------------------------------------------------------
+# gitworkers
 _localdir(ns...) = _urldir(".local", ns...)
 _localver(path) = _mkdirpath(replace(path, _repodir() => _localdir()))
 _repodir(ns...) = _urldir(".repo", ns...)
@@ -151,17 +167,3 @@ for (_funname, _dirname) in [
     @eval $(_repo_funname)() = _mkpath(_repodir($(_dirname)))
     @eval $(_repo_funname)(n, ns...) = _repodir($(_dirname), n, ns...)
 end
-
-# _local_tasks_outs_dir(ns...) = _localdir(".logs", ns...)
-# _local_signals_dir(ns...) = _localdir(".signals", ns...)
-# _local_procs_dir(ns...) = _localdir(".procs", ns...)
-# _local_tasks_cmds_dir(ns...) = _localdir(".tasks", ns...)
-# _local_tasks_exprs_dir(ns...) = _localdir(".exprs", ns...)
-
-# # ---------------------------------------------------------------
-
-# _repo_tasks_outs_dir(ns...) = _repodir(".logs", ns...)
-# _repo_signals_dir(ns...) = _repodir(".signals", ns...)
-# _repo_procs_dir(ns...) = _repodir(".procs", ns...)
-# _repo_tasks_cmds_dir(ns...) = _repodir(".tasks", ns...)
-# _repo_loop_control_dir(ns...) = _repodir(".loopcontrol", ns...)

@@ -12,12 +12,17 @@ function _gw_up_serverlogs(repo_logs_dir; deep = 2, tout = 120.0, wt = 2.0, filt
 	end
 
     # following
-    timeout = !_waitfor_content_change(repo_logs_dir; tout, wt)
-    timeout && return
+    try
+        timeout = !_waitfor_content_change(repo_logs_dir; tout, wt)
+        timeout && return
 
-    for logfile in _last_logs(repo_logs_dir; deep, filter)
-        println("\n\n", "log file: ", basename(logfile), "\n\n")
-        _print_file(logfile)
+        for logfile in _last_logs(repo_logs_dir; deep, filter) |> reverse!
+            println("\n\n", "log file: ", basename(logfile), "\n\n")
+            _print_file(logfile)
+        end
+    catch err
+        (err isa InterruptException) && return
+        rethrow(err)
     end
     
 end

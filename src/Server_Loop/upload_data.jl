@@ -14,7 +14,7 @@ function _upload_tasks_outs()
 
         # copy if required
         # this assume that any change in the out file change its size
-        _on_size_event(local_out; dofirst = true) do
+        _on_size_event(local_out; atmissing = true) do
             repo_out = _repover(local_out)
             _cp(local_out, repo_out)
         end

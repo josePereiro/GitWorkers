@@ -1,16 +1,26 @@
 function _check_no_proc_running(hint, n)
-    serverprocs = _filterdir(_local_procs_dir()) do file
-        _is_procreg_file(file) && contains(file, hint)
-    end
-    noprocs = length(serverprocs)
+    noprocs = _no_proc_running(hint)
     if noprocs != n
-        @error("FATAL, $(n) $(hint) registered process(s) expected!!!, found $(noprocs)")
+        print("\n\n")
+        try
+            error("FATAL, $(n) $(hint) registered process(s) expected!!!, found $(noprocs)")
+        catch err
+            print("\n\n")
+            @error("At cheking proc number", pid = getpid(), time = now(), err = _err_str(err))
+            print("\n\n")
+            sleep(3.0) # wait flush
+        end
         exit()
     end
 end
 
-_check_duplicated_server_main_proc() = _check_no_proc_running(_GITGW_SERVER_MAIN_PROC_TAG, 1)
-_check_duplicated_server_loop_proc() = _check_no_proc_running(_GITGW_SERVER_LOOP_PROC_TAG, 1)
+_check_duplicated_server_main_proc() = _with_server_main_logger() do
+    _check_no_proc_running(_GITGW_SERVER_MAIN_PROC_TAG, 1)
+end
+
+_check_duplicated_server_loop_proc() = _with_server_loop_logger() do
+    _check_no_proc_running(_GITGW_SERVER_LOOP_PROC_TAG, 1)
+end
 
 function _clear_invalid_procs_regs()
     for procreg in _readdir(_local_procs_dir(); join = true)

@@ -27,7 +27,7 @@ end
 
 ## ------------------------------------------------------------------
 # SETUP
-GitWorkers._gw_setup_client_local_part(;
+GitWorkers._local_setup(;
     url = _GW_REMOTE_URL, sys_root = _GW_SYS_ROOT
 )
 

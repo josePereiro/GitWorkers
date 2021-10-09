@@ -69,3 +69,21 @@ function _print_file(file, c0 = 1, c1 = typemax(Int); buffsize = 500)
     end
     return c
 end
+
+function _ignoring_errors(f::Function; 
+        allowed = (err) -> true, wfrec = 5
+    )
+    task = @async f()
+    hits = 0
+    while true
+        try 
+            wait(task)
+            return nothing
+        catch err
+            !allowed(err) && rethrow(err)
+            iszero(rem(hits, wfrec)) && @warn("Ignoring errors", err)
+            hits += 1
+        end
+    end
+    return nothing
+end

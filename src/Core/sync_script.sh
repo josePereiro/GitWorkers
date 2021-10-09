@@ -85,6 +85,10 @@ mkdir -p "${sh_repodir}" || _error "unable to create repo dir"
 cd "${sh_repodir}" || _error "unable to cd repo dir" 
 
 # ---------------------------------------------------------------------------------------
+# remove any lock
+[ -f "${sh_repodir_git}/index.lock" ] && rm -f "${sh_repodir_git}/index.lock"
+
+# ---------------------------------------------------------------------------------------
 # pull or clone if necessary
 _is_force_clone_mode && rm -frd "${sh_repodir}" 
 if _is_pull_mode; then

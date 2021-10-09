@@ -18,7 +18,12 @@ function _call_sync_script(
         "bash", sync_script, repodir, url, 
         op_mode, commit_msg, success_token, fail_token, clonning_token
     ])
-    _, out = ExternalCmds.run_cmd(cmd; ios = verb ? [stdout] : [])
+
+    out = ""
+    allowed = (err) -> (err isa InterruptException)
+    _ignoring_errors(;allowed) do
+        _, out = ExternalCmds.run_cmd(cmd; ios = verb ? [stdout] : [])
+    end
     return out
 end
 

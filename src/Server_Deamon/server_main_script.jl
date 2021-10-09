@@ -1,10 +1,10 @@
 import GitWorkers
 
 ## ------------------------------------------------------------------
-GitWorkers._local_setup(;
+GitWorkers._run_main(;
     sys_root = ARGS[1],
     url = ARGS[2]
 )
 
 ## ------------------------------------------------------------------
-GitWorkers._server_loop()
+exit()

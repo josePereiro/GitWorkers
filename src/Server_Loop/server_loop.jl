@@ -13,7 +13,10 @@ function _server_loop()
     # ---------------------------------------------------------------
     # welcome
     _with_server_loop_logger() do
+        print("\n\n")
+        @info("")
         @info("Starting server loop", looppid = getpid(), time = now())
+        print("\n\n")
     end
     
     # ---------------------------------------------------------------
@@ -28,11 +31,15 @@ function _server_loop()
         function (out)
             if contains(out, fail_token)
                 _with_server_loop_logger() do
+                    print("\n\n")
                     @warn("Fail token detected", action, time = now(), out)
+                    print("\n\n")
                 end
             elseif contains(out, clonning_token)
                 _with_server_loop_logger() do
+                    print("\n\n")
                     @warn("Clonning token detected", action, time = now(), out)
+                    print("\n\n")
                 end
             end
         end
@@ -50,8 +57,20 @@ function _server_loop()
             clonning_token = _gen_id()
 
             # ------------------------------------------------------
-            # pull loop
+            # stand by loop
             while true
+
+                # ------------------------------------------------------
+                # sys maintinance
+                _reg_server_loop_proc()
+                _clear_invalid_procs_regs()
+                _check_duplicated_server_main_proc()
+                _check_duplicated_server_loop_proc()
+                _clear_local_signals()
+                _clear_local_tasks()
+                
+                # ------------------------------------------------------
+                # pull
                 success = _gw_pull(;
                     repodir, url,
                     success_token, fail_token, clonning_token,
@@ -59,11 +78,6 @@ function _server_loop()
                     feedback = _sync_logging(:pulling, fail_token, clonning_token),
                     verb
                 )
-
-                # ------------------------------------------------------
-                # sys maintinance
-                _clear_local_signals()
-                _clear_local_tasks()
                 
                 # ------------------------------------------------------
                 # loopcontrol
@@ -81,8 +95,10 @@ function _server_loop()
             iter = _get_curriter()
             
             _with_server_loop_logger() do
-                println("\n------------------------------------------------------")
+                print("\n\n")
+                @info("")
                 @info("Server loop", iter, looppid = getpid(), time = now())
+                print("\n\n")
             end
 
             # ------------------------------------------------------
@@ -125,19 +141,13 @@ function _server_loop()
             # exec signals
             _exec_killsigs()
             _exec_resetsig()
-            
-            # ------------------------------------------------------
-            # sys maintinance
-            _reg_server_loop_proc()
-            _clear_invalid_procs_regs()
-            _check_duplicated_server_main_proc()
-            _check_duplicated_server_loop_proc()
 
         catch err
             _with_server_loop_logger() do
                 print("\n\n")
                 @error("At server loop", looppid = getpid(), time = now(), err = _err_str(err))
                 print("\n\n")
+                sleep(3.0) # wait flush
             end
             exit()
         end

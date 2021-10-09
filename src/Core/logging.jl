@@ -3,14 +3,18 @@ _is_log_file(path) = _endswith(path, _GW_LOG_EXT)
 
 ## ------------------------------------------------------------------------------
 function _filelog_formater(io, args)
-    println(io, "-"^60)
-    println(io, args.level, " | ", args.message)
-    for (k, v) in args.kwargs
-        kstr = string(k)
-        vstr = string(v)
-        length(vstr) > 60 ? 
-            println(io, kstr, ":\n", vstr) :
-            println(io, kstr, ": ", vstr)
+    if isempty(args.message) && isempty(args.kwargs)
+        println(io)
+    else
+        println(io, "-"^60)
+        println(io, args.level, " | ", args.message)
+        for (k, v) in args.kwargs
+            kstr = string(k)
+            vstr = string(v)
+            length(vstr) > 60 ? 
+                println(io, kstr, ":\n", vstr) :
+                println(io, kstr, ": ", vstr)
+        end
     end
 end
 
@@ -28,6 +32,7 @@ _rotating_logger(logdir, nametag, ext) =
     DatetimeRotatingFileLogger(_filelog_formater, logdir, _log_format_name(nametag, ext); always_flush = true)
 
 function _tee_logger(logdir, nametag, ext)
+    _mkpath(logdir)
     TeeLogger(
         _rotating_logger(logdir, nametag, ext),
         global_logger()

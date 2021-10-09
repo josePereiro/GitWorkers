@@ -1,24 +1,20 @@
 ## ---------------------------------------------------------------
-function _gw_setup_client_local_part(;
+function _local_setup(;
         url::AbstractString,
         sys_root::AbstractString
     )
 
-    mkpath(sys_root)
+    _mkpath(sys_root)
 
-     # globals
-     _set_url!(url)
-     _set_root!(sys_root)
-     _set_wutime!()
- 
-     # initial setup
-     _reset_file_trakers!()
+    # globals
+    _set_url!(url)
+    _set_root!(sys_root)
+    _write_globals()
+
+    # initial setup
+    _reset_file_trakers!()
 
 end
-
-# Compat with old versions
-# TODO: remove when stable
-_setup_gitworker_local_part = _gw_setup_client_local_part
  
 ## ---------------------------------------------------------------
 # TODO: connect with config
@@ -30,7 +26,7 @@ function gw_setup_client(;
     )
 
     # setup
-    _gw_setup_client_local_part(;url, sys_root)
+    _local_setup(;sys_root, url)
 
     _repo_update(() -> (_touch_dummy(); true);
         commit_msg = "Sync at ($(now()))", 

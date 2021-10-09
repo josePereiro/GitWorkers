@@ -45,6 +45,7 @@ module GitWorkers
     include("Core/sync_script.jl")
     include("Core/nuke_script.jl")
     include("Core/logging.jl")
+    include("Core/proc_regs.jl")
     
     include("Signals/utils.jl")
     include("Signals/killsig.jl")
@@ -56,9 +57,10 @@ module GitWorkers
     include("Tasks/set_long_task.jl")
     include("Tasks/spawn_long_task.jl")
     include("Tasks/task_out.jl")
+    include("Tasks/procs.jl")
     
     include("FileSystem/utils.jl")
-    include("FileSystem/gw_dirtree.jl")
+    include("FileSystem/dirtree.jl")
     
     include("Server_Loop/atexit.jl")
     include("Server_Loop/download_data.jl")
@@ -73,10 +75,15 @@ module GitWorkers
     include("Server_Loop/upload_data.jl")
     include("Server_Loop/logging.jl")
     
-    include("Server_Main/run_gitworker_server.jl")
+    include("Server_Main/procs.jl")
+    include("Server_Main/run_main.jl")
     include("Server_Main/logging.jl")
-
-    export run_gitworker_server
+    include("Server_Main/server_main_os.jl")
+    
+    include("Server_Deamon/run_deamon.jl")
+    include("Server_Deamon/spawn_main.jl")
+    include("Server_Deamon/logging.jl")
+    include("Server_Deamon/procs.jl")
     
     include("Events/FileTracker.jl")
     include("Events/waitfor.jl")

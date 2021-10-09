@@ -1,43 +1,35 @@
-function run_gitworker_server(;
+function _run_main(;
         url::AbstractString,
         sys_root::AbstractString = homedir()
     )
 
     # ---------------------------------------------------------------
     # SETUP
-    gw_setup_client(;url, sys_root)
+    gw_setup_client(;sys_root, url)
     
     # ---------------------------------------------------------------
     # welcome
     _with_server_main_logger() do
         print("\n\n")
+        @info("")
         @info("Starting server main process", mainpid = getpid(), time = now())
         print("\n\n")
     end
-
-    # ---------------------------------------------------------------
-    # check
-    _reg_server_main_proc()
-    _clear_invalid_procs_regs()
-    _check_duplicated_server_main_proc()
-
+    
     # ---------------------------------------------------------------
     # Server Os
-    _GW_ISRUNNING = true
-    @async while _GW_ISRUNNING
-        # handle proc reg
-        _reg_server_main_proc()
-        _check_duplicated_server_main_proc()
-        _clear_invalid_procs_regs()
-
-        sleep(10.0)
-    end
+    _reg_server_main_proc()
+    @async _run_server_main_os()
 
     # ---------------------------------------------------------------
     # make process resiliant
     while true
     
         try
+            # ---------------------------------------------------------------
+            # reg main
+            _reg_server_main_proc()
+
             # ---------------------------------------------------------------
             # spawn proccess
             _with_server_main_logger() do
@@ -54,7 +46,8 @@ function run_gitworker_server(;
             
         catch err
             _with_server_main_logger() do
-                @error("At server loop", err = _err_str(err), time = now())
+                @error("At server loop", mainpid = getpid(), err = _err_str(err), time = now())
+                sleep(3.0) # wait flush
             end
             (err isa InterruptException) && exit()
         end
@@ -62,7 +55,6 @@ function run_gitworker_server(;
     end
 
     # ---------------------------------------------------------------
-    _GW_ISRUNNING = false
     exit()
     
 end

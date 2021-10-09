@@ -1,15 +1,17 @@
-function _run_server_loop_os(;wt = 10.0)
+function _run_server_loop_os(;wt = 25.0)
     while true
         try
             # REG PROC
             _reg_server_loop_proc()
-            sleep(wt)
         catch err
-            (err isa InterruptException) && exit()
             _with_server_loop_logger() do
-                @error("At server loop os", err = _err_str(err))
+                print("\n\n")
+                @error("At server loop os", looppid = getpid(), err = _err_str(err), time = now())
+                print("\n\n")
+                sleep(3.0) # wait flush
             end
-            rethrow(err)
+            exit()
         end
+        sleep(wt)
     end
 end
