@@ -1,11 +1,11 @@
-function _waitfor_handler(file, fun; wt = 2.0, tout = 60.0, verb = false)
-    val0 = fun(file)
+function _waitfor_handler(fun::Function; wt = 2.0, tout = 60.0, verb = false)
+    val0 = fun()
     t0 = time()
     while true
         # pull
         _gw_pull_and_send_pushflag(;verb)
         
-        val = fun(file)
+        val = fun()
         (val != val0) && return true
         ((time() - t0) > tout) && return false
         sleep(wt)
@@ -13,10 +13,16 @@ function _waitfor_handler(file, fun; wt = 2.0, tout = 60.0, verb = false)
     return false
 end
 
-_waitfor_content_change(file; kwargs...) = 
-    _waitfor_handler(file, _file_content_hash; kwargs...)
+_waitfor_content_change(path; kwargs...) = _waitfor_handler(; kwargs...) do
+    !ispath(path) && return hash(0)
+    isfile(path) && return _file_content_hash(path)
+    isdir(path) && return hash(_readdir(path))
+end
     
-_waitfor_size_change(file; kwargs...) = 
-    _waitfor_handler(file, filesize; kwargs...)
+_waitfor_size_change(path; kwargs...) = _waitfor_handler(; kwargs...) do
+    !ispath(path) && return filesize(path)
+    isfile(path) && return filesize(path)
+    isdir(path) && _foldersize(path)
+end
 
 _waitfor_till_next_iter(; kwargs...) = _waitfor_content_change(_curriter_file(); kwargs...)

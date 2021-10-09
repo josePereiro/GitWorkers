@@ -40,7 +40,7 @@ GitWorkers._gw_setup_client_local_part(;
 println("\n", rpad("STARTING ", 60, "-"))
 println("pid: ", getpid())
 println("task id: ", _GW_TASKID)
-println("\n\n")
+print("\n\n")
 
 ## ------------------------------------------------------------------
 # EVAL EXPRS
@@ -61,7 +61,7 @@ end
 println("\n FINISHED ----------------------------------")
 println("pid: ", getpid())
 println("task id: ", _GW_TASKID)
-println("\n\n")
+print("\n\n")
 
 ## ------------------------------------------------------------------
 # INSIST FLUSHING

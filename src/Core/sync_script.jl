@@ -9,14 +9,14 @@ _SYNC_SCRIPT_NO_OP_MODE = "NO_OP"
 ## ---------------------------------------------------------------
 function _call_sync_script(
         repodir, url, op_mode,
-        commit_msg, success_token, fail_token; 
+        commit_msg, success_token, fail_token, clonning_token;
         verb = true
     )
     # TODO: create script Template to handle custom 'git' commands
     sync_script = joinpath(@__DIR__, "sync_script.sh")
     cmd = Cmd([
         "bash", sync_script, repodir, url, 
-        op_mode, commit_msg, success_token, fail_token
+        op_mode, commit_msg, success_token, fail_token, clonning_token
     ])
     _, out = ExternalCmds.run_cmd(cmd; ios = verb ? [stdout] : [])
     return out
@@ -29,7 +29,7 @@ function _call_sync_script(;
         pull = false, 
         force_clonning = false,
         push = false,
-        success_token, fail_token,
+        success_token, fail_token, clonning_token,
         verb = true
     )
     if (pull && !push && !force_clonning)
@@ -48,8 +48,7 @@ function _call_sync_script(;
     
     _call_sync_script(
         repodir, url, op_mode,
-        commit_msg, success_token, fail_token; 
+        commit_msg, success_token, fail_token, clonning_token; 
         verb
     )
-
 end

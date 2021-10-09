@@ -1,22 +1,22 @@
-function _upload_logs()
+function _upload_tasks_outs()
     
-    # logs
-    _local_logs = _local_tasks_outs_dir()
-    _repo_logs = _repo_tasks_outs_dir()
-    !isdir(_local_logs) && return
-    !isdir(_repo_logs) && mkpath(_repo_logs)
+    # outs
+    _local_outs = _local_tasks_outs_dir()
+    _repo_outs = _repo_tasks_outs_dir()
+    !isdir(_local_outs) && return
+    !isdir(_repo_outs) && mkpath(_repo_outs)
 
 
-    for local_log in _readdir(_local_logs; join = true)
+    for local_out in _readdir(_local_outs; join = true)
         
-        # Maintinance
-        !_is_log(local_log) && rm(local_log)
+        # some maintinance
+        !_is_taskout(local_out) && rm(local_out)
 
         # copy if required
-        # this assume that any change in the log change its size
-        _on_size_event(local_log; dofirst = true) do
-            repo_log = _repover(local_log)
-            _cp(local_log, repo_log)
+        # this assume that any change in the out file change its size
+        _on_size_event(local_out; dofirst = true) do
+            repo_out = _repover(local_out)
+            _cp(local_out, repo_out)
         end
     end
 

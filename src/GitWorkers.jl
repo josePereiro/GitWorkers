@@ -21,6 +21,7 @@ module GitWorkers
     include("Client/gw_setup_client.jl")
     include("Client/gw_test_task.jl")
     include("Client/gw_send_killsig.jl")
+    include("Client/gw_up_serverlogs.jl")
 
     export gw_setup_client, 
         @gw_spawn, gw_follow,
@@ -29,6 +30,8 @@ module GitWorkers
         gw_last_task, 
         gw_test_task,
         gw_push, gw_ping, gw_pull, 
+        gw_server_loop_logs,
+        gw_server_main_logs,
         gw_reset_server, gw_clear_rts, gw_send_killsig
 
     include("ExternalCmds/utils.jl")
@@ -43,10 +46,10 @@ module GitWorkers
     include("Core/nuke_script.jl")
     include("Core/logging.jl")
     
-    include("Signals/procs.jl")
     include("Signals/utils.jl")
     include("Signals/killsig.jl")
     include("Signals/resetsig.jl")
+    include("Signals/up_serverlogs_sig.jl")
 
     include("Tasks/long_task_os.jl")
     include("Tasks/long_tasks.jl")
@@ -65,10 +68,13 @@ module GitWorkers
     include("Server_Loop/repo_maintinance.jl")
     include("Server_Loop/server_loop_os.jl")
     include("Server_Loop/server_loop.jl")
+    include("Server_Loop/spawn_long_tasks.jl")
     include("Server_Loop/sys_maintinance.jl")
     include("Server_Loop/upload_data.jl")
+    include("Server_Loop/logging.jl")
     
     include("Server_Main/run_gitworker_server.jl")
+    include("Server_Main/logging.jl")
 
     export run_gitworker_server
     

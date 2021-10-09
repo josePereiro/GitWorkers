@@ -8,6 +8,14 @@ function run_gitworker_server(;
     gw_setup_client(;url, sys_root)
     
     # ---------------------------------------------------------------
+    # welcome
+    _with_server_main_logger() do
+        print("\n\n")
+        @info("Starting server main process", mainpid = getpid(), time = now())
+        print("\n\n")
+    end
+
+    # ---------------------------------------------------------------
     # check
     _reg_server_main_proc()
     _clear_invalid_procs_regs()
@@ -32,9 +40,11 @@ function run_gitworker_server(;
         try
             # ---------------------------------------------------------------
             # spawn proccess
-            println("\n\n")
-            @info("Spawing server loop")
-            println("\n\n")
+            _with_server_main_logger() do
+                print("\n\n")
+                @info("Spawing server loop", mainpid = getpid(), time = now())
+                print("\n\n")
+            end
             projdir = Base.active_project()
             script_path = joinpath(@__DIR__, "server_loop_script.jl")
             jlcmd = Base.julia_cmd()
@@ -43,10 +53,10 @@ function run_gitworker_server(;
             run(jlcmd; wait = true)
             
         catch err
+            _with_server_main_logger() do
+                @error("At server loop", err = _err_str(err), time = now())
+            end
             (err isa InterruptException) && exit()
-            print("\n\n")
-            _printerr(err)
-            print("\n\n")
         end
 
     end

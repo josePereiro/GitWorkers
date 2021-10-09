@@ -1,10 +1,16 @@
+const _GW_LOG_EXT = ".log"
+_is_log_file(path) = _endswith(path, _GW_LOG_EXT)
+
 ## ------------------------------------------------------------------------------
 function _filelog_formater(io, args)
-    println(io)
+    println(io, "-"^60)
     println(io, args.level, " | ", args.message)
     for (k, v) in args.kwargs
-        println(io, string(k), ":")
-        println(io, string(v))
+        kstr = string(k)
+        vstr = string(v)
+        length(vstr) > 60 ? 
+            println(io, kstr, ":\n", vstr) :
+            println(io, kstr, ": ", vstr)
     end
 end
 
@@ -20,9 +26,21 @@ _log_format_name(tag, ext) = _log_format_name(tag, "YYYY-mm-dd-HH", ext)
 
 _rotating_logger(logdir, nametag, ext) = DatetimeRotatingFileLogger(_filelog_formater, logdir, _log_format_name(nametag, ext))
 
-_tee_logger(logdir, nametag, ext) = TeeLogger(
-    _rotating_logger(logdir, nametag, ext),
-    global_logger()
-)
+function _tee_logger(logdir, nametag, ext)
+    TeeLogger(
+        _rotating_logger(logdir, nametag, ext),
+        global_logger()
+    )
+end
 
-## ------------------------------------------------------------------------------
+function _last_logs(log_dir; deep = 1, filter = _is_log_file)
+    all_logs = _filterdir(
+        filter, log_dir; 
+        join = true, sort = true
+    )
+
+    isempty(all_logs) && return String[]
+    i1 = lastindex(all_logs)
+    i0 = max(1, i1 - deep + 1)
+    return all_logs[i1:-1:i0]
+end

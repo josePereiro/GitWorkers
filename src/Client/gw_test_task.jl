@@ -10,7 +10,7 @@ function gw_test_task(iters = 120)
                 flush(stdout)
                 flush(stderr)
             end
-            println("\n\n")
+            print("\n\n")
 
         end
     end

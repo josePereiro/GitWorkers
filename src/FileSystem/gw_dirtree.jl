@@ -98,7 +98,7 @@ sys_root (root)
 
 # ---------------------------------------------------------------
 # the dirpath od the home
-_gw_rootdir(ns...) = _mkpath(abspath(_get_root()), ns...)
+_gw_rootdir(ns...) = _mkdirpath(abspath(_get_root()), ns...)
 
 # ---------------------------------------------------------------
 # the home of GitWorkers
@@ -113,9 +113,9 @@ _native_urlpath(path) = _urldir(_rel_urlpath(path))
 
 # ---------------------------------------------------------------
 _localdir(ns...) = _urldir(".local", ns...)
-_localver(path) = _mkpath(replace(path, _repodir() => _localdir()))
+_localver(path) = _mkdirpath(replace(path, _repodir() => _localdir()))
 _repodir(ns...) = _urldir(".repo", ns...)
-_repover(path) = _mkpath(replace(path, _localdir() => _repodir()))
+_repover(path) = _mkdirpath(replace(path, _localdir() => _repodir()))
 
 for (_funname, _dirname) in [
         # sys logs
@@ -145,9 +145,11 @@ for (_funname, _dirname) in [
     ]
 
     _local_funname = Symbol("_local_", _funname)
-    @eval $(_local_funname)(ns...) = _localdir($(_dirname), ns...)
+    @eval $(_local_funname)() = _mkpath(_localdir($(_dirname)))
+    @eval $(_local_funname)(n, ns...) = _localdir($(_dirname), n, ns...)
     _repo_funname = Symbol("_repo_", _funname)
-    @eval $(_repo_funname)(ns...) = _repodir($(_dirname), ns...)
+    @eval $(_repo_funname)() = _mkpath(_repodir($(_dirname)))
+    @eval $(_repo_funname)(n, ns...) = _repodir($(_dirname), n, ns...)
 end
 
 # _local_tasks_outs_dir(ns...) = _localdir(".logs", ns...)

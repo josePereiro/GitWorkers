@@ -1,8 +1,8 @@
 # ---------------------------------------------------------------------------------------
 # args 
-if [ $# -lt 6 ]; then
+if [ $# -lt 7 ]; then
 	echo "Not enougth arguments."
-	echo "Usage: sync_script <repodir> <url> <op_mode> <commit_msg> <success_token> <fail_token>"
+	echo "Usage: sync_script <repodir> <url> <op_mode> <commit_msg> <success_token> <fail_token> <clonning_token>"
 	exit 1
 fi
 
@@ -12,6 +12,7 @@ sh_op_mode="$3"
 sh_commit_msg="$4" 
 sh_success_token="$5" 
 sh_error_token="$6" 
+sh_clonning_token="$7" 
 
 # verb
 # echo ${sh_repodir}
@@ -84,7 +85,7 @@ mkdir -p "${sh_repodir}" || _error "unable to create repo dir"
 cd "${sh_repodir}" || _error "unable to cd repo dir" 
 
 # ---------------------------------------------------------------------------------------
-# pull or clonne if necesary 
+# pull or clone if necessary
 _is_force_clone_mode && rm -frd "${sh_repodir}" 
 if _is_pull_mode; then
 	_check_root || _error "_check_root fails" 
@@ -95,7 +96,7 @@ if _is_pull_mode; then
 		git -C "${sh_repodir}" reset --hard FETCH_HEAD || _error "git reset --hard FETCH_HEAD failed" 
 	else
 		echo
-		echo "clonning repo"
+		echo "clonning repo, token: ${sh_clonning_token}"
 		mkdir -p "${sh_recovery_dir}" || _error "unable to create recovery dir" 
 		git -C "${sh_repodir}" clone --depth=1 "${sh_url}" "${sh_recovery_dir}" || _error "git clone failed" 
 		mv -f "${sh_recovery_dir_git}" "${sh_repodir_git}" || _error "recovery copy failed"

@@ -19,14 +19,14 @@ end
 function _follow_task(taskid; tout = 120.0, wt = 2.0, c0 = 0)
     isempty(taskid) && return
 
-    logfile = _repo_task_outfile(taskid)
+    out_file = _repo_task_out_file(taskid)
     try
 
         println("\n")
-        @info("Following task: ", taskid, logfile)
+        @info("Following task: ", taskid, out_file)
         println("\n")
 
-        _follow_and_print(logfile; tout, wt, c0)
+        _follow_and_print(out_file; tout, wt, c0)
 
     catch err
         (err isa InterruptException) && return

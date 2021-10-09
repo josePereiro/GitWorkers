@@ -102,14 +102,16 @@ function _gw_syncdirs(srcdir::AbstractString, dstdir::AbstractString)
     _syncdirs(srcdir, dstdir)
 end
 
-function _mkpath(n, ns...)
+_mkpath(p) = mkpath(string(p))
+
+function _mkdirpath(n, ns...)
     path = joinpath(string(n), string.(ns)...)
     dir = dirname(path)
     !isdir(dir) && mkpath(dir)
     return path
 end
 
-_gwmkpath(n, ns...) = _native_urlpath(_mkpath(n, ns...))
+_gw_mkdirpath(n, ns...) = _native_urlpath(_mkdirpath(n, ns...))
 
 _readdir(dir; join::Bool = false, sort::Bool = true) = 
     isdir(dir) ? readdir(dir; join, sort) : String[]
