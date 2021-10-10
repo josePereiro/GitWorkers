@@ -21,7 +21,6 @@ const _GW_REMOTE_URL = ARGS[4]
 ## ------------------------------------------------------------------
 # atexit
 atexit() do
-    println("\n\n\nAt exit\n\n\n")
     GitWorkers._rm(_GW_EXPR_FILE)
 end
 
@@ -58,7 +57,8 @@ end
 
 ## ------------------------------------------------------------------
 # FINISHED
-println("\n FINISHED ----------------------------------")
+# This is use to finish the following of a task. So, do not modify it
+println("\n", rpad("FINISHED ", 60, "-"))
 println("pid: ", getpid())
 println("task id: ", _GW_TASKID)
 print("\n\n")

@@ -43,7 +43,9 @@ end
 
 _endswith(text, suffix) = endswith(string(text), string(suffix))
 
-function _print_file(file, c0 = 1, c1 = typemax(Int); buffsize = 500)
+function _print_file(file, c0 = 1, c1 = typemax(Int); 
+        buffsize = 500, onprint = (str) -> nothing
+    )
     c = 1
     bi = 0
     buff = Vector{Char}(undef, buffsize)
@@ -58,13 +60,17 @@ function _print_file(file, c0 = 1, c1 = typemax(Int); buffsize = 500)
             bi += 1
             buff[bi] = ch
             if (bi == buffsize)
-                print(join(buff))
+                str = join(buff)
+                onprint(str)
+                print(str)
                 bi = 0
             end
         end
         
         if bi > 0
-            print(join(buff[1:bi]))
+            str = join(buff[1:bi])
+            onprint(str)
+            print(str)
         end
     end
     return c
