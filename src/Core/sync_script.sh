@@ -28,7 +28,16 @@ sh_repodir_git="${sh_repodir}/.git"
 sh_gitignore="${sh_repodir}/.gitignore" 
 sh_recovery_dir="${sh_repodir}/.recovery" 
 sh_recovery_dir_git="${sh_recovery_dir}/.git" 
-sh_startup_file="${sh_repodir}/sync_startup" 
+sh_startup_file="${sh_repodir}/sync_startup"
+
+git_user_name="$(git config user.name)"
+git_user_email="$(git config user.email)"
+if [ -z "${git_user_name}" ]; then
+	git_user_name="GitWorker"
+fi
+if [ -z "${git_user_email}" ]; then
+	git_user_email="fake@email.com"
+fi
 
 # ---------------------------------------------------------------------------------------
 # startup 
@@ -143,7 +152,7 @@ if _is_push_mode; then
 	git -C "${sh_repodir}" add -A || _error "add -A failed" 
 	git -C "${sh_repodir}" status || _error "git status failed"
 	git -C "${sh_repodir}" diff-index --quiet HEAD && _success # If nothing to commit _success
-	git -C "${sh_repodir}" commit -am "${sh_commit_msg}" || _error "commit -am 'msg' failed" 
+	git -C "${sh_repodir}" -c user.name="${git_user_name}" -c user.email="${git_user_email}" commit -am "${sh_commit_msg}" || _error "commit -am 'msg' failed" 
 	git -C "${sh_repodir}" push || _error "git push failed" 
 fi
 [ "$?" != "0" ] && _error "PUSH fails"
