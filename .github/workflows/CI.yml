@@ -23,16 +23,16 @@ jobs:
         with:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
-      - uses: actions/local@v1
-        env:
-          local-name: local-artifacts
-        with:
-          path: ~/.julia/artifacts
-          key: ${{ runner.os }}-test-${{ env.local-name }}-${{ hashFiles('**/Project.toml') }}
-          restore-keys: |
-            ${{ runner.os }}-test-${{ env.local-name }}-
-            ${{ runner.os }}-test-
-            ${{ runner.os }}-
+      # - uses: actions/local@v1
+      #   env:
+      #     local-name: local-artifacts
+      #   with:
+      #     path: ~/.julia/artifacts
+      #     key: ${{ runner.os }}-test-${{ env.local-name }}-${{ hashFiles('**/Project.toml') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-test-${{ env.local-name }}-
+      #       ${{ runner.os }}-test-
+      #       ${{ runner.os }}-
       # Intalling custom registry 
       - run: julia -e 'import Pkg; Pkg.Registry.add(Pkg.RegistrySpec(url = "https://github.com/josePereiro/CSC_Registry.jl"))'
       - uses: julia-actions/julia-buildpkg@v1
