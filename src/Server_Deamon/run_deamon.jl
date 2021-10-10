@@ -1,6 +1,6 @@
 function run_gitworker_server(;
         sys_root = homedir(), 
-        deb = true
+        deb = false
     )
 
     _set_root!(sys_root)

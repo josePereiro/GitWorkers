@@ -55,14 +55,18 @@ _check_root () {
 	local refdummy="${sh_repodir}/.git/._gw_sync_dummy"
 
 	if [ -d "${realroot}/.git" ]; then
+		# remove reference dummy
 		rm -f "${refdummy}"
-
-		# I create a dummy using the refpath and then check if it exists in the real
-		touch "${refdummy}"
+		
+		# check real dummy
 		if [ -f "${realdummy}" ]; then
-			rm -f "${refdummy}"
-			return 0
-		else
+			_error "unexpected repo root, expected: ${sh_repodir}, found: ${realroot}"
+		fi
+
+		# I create a dummy using the refpath and then 
+		# check if it exists in the real
+		touch "${refdummy}"
+		if [ ! -f "${realdummy}" ]; then
 			rm -f "${refdummy}"
 			_error "unexpected repo root, expected: ${sh_repodir}, found: ${realroot}"
 		fi
@@ -102,7 +106,7 @@ cd "${sh_repodir}" || _error "unable to cd repo dir"
 
 # ---------------------------------------------------------------------------------------
 # remove any lock
-[ -f "${sh_repodir_git}/index.lock" ] && rm -f "${sh_repodir_git}/index.lock"
+rm -f "${sh_repodir_git}/index.lock"
 
 # ---------------------------------------------------------------------------------------
 # pull or clone if necessary
