@@ -23,7 +23,7 @@ function _call_sync_script(
     out = ""
     allowed = (err) -> (err isa InterruptException)
     _ignoring_errors(;allowed) do
-        _, out = ExternalCmds.run_cmd(cmd; ios = verb ? [stdout] : [])
+        _, out = _run_cmd(cmd; ios = verb ? [stdout] : [])
     end
     return out
 end

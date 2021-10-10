@@ -10,6 +10,6 @@ function _call_nuke_script(;
         "bash", sync_script, repodir, url, string(depth),
             success_token, fail_token
     ])
-    _, out = ExternalCmds.run_cmd(cmd; ios = verb ? [stdout] : [])
+    _, out = _run_cmd(cmd; ios = verb ? [stdout] : [])
     return out
 end

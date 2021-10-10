@@ -3,7 +3,6 @@ module GitWorkers
     import LibGit2
     import TOML
     import Pkg
-    import ExternalCmds
 
     using Dates
     using Serialization
@@ -35,6 +34,7 @@ module GitWorkers
         gw_reset_server, gw_clear_rts, gw_send_killsig
 
     include("ExternalCmds/utils.jl")
+    include("ExternalCmds/run.jl")
     
     include("Core/utils.jl")
     include("Core/config.jl")

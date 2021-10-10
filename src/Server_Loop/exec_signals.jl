@@ -15,7 +15,7 @@ function _exec_killsigs()
             print("\n\n")
         end
 
-        _kill_proc(tokill; unsafe)
+        _safe_kill(tokill; unsafe)
     end
 end
 
