@@ -11,6 +11,9 @@ function _create_test_repos(testdir)
     dumpfile = joinpath(upstream_repo, "README.md")
     write(dumpfile, "# TEST")
     run(Cmd(["git", "-C", upstream_repo, "--bare", "init"]))
+    run(Cmd(["git", "-C", upstream_repo, "config", "user.name", "john doe"]))
+    run(Cmd(["git", "-C", upstream_repo, "config", "user.email", "bla@gmail.com"]))
+    println(read(joinpath(upstream_repo, "config"), String))
     println("\n")
 
     # setup gitwr
