@@ -1,7 +1,6 @@
 ## ------------------------------------------------------
 # REGISTER PROC
 const _GW_PROCREG_EXT = ".proc"
-
 _procreg_name(pid, tag) = string(pid, ".", tag, _GW_PROCREG_EXT)
 
 const _GW_PROCREG_NAME_REGEX = Regex("^(?<pid>[0-9]+)\\.(?<tag>.*)(?<ext>\\.proc)\$")
@@ -38,25 +37,24 @@ function _find_procreg(pid, tag = ""; procsdir = _local_procs_dir())
     return ""
 end
 
-# validate if a proc is active and registered
-function _validate_proc(pid, tag)
-    isempty(string(pid)) && return false
-    fn = _local_procreg(pid, tag)
-    dat = _read_toml(fn)
+function _validate_proc(regfile)
+
+    !isfile(regfile) && return false
+    !_is_procreg_file(regfile) && return false
+
+    dat = _read_toml(regfile)
     reg_lstart = get(dat, "lstart", "MISSING")
+    pid = get(dat, "pid", "-1")
+    
     curr_lstart = _get_proc_lstart(pid)
-    reg_lstart == curr_lstart
+    
+    return reg_lstart == curr_lstart
 end
 
-function _validate_proc(fn)
-    pid, tag, _ = _parse_procreg_name(fn) 
-    _validate_proc(pid, tag)
-end
-
-function _no_proc_running(hint)
+function _no_proc_running(hint; procdir = _local_procs_dir())
     hint = string(hint)
-    serverprocs = _filterdir(_local_procs_dir()) do file
-        _is_procreg_file(file) && contains(file, hint) && _validate_proc(file)
+    serverprocs = _filterdir(procdir; join = true) do regfile
+        contains(regfile, hint) && _validate_proc(regfile)
     end
     return length(serverprocs)
 end

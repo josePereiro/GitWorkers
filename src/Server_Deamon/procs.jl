@@ -1,5 +1,4 @@
-# ## ------------------------------------------------------
-# # _deamon_procs_dir(ns...)
-# const _GW_DEAMON_PROC_TAG = "TASK"
+## ------------------------------------------------------
+const _GW_DEAMON_PROC_TAG = "DEAMON"
 
-# _reg_task_proc(; kwargs...) = _reg_proc(getpid(), _GW_DEAMON_PROC_TAG; kwargs...)
+_reg_deamon_proc(; kwargs...) = _reg_proc(getpid(), _GW_DEAMON_PROC_TAG; kwargs...)
