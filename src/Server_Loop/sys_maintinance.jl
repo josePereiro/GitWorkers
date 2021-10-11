@@ -22,9 +22,14 @@ _check_duplicated_server_loop_proc() = _with_server_loop_logger() do
     _check_no_proc_running(_GITGW_SERVER_LOOP_PROC_TAG, 1)
 end
 
-function _clear_invalid_procs_regs()
+function _clear_invalid_procs_regs(;verb = true)
     for procreg in _readdir(_local_procs_dir(); join = true)
-        !_validate_proc(procreg) && _rm(procreg)
+        if !_validate_proc(procreg)
+            _rm(procreg)
+            verb && @warn("Invalid procreg deleted", 
+                name = basename(procreg), time = now()
+            )
+        end
     end
 end
 

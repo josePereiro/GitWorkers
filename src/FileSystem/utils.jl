@@ -116,6 +116,12 @@ _gw_mkdirpath(n, ns...) = _native_urlpath(_mkdirpath(n, ns...))
 _readdir(dir; join::Bool = false, sort::Bool = true) = 
     isdir(dir) ? readdir(dir; join, sort) : String[]
 
+function _readdir(f::Function, dir; kwargs...)
+    for file in _readdir(dir; kwargs...)
+        f(file)
+    end
+end
+
 _gw_readdir(dir; join::Bool = false, sort::Bool = true) = 
         _readdir(_native_urlpath(dir); join, sort)
 

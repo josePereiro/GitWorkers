@@ -1,12 +1,15 @@
 ## ------------------------------------------------------
 # REGISTER PROC
 const _GITGW_PROCREG_EXT = ".proc"
+
 _procreg_name(pid, tag) = string(pid, ".", tag, _GITGW_PROCREG_EXT)
-_is_procreg_file(fn) = _endswith(fn, _GITGW_PROCREG_EXT)
+
+const _GW_PROCREG_NAME_REGEX = Regex("^(?<pid>[0-9]+)\\.(?<tag>.*)(?<ext>\\.proc)\$")
+_is_procreg_file(fn) = !isnothing(match(_GW_PROCREG_NAME_REGEX, basename(fn)))
+
 function _parse_procreg_name(fn) 
-    !_is_procreg_file(fn) && return ("", "", "")
-    split_ = split(basename(fn), ".")
-    (length(split_) == 3) ? split_ : ("", "", "")
+    m = match(_GW_PROCREG_NAME_REGEX, basename(fn))
+    return isnothing(m) ? ("", "", "") : (m[:pid], m[:tag], m[:ext])
 end
 
 _local_procreg(pid, tag) = _local_procs_dir(_procreg_name(pid, tag))
@@ -26,6 +29,7 @@ end
 
 function _find_procreg(pid, tag = ""; procsdir = _local_procs_dir())
     pid = string(pid)
+    isempty(pid) && return ""
     for procreg in _readdir(procsdir; join = true)
         pidi, tagi, _ = _parse_procreg_name(procreg)
         isempty(tag) && (tagi = tag) # ignore tag
@@ -34,7 +38,7 @@ function _find_procreg(pid, tag = ""; procsdir = _local_procs_dir())
     return ""
 end
 
-# validate if a proc is active and is registered
+# validate if a proc is active and registered
 function _validate_proc(pid, tag)
     isempty(string(pid)) && return false
     fn = _local_procreg(pid, tag)

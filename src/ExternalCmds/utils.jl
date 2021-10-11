@@ -13,6 +13,8 @@ end
 
 const _GW_PS_CMD_OUT_STRIP_PATTERN = ['\t', ' ', '\n']
 _get_proc_lstart(pid) = try
+    pid = string(pid)
+    pid == "-1" && return false
     ret = read(`ps -p $(pid) -o lstart=`, String)
     return string(strip(ret, _GW_PS_CMD_OUT_STRIP_PATTERN))
     catch; return ""

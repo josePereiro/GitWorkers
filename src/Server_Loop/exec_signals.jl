@@ -6,15 +6,24 @@ function _exec_killsigs()
         # read signal
         sigdat = _read_toml(killsig)
         tokill = get(sigdat, "pid", "")
-        unsafe = get(sigdat, "unsave", false)
+        unsafe = get(sigdat, "unsafe", false)
+        isempty(tokill) && return
 
         # read signal
         _with_server_loop_logger() do
             print("\n\n")
-            @info("Executing kill sig", looppid = getpid(), tokill, unsafe, time = now())
+            procreg = _find_procreg(tokill; procsdir = _local_procs_dir())
+            @warn("Executing kill sig", 
+                looppid = getpid(), 
+                tokill, unsafe, 
+                isvalid = _validate_proc(procreg),
+                procreg = basename(procreg),
+                time = now()
+            )
             print("\n\n")
         end
 
+        # Test
         _safe_kill(tokill; unsafe)
     end
 end

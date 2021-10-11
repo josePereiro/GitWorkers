@@ -62,12 +62,14 @@ function _server_loop()
 
                 # ------------------------------------------------------
                 # sys maintinance
-                _reg_server_loop_proc()
-                _clear_invalid_procs_regs()
-                _check_duplicated_server_main_proc()
-                _check_duplicated_server_loop_proc()
-                _clear_local_signals()
-                _clear_local_tasks()
+                _with_server_loop_logger() do
+                    _reg_server_loop_proc()
+                    _clear_invalid_procs_regs()
+                    _check_duplicated_server_main_proc()
+                    _check_duplicated_server_loop_proc()
+                    _clear_local_signals()
+                    _clear_local_tasks()
+                end
                 
                 # ------------------------------------------------------
                 # pull
@@ -79,13 +81,14 @@ function _server_loop()
                     verb
                 )
                 
+                # wait
+                _listen_wait()
+
                 # ------------------------------------------------------
                 # loopcontrol
                 # push flag
                 _check_pushflag() && break
 
-                # wait
-                _listen_wait()
             end
             _reset_listen_wait()
             !success && continue
