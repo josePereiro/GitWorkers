@@ -1,8 +1,8 @@
 ## ------------------------------------------------------
 # REGISTER PROC
-const _GITGW_PROCREG_EXT = ".proc"
+const _GW_PROCREG_EXT = ".proc"
 
-_procreg_name(pid, tag) = string(pid, ".", tag, _GITGW_PROCREG_EXT)
+_procreg_name(pid, tag) = string(pid, ".", tag, _GW_PROCREG_EXT)
 
 const _GW_PROCREG_NAME_REGEX = Regex("^(?<pid>[0-9]+)\\.(?<tag>.*)(?<ext>\\.proc)\$")
 _is_procreg_file(fn) = !isnothing(match(_GW_PROCREG_NAME_REGEX, basename(fn)))

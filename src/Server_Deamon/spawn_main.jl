@@ -10,7 +10,7 @@ function _spawn_main(;sys_root, url,
         
         # ---------------------------------------------------------------
         # check if main is already running
-        noprocs = _no_proc_running(_GITGW_SERVER_MAIN_PROC_TAG)
+        noprocs = _no_proc_running(_GW_SERVER_MAIN_PROC_TAG)
         if (noprocs > 0)
 
             _with_server_deamon_logger() do

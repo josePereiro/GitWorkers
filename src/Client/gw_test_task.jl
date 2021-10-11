@@ -1,4 +1,4 @@
-function gw_test_task(iters = 120)
+function gw_test_task(iters = 120; follow = true)
 
     expr = quote
         begin
@@ -14,7 +14,7 @@ function gw_test_task(iters = 120)
 
         end
     end
-    _gw_spawn(expr)
+    _gw_spawn(expr; follow)
 
     return nothing
 end
