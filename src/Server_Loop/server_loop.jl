@@ -12,12 +12,10 @@ function _server_loop()
 
     # ---------------------------------------------------------------
     # welcome
-    _with_server_loop_logger() do
-        print("\n\n")
-        @info("")
-        @info("Starting server loop", looppid = getpid(), time = now())
-        print("\n\n")
-    end
+    print("\n\n")
+    @info("")
+    @info("Starting server loop", looppid = getpid(), time = now())
+    print("\n\n")
     
     # ---------------------------------------------------------------
     # sync loop
@@ -30,17 +28,17 @@ function _server_loop()
     function _sync_logging(action, fail_token, clonning_token)
         function (out)
             if contains(out, fail_token)
-                _with_server_loop_logger() do
-                    print("\n\n")
-                    @warn("Fail token detected", action, time = now(), out)
-                    print("\n\n")
-                end
+
+                print("\n\n")
+                @warn("Fail token detected", action, time = now(), out)
+                print("\n\n")
+
             elseif contains(out, clonning_token)
-                _with_server_loop_logger() do
-                    print("\n\n")
-                    @warn("Clonning token detected", action, time = now(), out)
-                    print("\n\n")
-                end
+
+                print("\n\n")
+                @warn("Clonning token detected", action, time = now(), out)
+                print("\n\n")
+
             end
         end
     end
@@ -62,14 +60,12 @@ function _server_loop()
 
                 # ------------------------------------------------------
                 # sys maintinance
-                _with_server_loop_logger() do
-                    _reg_server_loop_proc()
-                    _clear_invalid_procs_regs()
-                    _check_duplicated_server_main_proc()
-                    _check_duplicated_server_loop_proc()
-                    _clear_local_signals()
-                    _clear_local_tasks()
-                end
+                _reg_server_loop_proc()
+                _clear_invalid_procs_regs()
+                _check_duplicated_server_main_proc()
+                _check_duplicated_server_loop_proc()
+                _clear_local_signals()
+                _clear_local_tasks()
                 
                 # ------------------------------------------------------
                 # pull
@@ -96,13 +92,11 @@ function _server_loop()
             # ------------------------------------------------------
             # get iter
             iter = _get_curriter()
-            
-            _with_server_loop_logger() do
-                print("\n\n")
-                @info("")
-                @info("Server loop", iter, looppid = getpid(), time = now())
-                print("\n\n")
-            end
+        
+            print("\n\n")
+            @info("")
+            @info("Server loop", iter, looppid = getpid(), time = now())
+            print("\n\n")
 
             # ------------------------------------------------------
             # download data
@@ -146,12 +140,12 @@ function _server_loop()
             _exec_resetsig()
 
         catch err
-            _with_server_loop_logger() do
-                print("\n\n")
-                @error("At server loop", looppid = getpid(), time = now(), err = _err_str(err))
-                print("\n\n")
-                sleep(3.0) # wait flush
-            end
+            
+            print("\n\n")
+            @error("At server loop", looppid = getpid(), time = now(), err = _err_str(err))
+            print("\n\n")
+            sleep(3.0) # wait flush
+
             exit()
         end
 

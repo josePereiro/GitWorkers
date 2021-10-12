@@ -10,20 +10,18 @@ function _spawn_long_tasks()
             continue
         end
 
-        _with_server_loop_logger() do
-            print("\n\n")
-            @info("Spawing task", looppid = getpid(), taskid, time = now())
-            print("\n\n")
-        end
+        print("\n\n")
+        @info("Spawing task", looppid = getpid(), taskid, time = now())
+        print("\n\n")
 
         try
             _spawn_long_task(taskid, taskfile)
         catch err
-            _with_server_loop_logger() do
-                print("\n\n")
-                @error("At spawn task", looppid = getpid(), time = now(), err = _err_str(err))
-                print("\n\n")
-            end
+            
+            print("\n\n")
+            @error("At spawn task", looppid = getpid(), time = now(), err = _err_str(err))
+            print("\n\n")
+
         end
     end
     

@@ -7,4 +7,6 @@ GitWorkers._local_setup(;
 )
 
 ## ------------------------------------------------------------------
-GitWorkers._server_loop()
+GitWorkers._with_server_loop_logger() do
+    GitWorkers._server_loop()
+end

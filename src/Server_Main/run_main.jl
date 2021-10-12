@@ -8,13 +8,21 @@ function _run_main(;
     gw_setup_client(;sys_root, url)
     
     # ---------------------------------------------------------------
-    # welcome
     _with_server_main_logger() do
-        print("\n\n")
-        @info("")
-        @info("Starting server main process", mainpid = getpid(), time = now())
-        print("\n\n")
+        _main_loop(sys_root, url)
     end
+
+end
+
+function _main_loop(sys_root, url)
+
+    # ---------------------------------------------------------------
+    # welcome
+    
+    print("\n\n")
+    @info("")
+    @info("Starting server main process", mainpid = getpid(), time = now())
+    print("\n\n")
     
     # ---------------------------------------------------------------
     # Server Os
@@ -32,11 +40,10 @@ function _run_main(;
 
             # ---------------------------------------------------------------
             # spawn proccess
-            _with_server_main_logger() do
-                print("\n\n")
-                @info("Spawing server loop", mainpid = getpid(), time = now())
-                print("\n\n")
-            end
+            print("\n\n")
+            @info("Spawing server loop", mainpid = getpid(), time = now())
+            print("\n\n")
+
             projdir = Base.active_project()
             script_path = joinpath(@__DIR__, "server_loop_script.jl")
             jlcmd = Base.julia_cmd()
@@ -45,10 +52,9 @@ function _run_main(;
             run(jlcmd; wait = true)
             
         catch err
-            _with_server_main_logger() do
-                @error("At server loop", mainpid = getpid(), err = _err_str(err), time = now())
-                sleep(3.0) # wait flush
-            end
+                
+            @error("At server loop", mainpid = getpid(), err = _err_str(err), time = now())
+            sleep(3.0) # wait flush
             (err isa InterruptException) && exit()
         end
 
@@ -56,5 +62,5 @@ function _run_main(;
 
     # ---------------------------------------------------------------
     exit()
-    
+
 end

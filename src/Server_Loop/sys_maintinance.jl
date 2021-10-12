@@ -14,13 +14,9 @@ function _check_no_proc_running(hint, n)
     end
 end
 
-_check_duplicated_server_main_proc() = _with_server_main_logger() do
-    _check_no_proc_running(_GW_SERVER_MAIN_PROC_TAG, 1)
-end
+_check_duplicated_server_main_proc() = _check_no_proc_running(_GW_SERVER_MAIN_PROC_TAG, 1)
 
-_check_duplicated_server_loop_proc() = _with_server_loop_logger() do
-    _check_no_proc_running(_GW_SERVER_LOOP_PROC_TAG, 1)
-end
+_check_duplicated_server_loop_proc() = _check_no_proc_running(_GW_SERVER_LOOP_PROC_TAG, 1)
 
 function _clear_invalid_procs_regs(;verb = true)
     for procreg in _readdir(_local_procs_dir(); join = true)

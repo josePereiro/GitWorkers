@@ -10,18 +10,16 @@ function _exec_killsigs()
         isempty(tokill) && return
 
         # read signal
-        _with_server_loop_logger() do
-            print("\n\n")
-            procreg = _find_procreg(tokill; procsdir = _local_procs_dir())
-            @warn("Executing kill sig", 
-                looppid = getpid(), 
-                tokill, unsafe, 
-                isvalid = _validate_proc(procreg),
-                procreg = basename(procreg),
-                time = now()
-            )
-            print("\n\n")
-        end
+        print("\n\n")
+        procreg = _find_procreg(tokill; procsdir = _local_procs_dir())
+        @warn("Executing kill sig", 
+            looppid = getpid(), 
+            tokill, unsafe, 
+            isvalid = _validate_proc(procreg),
+            procreg = basename(procreg),
+            time = now()
+        )
+        print("\n\n")
 
         # Test
         _safe_kill(tokill; unsafe)
@@ -36,11 +34,9 @@ function _update_proj()
         # Pkg.add("GitWorkers")
         Pkg.update("GitWorkers")
     catch err
-        _with_server_loop_logger() do
-            print("\n\n")
-            @error("At update proj", looppid = getpid(), time = now(), err = _err_str(err))
-            print("\n\n")
-        end
+        print("\n\n")
+        @error("At update proj", looppid = getpid(), time = now(), err = _err_str(err))
+        print("\n\n")
     end
 end
 
@@ -50,20 +46,18 @@ function _exec_resetsig()
     if isfile(resetsig)
         sigdat = _read_toml(resetsig)
         update = get(sigdat, "update", false)
-        
-        _with_server_loop_logger() do
-            print("\n\n")
-            @info("Executing resetsig", looppid = getpid(), update, time = now())
-            print("\n\n")
-        end
+
+        print("\n\n")
+        @info("Executing resetsig", looppid = getpid(), update, time = now())
+        print("\n\n")
 
         if update 
-            _with_server_loop_logger() do
-                print("\n\n")
-                @info("Updating project")
-                print("\n\n")
-                _update_proj()
-            end
+            
+            print("\n\n")
+            @info("Updating project")
+            print("\n\n")
+
+            _update_proj()
         end
 
         _server_loop_exit()
@@ -77,11 +71,9 @@ function _exec_up_serverlogs_sig()
         sigdat = _read_toml(sigfile)
         deep = max(get(sigdat, "deep", -1), 1)
 
-        _with_server_loop_logger() do
-            print("\n\n")
-            @info("Executing up_serverlogs_sig", looppid = getpid(), deep, time = now())
-            print("\n\n")
-        end
+        print("\n\n")
+        @info("Executing up_serverlogs_sig", looppid = getpid(), deep, time = now())
+        print("\n\n")
         
         # copy the most recent deep logs
         for logs in [
