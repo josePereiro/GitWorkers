@@ -24,26 +24,6 @@ function _server_loop()
     success = false
 
     # ---------------------------------------------------------------
-    # feedback
-    function _sync_logging(action, fail_token, clonning_token)
-        function (out)
-            if contains(out, fail_token)
-
-                print("\n\n")
-                @warn("Fail token detected", action, time = now(), out)
-                print("\n\n")
-
-            elseif contains(out, clonning_token)
-
-                print("\n\n")
-                @warn("Clonning token detected", action, time = now(), out)
-                print("\n\n")
-
-            end
-        end
-    end
-
-    # ---------------------------------------------------------------
     # SERVER LOOP
     while true
 
@@ -54,6 +34,10 @@ function _server_loop()
             success_token = _gen_id()
             clonning_token = _gen_id()
 
+            # ------------------------------------------------------
+            # sys maintinance
+            _clear_repowdir()
+            
             # ------------------------------------------------------
             # stand by loop
             while true
@@ -152,4 +136,24 @@ function _server_loop()
         println("\n")
 
     end # server loop end
+end
+
+# ---------------------------------------------------------------
+# sync feedback
+function _sync_logging(action, fail_token, clonning_token)
+    function (out)
+        if contains(out, fail_token)
+
+            print("\n\n")
+            @warn("Fail token detected", action, time = now(), out)
+            print("\n\n")
+
+        elseif contains(out, clonning_token)
+
+            print("\n\n")
+            @warn("Clonning token detected", action, time = now(), out)
+            print("\n\n")
+
+        end
+    end
 end

@@ -50,6 +50,7 @@ end
 function _repo_update(upfun::Function;
         commit_msg = "Update at ($(now()))", 
         force_clonning = false,
+        clear_wdir = true,
         verb = false
     )
     
@@ -59,17 +60,21 @@ function _repo_update(upfun::Function;
     for att in 1:5
         
         # ------------------------------------------------------
+        # sys maintinance
+        clear_wdir && _clear_repowdir()
+
+        # ------------------------------------------------------
         # pull
         success = _gw_pull(; force_clonning, verb)
         !success && continue
 
         # ------------------------------------------------------
         # Should affect repo
-        upflag = upfun()
+        pushflag = upfun()
 
         # ------------------------------------------------------
-        # pull
-        if upflag === true
+        # push
+        if pushflag === true
             success = _gw_push(;commit_msg, verb)
             success && break
         end

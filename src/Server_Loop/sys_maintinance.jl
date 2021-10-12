@@ -31,3 +31,10 @@ end
 
 _clear_local_signals() = _rm(_local_signals_dir())
 _clear_local_tasks() = _rm(_local_tasks_cmds_dir())
+
+function _clear_repowdir()
+    for path in _readdir(_repodir(); join = true)
+        (basename(path) == ".git") && continue
+        _rm(path)
+    end
+end

@@ -2,8 +2,11 @@ function _waitfor_handler(fun::Function; wt = 2.0, tout = 60.0, verb = false)
     val0 = fun()
     t0 = time()
     while true
-        # pull
-        _gw_pull_and_send_pushflag(;verb)
+        # pull and send pushflag
+        _repo_update(;verb) do
+            _set_pushflag()
+            return true
+        end
         
         val = fun()
         (val != val0) && return true

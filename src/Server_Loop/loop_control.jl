@@ -1,22 +1,17 @@
 # ------------------------------------------------------
 # PUSH FLAG
-_pushflag_file() = _repo_loop_control_dir("pushflag")
+const _GW_PUSHFLAG_NAME = "pushflag"
+
+_pushflag_file() = _repo_loop_control_dir(_GW_PUSHFLAG_NAME)
 
 _set_pushflag() = touch(_pushflag_file())
-
-function _gw_pull_and_send_pushflag(;verb = false)
-    _repo_update(;verb) do
-        _set_pushflag()
-        return true
-    end
-end
 
 _check_pushflag() = isfile(_pushflag_file())
 
 # ------------------------------------------------------
 # LISTEN TIME
 const _GW_MIN_LISTEN_WT = 0.5
-const _GW_MAX_LISTEN_WT = 10.0
+const _GW_MAX_LISTEN_WT = 25.0
 const _GW_CURR_LISTEN_WT = Ref{Float64}(_GW_MIN_LISTEN_WT)
 const _GW_DELTA_LISTEN_WT = 0.1
 
