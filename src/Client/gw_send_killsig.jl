@@ -18,7 +18,7 @@ function gw_send_killsig(pid; unsafe = false, verb = false, tout = 120)
             println("Signal sended\n\n")
             
             for _ in 1:5
-                println("waiting, curriter: ", _get_curriter())
+                println("Waiting, curriter: ", _get_curriter())
                 timeout = !_waitfor_till_next_iter(;verb, tout)
                 timeout && return
                 

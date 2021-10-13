@@ -1,9 +1,7 @@
 ## ------------------------------------------------------------------
-function _set_long_task(taskid, ex::Expr)
-    
-    !Meta.isexpr(ex, :block) && error("A 'begin' block was expected. Ex: '@gitworker begin println(\"Hi\")' end")
+function _set_jlexpr_task(taskid, ex::Expr)
 
-    taskfile = _repo_long_task_file(taskid)
+    taskfile = _repo_jlexpr_task_file(taskid)
     _gw_task__ = (;
         id = taskid, 
         taskfile = _rel_urlpath(taskfile) # This is run in client

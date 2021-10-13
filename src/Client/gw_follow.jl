@@ -9,7 +9,8 @@ end
 # ----------------------------------------------------------------
 function _follow_and_print(file, stophint; 
         tout = 120.0, wt = 2.0, c0 = 0, 
-        buffsize = 500
+        buffsize = 500, 
+        verb = false
     )
     
     # collect tail
@@ -28,7 +29,7 @@ function _follow_and_print(file, stophint;
         finished = contains(tailstr, stophint)
         finished && return
     
-        timeout = !_waitfor_size_change(file; tout, wt)
+        timeout = !_waitfor_size_change(file; tout, wt, verb)
         timeout && return
         
     end # while true
@@ -36,7 +37,7 @@ end
 
 # ----------------------------------------------------------------
 function _task_finished_regex_hint(taskid)
-    # from long task script end tag
+    # from jlexpr task script end tag
     # println("\n", rpad("FINISHED ", 60, "-"))
     # println("pid: ", getpid())
     # println("task id: ", _GW_TASKID)
@@ -44,7 +45,7 @@ function _task_finished_regex_hint(taskid)
 end
 
 # ----------------------------------------------------------------
-function _follow_task(taskid; tout = 120.0, wt = 2.0, c0 = 0)
+function _follow_task(taskid; tout = 120.0, wt = 2.0, c0 = 0, verb = false)
     isempty(taskid) && return
 
     out_file = _repo_task_out_file(taskid)
@@ -55,7 +56,7 @@ function _follow_task(taskid; tout = 120.0, wt = 2.0, c0 = 0)
         @info("Following task: ", taskid, out_file)
         println("\n")
 
-        _follow_and_print(out_file, stophint; tout, wt, c0)
+        _follow_and_print(out_file, stophint; tout, wt, c0, verb)
 
     catch err
         (err isa InterruptException) && return

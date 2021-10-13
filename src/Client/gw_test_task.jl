@@ -14,7 +14,7 @@ function gw_test_task(iters = 120; follow = true)
 
         end
     end
-    _gw_spawn(expr; follow)
+    gw_spawn(expr; follow)
 
     return nothing
 end

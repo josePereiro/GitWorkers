@@ -38,13 +38,33 @@ let
                 @assert !isfile($(dummy_file))
                 GitWorkers._mkpath(dirname($(dummy_file)))
                 write($(dummy_file), $(token))
-                println("Hiiiii from server proc ", getpid())
+                println("jlexpr task test ")
             end
         end
-        GitWorkers._gw_spawn(expr; verb = true, follow = true, tout = 120.0, wt = 3.0)
+        gw_spawn(expr; verb = true, follow = true, tout = 120.0, wt = 3.0)
         
         @test isfile(dummy_file)
-        @test isfile(dummy_file) && (read(dummy_file, String) == token)
+        @test contains(read(dummy_file, String), token)
+
+        # gw bash
+        rm(dummy_file; force = true)
+        @assert !isfile(dummy_file)
+
+        src = """echo "bash str task test"; echo '$(token)' > '$(dummy_file)'"""
+        gw_bash(src)
+
+        @test isfile(dummy_file)
+        @test contains(read(dummy_file, String), token)
+
+        # gw julia
+        rm(dummy_file; force = true)
+        @assert !isfile(dummy_file)
+
+        src = """println("julia str task test"); write("$(dummy_file)", "$(token)") """
+        gw_julia(src)
+
+        @test isfile(dummy_file)
+        @test contains(read(dummy_file, String), token)
 
         # ---------------------------------------------------------------------
         println("\n\n")

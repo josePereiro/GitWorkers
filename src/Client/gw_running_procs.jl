@@ -2,11 +2,9 @@ function _gw_running_procs(;verb = false, tout = 120)
 
 	# Do a full sync
 	println("-"^60)
-	println("Updating, curriter: ", _get_curriter())
-	
+	println("Syncing, curriter: ", _get_curriter())
 	timeout = !_waitfor_till_next_iter(;verb, tout)
 	timeout && return
-
 	println("Done, curriter: ", _get_curriter())
 	println()
 	

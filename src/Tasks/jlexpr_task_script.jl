@@ -42,11 +42,18 @@ println("task id: ", _GW_TASKID)
 print("\n\n")
 
 ## ------------------------------------------------------------------
+# INSIST FLUSHING
+for _ in 1:10
+    flush(stdout); flush(stderr)
+end
+
+## ------------------------------------------------------------------
 # EVAL EXPRS
 try 
     _GW_TASK_EXPR = Serialization.deserialize(_GW_EXPR_FILE)
     GitWorkers._rm(_GW_EXPR_FILE)
     @sync GitWorkers.eval(_GW_TASK_EXPR)
+    flush(stdout); flush(stderr)
 catch err
     print("\n\n")
     GitWorkers._printerr(err)
@@ -56,9 +63,16 @@ finally
 end
 
 ## ------------------------------------------------------------------
+# INSIST FLUSHING
+for _ in 1:10
+    flush(stdout); flush(stderr)
+end
+
+## ------------------------------------------------------------------
 # FINISHED
-# This is use to finish the following of a task. So, do not modify it
-println("\n", rpad("FINISHED ", 60, "-"))
+# This is used to finish the following of a task. So, do not modify it
+print("\n\n")
+println(rpad("FINISHED ", 60, "-"))
 println("pid: ", getpid())
 println("task id: ", _GW_TASKID)
 print("\n\n")
@@ -66,8 +80,7 @@ print("\n\n")
 ## ------------------------------------------------------------------
 # INSIST FLUSHING
 for _ in 1:10
-    flush(stdout)
-    flush(stderr)
+    flush(stdout); flush(stderr)
 end
 
 ## ------------------------------------------------------------------

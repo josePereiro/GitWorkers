@@ -8,6 +8,8 @@ module GitWorkers
     using Serialization
     using LoggingExtras
 
+    include("Client/gw_bash.jl")
+    include("Client/gw_julia.jl")
     include("Client/gw_curr_iter.jl")
     include("Client/gw_follow.jl")
     include("Client/gw_last_task.jl")
@@ -23,11 +25,14 @@ module GitWorkers
     include("Client/gw_up_serverlogs.jl")
 
     export gw_setup_client, 
-        @gw_spawn, gw_follow,
+        gw_follow,
         gw_running_procs,
         gw_curr_iter,
         gw_last_task, 
         gw_test_task,
+        gw_spawn, @gw_spawn, 
+        gw_bash, @gw_bash_str,
+        gw_julia, @gw_julia_str,
         gw_push, gw_ping, gw_pull, 
         gw_server_loop_logs,
         gw_server_main_logs,
@@ -52,12 +57,15 @@ module GitWorkers
     include("Signals/resetsig.jl")
     include("Signals/up_serverlogs_sig.jl")
 
-    include("Tasks/long_task_os.jl")
-    include("Tasks/long_tasks.jl")
-    include("Tasks/set_long_task.jl")
-    include("Tasks/spawn_long_task.jl")
+    include("Tasks/jlexpr_task_os.jl")
+    include("Tasks/jlexpr_tasks.jl")
+    include("Tasks/set_bash_task.jl")
+    include("Tasks/set_julia_task.jl")
+    include("Tasks/set_jlexpr_task.jl")
+    include("Tasks/spawn_jlexpr_task.jl")
     include("Tasks/task_out.jl")
     include("Tasks/procs.jl")
+    include("Tasks/utils.jl")
     
     include("FileSystem/utils.jl")
     include("FileSystem/dirtree.jl")
@@ -70,7 +78,7 @@ module GitWorkers
     include("Server_Loop/repo_maintinance.jl")
     include("Server_Loop/server_loop_os.jl")
     include("Server_Loop/server_loop.jl")
-    include("Server_Loop/spawn_long_tasks.jl")
+    include("Server_Loop/spawn_jlexpr_tasks.jl")
     include("Server_Loop/sys_maintinance.jl")
     include("Server_Loop/upload_data.jl")
     include("Server_Loop/logging.jl")

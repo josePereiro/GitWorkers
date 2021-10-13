@@ -1,5 +1,5 @@
 # ------------------------------------------------------------------
-function _spawn_long_task(taskid, taskfile)
+function _spawn_jlexpr_task(taskid, taskfile)
 
     # setup
     sysroot = _get_root()
@@ -18,7 +18,7 @@ function _spawn_long_task(taskid, taskfile)
     serialize(exprfile, raskcmd.expr)
     
     # TODO: connect with config for julia cmd
-    scriptfile = joinpath(@__DIR__, "long_task_script.jl")
+    scriptfile = joinpath(@__DIR__, "jlexpr_task_script.jl")
     julia = Base.julia_cmd()
     jlcmd = Cmd(`$julia --startup-file=no --project=$(projdir) -- $(scriptfile) $(taskid) $(exprfile) $(sysroot) $(url)`; detach = false)
     jlcmd = pipeline(jlcmd; stdout = out_file, stderr = out_file, append = true)

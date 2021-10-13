@@ -115,7 +115,7 @@ function _server_loop()
             # exec tasks
             if success
                 println("\nexec tasks")
-                _spawn_long_tasks()
+                _spawn_jlexpr_tasks()
             end
 
             # ------------------------------------------------------
