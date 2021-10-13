@@ -2,6 +2,7 @@ function _run_server_loop_os(;wt = 25.0)
     while true
         try
             # REG PROC
+            _clear_invalid_procs_regs()
             _reg_server_loop_proc()
         catch err
             

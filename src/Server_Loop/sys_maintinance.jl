@@ -1,9 +1,9 @@
 function _check_no_proc_running(hint, n)
     noprocs = _no_proc_running(hint)
-    if noprocs != n
+    if noprocs > n
         print("\n\n")
         try
-            error("FATAL, $(n) $(hint) registered process(s) expected!!!, found $(noprocs)")
+            error("FATAL, noprocs <= n $(hint) registered process(s) expected!!!, found $(noprocs) > $(n) ")
         catch err
             print("\n\n")
             @error("At cheking proc number", pid = getpid(), time = now(), err = _err_str(err))

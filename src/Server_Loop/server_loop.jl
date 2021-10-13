@@ -18,10 +18,11 @@ function _server_loop()
     print("\n\n")
     
     # ---------------------------------------------------------------
-    # sync loop
+    # loop globals
     verb = true
     sync_msg = ""
     success = false
+    iter = -1
 
     # ---------------------------------------------------------------
     # SERVER LOOP
@@ -62,21 +63,22 @@ function _server_loop()
                 )
                 
                 # wait
-                _listen_wait()
+                _server_loop_listen_wait()
 
                 # ------------------------------------------------------
                 # loopcontrol
                 # push flag
                 _check_pushflag() && break
 
-            end
-            _reset_listen_wait()
-            !success && continue
+                # curriter
+                iter = _get_curriter()
+                iter < 5 && break # this ensures a few starting commits
 
-            # ------------------------------------------------------
-            # get iter
-            iter = _get_curriter()
+            end
+            _reset_server_loop_listen_wait()
+            !success && continue
         
+            # ------------------------------------------------------
             print("\n\n")
             @info("")
             @info("Server loop", iter, looppid = getpid(), time = now())
@@ -100,6 +102,10 @@ function _server_loop()
             _clear_repo_tasks()
 
             # ------------------------------------------------------
+            # iter 
+            _update_curriter()
+
+            # ------------------------------------------------------
             # push
             _update_curriter()
             sync_msg = "Sync iter: $(iter) time :$(now())"
@@ -114,7 +120,6 @@ function _server_loop()
             # ------------------------------------------------------
             # exec tasks
             if success
-                println("\nexec tasks")
                 _spawn_jlexpr_tasks()
             end
 

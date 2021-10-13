@@ -10,21 +10,14 @@ _check_pushflag() = isfile(_pushflag_file())
 
 # ------------------------------------------------------
 # LISTEN TIME
-const _GW_MIN_LISTEN_WT = 0.5
-const _GW_MAX_LISTEN_WT = 25.0
-const _GW_CURR_LISTEN_WT = Ref{Float64}(_GW_MIN_LISTEN_WT)
-const _GW_DELTA_LISTEN_WT = 0.1
+# mins from reset => wait time
+const _GW_SERVER_LOOP_SLEEP_PROGRAM = SleepProgram(2*60 => 2, 10*60 => 15, 30*60 => 60)
 
+_reset_server_loop_listen_wait() = reset!(_GW_SERVER_LOOP_SLEEP_PROGRAM)
 
-_reset_listen_wait() = (_GW_CURR_LISTEN_WT[] = _GW_MIN_LISTEN_WT)
-
-function _listen_wait()
-    
+function _server_loop_listen_wait()
     println("\nJust listening, time: ", now())
-    
-    wt = clamp(_GW_CURR_LISTEN_WT[], _GW_MIN_LISTEN_WT, _GW_MAX_LISTEN_WT)
-    _GW_CURR_LISTEN_WT[] += _GW_DELTA_LISTEN_WT
-    sleep(wt)
+    sleep(_GW_SERVER_LOOP_SLEEP_PROGRAM)
 end
 
 # ------------------------------------------------------

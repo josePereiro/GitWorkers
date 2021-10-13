@@ -3,6 +3,7 @@ module GitWorkers
     import LibGit2
     import TOML
     import Pkg
+    import Base.sleep
 
     using Dates
     using Serialization
@@ -70,6 +71,10 @@ module GitWorkers
     include("FileSystem/utils.jl")
     include("FileSystem/dirtree.jl")
     
+    include("Events/FileTracker.jl")
+    include("Events/waitfor.jl")
+    include("Events/SleepProgram.jl")
+
     include("Server_Loop/atexit.jl")
     include("Server_Loop/download_data.jl")
     include("Server_Loop/exec_signals.jl")
@@ -85,16 +90,15 @@ module GitWorkers
     
     include("Server_Main/procs.jl")
     include("Server_Main/run_main.jl")
+    include("Server_Main/main_loop.jl")
     include("Server_Main/logging.jl")
     include("Server_Main/server_main_os.jl")
+    include("Server_Main/loop_control.jl")
     
     include("Server_Deamon/run_deamon.jl")
     include("Server_Deamon/spawn_main.jl")
     include("Server_Deamon/logging.jl")
     include("Server_Deamon/procs.jl")
-    
-    include("Events/FileTracker.jl")
-    include("Events/waitfor.jl")
     
     include("Test/test_repos.jl")
     include("Test/monkey_delete.jl")
