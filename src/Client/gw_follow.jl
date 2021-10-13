@@ -65,7 +65,7 @@ function _follow_task(taskid; tout = 120.0, wt = 2.0, c0 = 0, verb = false)
 end
 
 # ----------------------------------------------------------------
-function gw_follow(taskid = _LAST_SPAWED_TASK[]; 
+function gw_follow(taskid = _LAST_SPAWED_TASKID[]; 
         tout = 120.0, wt = 2.0, c0 = 0
     )
     _follow_task(taskid; tout, wt, c0)

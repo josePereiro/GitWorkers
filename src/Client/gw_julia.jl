@@ -10,7 +10,7 @@ function gw_julia(src::AbstractString;
         _set_julia_task(taskid, src)
         return true
     end
-    _LAST_SPAWED_TASK[] = taskid
+    _LAST_SPAWED_TASKID[] = taskid
 
     follow && _follow_task(taskid; tout, wt, verb)
 

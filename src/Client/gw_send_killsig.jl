@@ -1,4 +1,4 @@
-function gw_send_killsig(pid; unsafe = false, verb = false, tout = 120)
+function gw_send_killsig(pid; tries = 5, unsafe = false, verb = false, tout = 120)
     
     try; 
         while true
@@ -30,6 +30,8 @@ function gw_send_killsig(pid; unsafe = false, verb = false, tout = 120)
                 end
                 sleep(3.0)
             end
+
+            tries -= 1; (tries < 1) && return
             println("\n\n")
         end
     catch err

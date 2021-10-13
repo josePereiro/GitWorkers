@@ -15,7 +15,7 @@ function gw_spawn(expr::Expr;
         _set_jlexpr_task(taskid, expr)
         return true
     end
-    _LAST_SPAWED_TASK[] = taskid
+    _LAST_SPAWED_TASKID[] = taskid
 
     follow && _follow_task(taskid; tout, wt)    
 

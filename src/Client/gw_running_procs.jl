@@ -18,16 +18,18 @@ function _gw_running_procs(;verb = false, tout = 120)
 	end
 end
 
-function gw_running_procs(;verb = false, repeat = true, tout = 120)
-	try
-		while true
+function gw_running_procs(tries = 1;
+		verb = false, tout = 120,
+		wt = 3.0
+	)
+	while true
+		try
 			_gw_running_procs(;verb, tout)
-
-			!repeat && break
-			sleep(3.0)
+			tries -= 1; (tries < 1) && return
+			sleep(wt)
+		catch err
+			(err isa InterruptException) && return
+			rethrow(err)
 		end
-	catch err
-		(err isa InterruptException) && return
-		rethrow(err)
 	end
 end
