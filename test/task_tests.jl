@@ -19,7 +19,7 @@ let
 
         # ---------------------------------------------------------------------
         # setup client
-        GitWorkers.gw_setup_client(;
+        GitWorkers.gw_setup_gitworker(;
             sys_root = client_root,
             url,
         )

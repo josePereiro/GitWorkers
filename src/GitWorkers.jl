@@ -20,24 +20,27 @@ module GitWorkers
     include("Client/gw_pull.jl")
     include("Client/gw_reset_server.jl")
     include("Client/gw_running_procs.jl")
-    include("Client/gw_setup_client.jl")
+    include("Client/gw_setup_gitworker.jl")
     include("Client/gw_test_task.jl")
     include("Client/gw_send_killsig.jl")
     include("Client/gw_up_serverlogs.jl")
 
-    export gw_setup_client, 
+    export gw_setup_gitworker, 
         gw_follow,
         gw_running_procs,
         gw_curr_iter,
         gw_last_task, 
         gw_test_task,
-        gw_spawn, @gw_spawn, 
-        gw_bash, @gw_bash_str,
-        gw_julia, @gw_julia_str,
-        gw_push, gw_ping, gw_pull, 
+        gw_push, gw_ping, gw_pull,
         gw_server_loop_logs,
         gw_server_main_logs,
-        gw_reset_server, gw_clear_rts, gw_send_killsig
+        gw_server_deamon_logs,
+        gw_reset_server, 
+        gw_send_killsig
+
+    export gw_spawn, @gw_spawn, 
+        gw_bash, @gw_bash_str,
+        gw_julia, @gw_julia_str
 
     include("ExternalCmds/utils.jl")
     include("ExternalCmds/run.jl")
@@ -95,10 +98,12 @@ module GitWorkers
     include("Server_Main/server_main_os.jl")
     include("Server_Main/loop_control.jl")
     
-    include("Server_Deamon/run_deamon.jl")
+    include("Server_Deamon/run_gitworker_server.jl")
     include("Server_Deamon/spawn_main.jl")
     include("Server_Deamon/logging.jl")
     include("Server_Deamon/procs.jl")
+
+    export run_gitworker_server
     
     include("Test/test_repos.jl")
     include("Test/monkey_delete.jl")
@@ -106,6 +111,10 @@ module GitWorkers
 
     function __init__()
         !Sys.isunix() && error("Non-unix systems are not yet supported!")
+        
+        # set global logger
+        empty!(_GLOBAL_LOGGER)
+        push!(_GLOBAL_LOGGER, global_logger())
     end
     
 end

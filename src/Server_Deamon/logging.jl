@@ -1,5 +1,5 @@
 const _GW_SERVER_DEAMON_LOGGER = LoggingExtras.TeeLogger[]
-const _GW_SERVER_DEAMON_LOG_FILE_EXT = string("loop", _GW_LOG_EXT)
+const _GW_SERVER_DEAMON_LOG_FILE_EXT = string("deamon", _GW_LOG_EXT)
 
 _is_server_deamon_log_file(fn) = _endswith(fn, _GW_SERVER_DEAMON_LOG_FILE_EXT)
 

@@ -25,6 +25,10 @@ function _server_loop()
     iter = -1
 
     # ---------------------------------------------------------------
+    # setup
+    _reset_server_loop_listen_wait()
+
+    # ---------------------------------------------------------------
     # SERVER LOOP
     while true
 
@@ -67,12 +71,13 @@ function _server_loop()
 
                 # ------------------------------------------------------
                 # loopcontrol
-                # push flag
-                _check_pushflag() && break
-
+                
                 # curriter
                 iter = _get_curriter()
                 iter < 5 && break # this ensures a few starting commits
+
+                # push flag
+                _check_pushflag() && break
 
             end
             _reset_server_loop_listen_wait()

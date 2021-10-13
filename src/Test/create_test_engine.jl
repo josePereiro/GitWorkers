@@ -17,7 +17,7 @@ function _create_test_engine(testdir; clear_repos = true, clear_scripts = false)
             "# GitWorkers._create_test_engine(@__DIR__)",
             "",
             "## ---------------------------------------------------------------",
-            "GitWorkers.gw_setup_client(;",
+            "gw_setup_gitworker(;",
                 """\tsys_root = "$(client_root)",""",
                 """\turl = "$(url)",""",
             ")"
@@ -32,8 +32,9 @@ function _create_test_engine(testdir; clear_repos = true, clear_scripts = false)
             "using GitWorkers", 
             "",
             "## ---------------------------------------------------------------",
-            "GitWorkers.run_gitworker_server(;",
+            "run_gitworker_server(;",
                 """\tsys_root = "$(server_root)", """,
+                """\turl = "$(url)",""",
                 """\tdeb = true """,
             ")"
         ], "\n")

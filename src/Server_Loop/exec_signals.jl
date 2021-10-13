@@ -76,6 +76,8 @@ function _exec_up_serverlogs_sig()
         print("\n\n")
         
         # copy the most recent deep logs
+
+        # worker logs
         for logs in [
                 _last_server_loop_logs(deep),
                 _last_server_main_logs(deep)
@@ -84,6 +86,11 @@ function _exec_up_serverlogs_sig()
                 repo_file = _repover(local_file)
                 _cp(local_file, repo_file)
             end
+        end
+
+        for deamon_file in _last_server_deamon_logs(deep)
+            repo_file = _repo_server_deamon_logs_dir(basename(deamon_file))
+            _cp(deamon_file, repo_file)
         end
     end
 end

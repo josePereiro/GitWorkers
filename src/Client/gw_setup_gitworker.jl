@@ -19,7 +19,7 @@ end
 ## ---------------------------------------------------------------
 # TODO: connect with config
 # init setup
-function gw_setup_client(;
+function gw_setup_gitworker(;
         url::AbstractString,
         sys_root::AbstractString = homedir(),
         force_clonning = false

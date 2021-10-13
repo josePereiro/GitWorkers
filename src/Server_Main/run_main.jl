@@ -5,7 +5,7 @@ function _run_main(;
 
     # ---------------------------------------------------------------
     # SETUP
-    gw_setup_client(;sys_root, url)
+    gw_setup_gitworker(;sys_root, url)
     
     # ---------------------------------------------------------------
     _with_server_main_logger() do

@@ -31,11 +31,12 @@ _log_format_name(tag, ext) = _log_format_name(tag, "YYYY-mm-dd-HH", ext)
 _rotating_logger(logdir, nametag, ext) = 
     DatetimeRotatingFileLogger(_filelog_formater, logdir, _log_format_name(nametag, ext); always_flush = true)
 
+const _GLOBAL_LOGGER = ConsoleLogger[] # This fill in __init__
 function _tee_logger(logdir, nametag, ext)
     _mkpath(logdir)
     TeeLogger(
         _rotating_logger(logdir, nametag, ext),
-        global_logger()
+        first(_GLOBAL_LOGGER)
     )
 end
 

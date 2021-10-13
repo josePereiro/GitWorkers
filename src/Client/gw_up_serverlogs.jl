@@ -32,3 +32,6 @@ gw_server_loop_logs(deep = 1; tout = 120.0, wt = 2.0, verb = false) =
 
 gw_server_main_logs(deep = 1; tout = 120.0, wt = 2.0, verb = false) = 
     _gw_up_serverlogs(_repo_server_main_logs_dir(); deep, tout, wt, filter = _is_server_main_log_file, verb)
+
+gw_server_deamon_logs(deep = 1; tout = 120.0, wt = 2.0, verb = false) = 
+    _gw_up_serverlogs(_repo_server_deamon_logs_dir(); deep, tout, wt, filter = _is_server_deamon_log_file, verb)
