@@ -37,16 +37,21 @@ function gitworker_tasks_tests()
         rm(dummy_file; force = true)
         @assert !isfile(dummy_file)
 
-        expr = quote 
-            begin 
-                GitWorkers._rm($(dummy_file))
-                @assert !isfile($(dummy_file))
-                GitWorkers._mkpath(dirname($(dummy_file)))
-                write($(dummy_file), $(token))
-                println("jlexpr task test ")
+        # The task spawn system migth fail
+        for _ in 1:5
+            expr = quote 
+                begin 
+                    GitWorkers._rm($(dummy_file))
+                    @assert !isfile($(dummy_file))
+                    GitWorkers._mkpath(dirname($(dummy_file)))
+                    write($(dummy_file), $(token))
+                    println("jlexpr task test ")
+                end
             end
+            gw_spawn(expr; verb = false, follow = true, tout = 60.0, wt = 5.0)
+
+            isfile(dummy_file) && break
         end
-        gw_spawn(expr; verb = false, follow = true, tout = 120.0, wt = 5.0)
         
         @test isfile(dummy_file)
         @test contains(read(dummy_file, String), token)
@@ -55,8 +60,12 @@ function gitworker_tasks_tests()
         rm(dummy_file; force = true)
         @assert !isfile(dummy_file)
 
-        src = """echo "bash str task test"; echo '$(token)' > '$(dummy_file)'"""
-        gw_bash(src; verb = false, follow = true, tout = 120.0, wt = 5.0)
+        # The task spawn system migth fail
+        for _ in 1:5
+            src = """echo "bash str task test"; echo '$(token)' > '$(dummy_file)'"""
+            gw_bash(src; verb = false, follow = true, tout = 60.0, wt = 5.0)
+            isfile(dummy_file) && break
+        end
 
         @test isfile(dummy_file)
         @test contains(read(dummy_file, String), token)
@@ -64,9 +73,13 @@ function gitworker_tasks_tests()
         # gw julia
         rm(dummy_file; force = true)
         @assert !isfile(dummy_file)
-
-        src = """println("julia str task test"); write("$(dummy_file)", "$(token)") """
-        gw_julia(src; verb = false, follow = true, tout = 120.0, wt = 5.0)
+        
+        # The task spawn system migth fail
+        for _ in 1:5
+            src = """println("julia str task test"); write("$(dummy_file)", "$(token)") """
+            gw_julia(src; verb = false, follow = true, tout = 60.0, wt = 5.0)
+            isfile(dummy_file) && break
+        end
 
         @test isfile(dummy_file)
         @test contains(read(dummy_file, String), token)
@@ -81,7 +94,10 @@ function gitworker_tasks_tests()
 
         tout = 10*60
         verb = false
-        gw_test_task(tout; follow = false)
+        # The task spawn system migth fail
+        for _ in 1:5
+            gw_test_task(tout; follow = false)
+        end
         sleep(15)
 
 
@@ -97,9 +113,7 @@ function gitworker_tasks_tests()
             end
 
             notasks = length(runningtasks)
-            @test notasks == 0 || notasks == 1
-            
-            if notasks == 1
+            if notasks > 0
 
                 procreg = first(runningtasks)
                 println("to kill : ", procreg)
@@ -111,7 +125,7 @@ function gitworker_tasks_tests()
 
                 gw_send_killsig(pid; tries = 15, unsafe = false, verb = false, tout = 120)
 
-                @test true
+                @test !GitWorkers._validate_proc(procreg)
                 break
 
             end

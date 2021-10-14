@@ -63,7 +63,7 @@ function _kill_all_procs(procdir = _local_procs_dir())
     _readdir(procdir; join = true) do procreg
         pidi, tagi, _ = _parse_procreg_name(procreg)
         isempty(pidi) && return
-        _safe_kill(pid; unsafe = false)
+        _safe_kill(pidi; unsafe = false)
     end
     
 end
