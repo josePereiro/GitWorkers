@@ -1,7 +1,7 @@
 # ----------------------------------------------------------------
 function gw_bash(src::AbstractString; 
         follow = true, tout = 120.0, 
-        wt = 3.0, verb = false
+        wt = 5.0, verb = false
     )
 
     taskid = _gen_id()

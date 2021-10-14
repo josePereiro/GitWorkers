@@ -8,7 +8,7 @@ end
 
 # ----------------------------------------------------------------
 function _follow_and_print(file, stophint; 
-        tout = 120.0, wt = 2.0, c0 = 0, 
+        tout = 120.0, wt = 5.0, c0 = 0, 
         buffsize = 500, 
         verb = false
     )
@@ -45,7 +45,7 @@ function _task_finished_regex_hint(taskid)
 end
 
 # ----------------------------------------------------------------
-function _follow_task(taskid; tout = 120.0, wt = 2.0, c0 = 0, verb = false)
+function _follow_task(taskid; tout = 120.0, wt = 5.0, c0 = 0, verb = false)
     isempty(taskid) && return
 
     out_file = _repo_task_out_file(taskid)
@@ -53,7 +53,7 @@ function _follow_task(taskid; tout = 120.0, wt = 2.0, c0 = 0, verb = false)
     try
 
         println("\n")
-        @info("Following task: ", taskid, out_file)
+        @info("Following task: ", taskid)
         println("\n")
 
         _follow_and_print(out_file, stophint; tout, wt, c0, verb)
@@ -66,7 +66,7 @@ end
 
 # ----------------------------------------------------------------
 function gw_follow(taskid = _LAST_SPAWED_TASKID[]; 
-        tout = 120.0, wt = 2.0, c0 = 0
+        tout = 120.0, wt = 5.0, c0 = 0
     )
     _follow_task(taskid; tout, wt, c0)
 end

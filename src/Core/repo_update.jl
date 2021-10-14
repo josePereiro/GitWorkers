@@ -56,12 +56,12 @@ function _repo_update(upfun::Function;
     
     success = false
 
+    # ------------------------------------------------------
+    # sys maintinance
+    clear_wdir && _clear_repowdir()
+
     # TODO: connect to config
     for att in 1:5
-        
-        # ------------------------------------------------------
-        # sys maintinance
-        clear_wdir && _clear_repowdir()
 
         # ------------------------------------------------------
         # pull

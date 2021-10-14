@@ -1,5 +1,7 @@
 function _check_no_proc_running(hint, n)
-    noprocs = _no_proc_running(hint)
+    noprocs = _no_proc_running() do regfile
+        contains(regfile, hint)
+    end
     if noprocs > n
         print("\n\n")
         try

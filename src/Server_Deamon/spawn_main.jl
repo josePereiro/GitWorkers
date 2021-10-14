@@ -10,7 +10,10 @@ function _spawn_main(;sys_root, url,
         
         # ---------------------------------------------------------------
         # check if main is already running
-        noprocs = _no_proc_running(_GW_SERVER_MAIN_PROC_TAG)
+        noprocs = _no_proc_running() do regfile
+            contains(regfile, _GW_SERVER_MAIN_PROC_TAG)
+        end
+
         if (noprocs > 0)
 
             print("\n\n")

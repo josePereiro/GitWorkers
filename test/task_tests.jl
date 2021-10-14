@@ -1,4 +1,4 @@
-let
+function gitworker_tasks_tests()
 
     test_dir = mktempdir(;prefix = "gw_")
     server_proc = nothing
@@ -29,8 +29,13 @@ let
         println("-"^60)
         println("Simple task test")
         println("\n\n")
+
         token = string(rand(UInt))
         dummy_file = joinpath(test_dir, "._gw_test_dummy")
+
+        # gw spawn
+        rm(dummy_file; force = true)
+        @assert !isfile(dummy_file)
 
         expr = quote 
             begin 
@@ -41,7 +46,7 @@ let
                 println("jlexpr task test ")
             end
         end
-        gw_spawn(expr; verb = true, follow = true, tout = 120.0, wt = 3.0)
+        gw_spawn(expr; verb = false, follow = true, tout = 120.0, wt = 5.0)
         
         @test isfile(dummy_file)
         @test contains(read(dummy_file, String), token)
@@ -51,7 +56,7 @@ let
         @assert !isfile(dummy_file)
 
         src = """echo "bash str task test"; echo '$(token)' > '$(dummy_file)'"""
-        gw_bash(src)
+        gw_bash(src; verb = false, follow = true, tout = 120.0, wt = 5.0)
 
         @test isfile(dummy_file)
         @test contains(read(dummy_file, String), token)
@@ -61,7 +66,7 @@ let
         @assert !isfile(dummy_file)
 
         src = """println("julia str task test"); write("$(dummy_file)", "$(token)") """
-        gw_julia(src)
+        gw_julia(src; verb = false, follow = true, tout = 120.0, wt = 5.0)
 
         @test isfile(dummy_file)
         @test contains(read(dummy_file, String), token)
@@ -71,22 +76,20 @@ let
         println("-"^60)
         println("Testing killsig")
         println("\n\n")
-        gw_pull(;force_clonning = true, verb = false)
         
-        @show GitWorkers._repo_procs_dir()
-        runningtasks = GitWorkers._filterdir(GitWorkers._repo_procs_dir()) do file
-            println("procreg: ", file)
-            GitWorkers._is_task_procreg(file)
-        end
+        gw_pull(;force_clonning = true, verb = false)
 
         tout = 10*60
         verb = false
         gw_test_task(tout; follow = false)
         sleep(15)
 
+
         for it in 1:15
+
             println("waiting, curriter: ", GitWorkers._get_curriter())
             timeout = !GitWorkers._waitfor_till_next_iter(;verb, tout)
+            @test !timeout
 
             runningtasks = GitWorkers._filterdir(GitWorkers._repo_procs_dir()) do file
                 println("procreg: ", file)
@@ -106,7 +109,7 @@ let
                 @test !isempty(tag)
                 @test tag == GitWorkers._GW_TASK_PROC_TAG
 
-                gw_send_killsig(pid)
+                gw_send_killsig(pid; tries = 15, unsafe = false, verb = false, tout = 120)
 
                 @test true
                 break
@@ -114,19 +117,30 @@ let
             end
 
             sleep(10)
-
-            @test it != 5
-        end
-
+             
+            if it == 15
+                @test notasks == 0
+            end
+            
+        end # for it in 1:15
 
     finally
         
         # kill server
         server_pid = isnothing(server_proc) ? -1 : GitWorkers._try_getpid(server_proc)
         @show server_pid
+        GitWorkers._kill_all_procs(GitWorkers._repo_procs_dir())
         GitWorkers._force_kill(server_pid)
 
 		GitWorkers._rm(test_dir)
         
 	end
+end
+
+let
+    for t in 1:5
+        println("\n"^5)
+        gitworker_tasks_tests()
+        println("\n"^5)
+    end
 end

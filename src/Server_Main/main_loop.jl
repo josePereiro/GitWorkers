@@ -2,7 +2,6 @@ function _main_loop(sys_root, url)
 
     # ---------------------------------------------------------------
     # welcome
-    
     print("\n\n")
     @info("")
     @info("Starting server main process", mainpid = getpid(), time = now())
@@ -12,6 +11,10 @@ function _main_loop(sys_root, url)
     # Server Os
     _reg_server_main_proc()
     @async _run_server_main_os()
+
+    # ---------------------------------------------------------------
+    # setup
+    _reset_server_main_listen_wait()
 
     # ---------------------------------------------------------------
     # make process resiliant
@@ -31,7 +34,7 @@ function _main_loop(sys_root, url)
             projdir = Base.active_project()
             script_path = joinpath(@__DIR__, "server_loop_script.jl")
             jlcmd = Base.julia_cmd()
-            jlcmd = Cmd(`$(jlcmd) --project=$(projdir) --startup-file=no -- $(script_path) $(sys_root) $(url)`)
+            jlcmd = Cmd(`$(jlcmd) --project=$(projdir) --startup-file=no -- $(script_path) $(sys_root) $(url)`; detach = false)
             jlcmd = pipeline(jlcmd, stdout=stdout, stderr=stdout)
             run(jlcmd; wait = true)
             

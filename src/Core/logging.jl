@@ -2,7 +2,7 @@ const _GW_LOG_EXT = ".log"
 _is_log_file(path) = _endswith(path, _GW_LOG_EXT)
 
 ## ------------------------------------------------------------------------------
-function _filelog_formater(io, args)
+function _gw_filelog_formater(io, args)
     if isempty(args.message) && isempty(args.kwargs)
         println(io)
     else
@@ -29,9 +29,15 @@ end
 _log_format_name(tag, ext) = _log_format_name(tag, "YYYY-mm-dd-HH", ext)
 
 _rotating_logger(logdir, nametag, ext) = 
-    DatetimeRotatingFileLogger(_filelog_formater, logdir, _log_format_name(nametag, ext); always_flush = true)
+    DatetimeRotatingFileLogger(_gw_filelog_formater, logdir, _log_format_name(nametag, ext); always_flush = true)
 
-const _GLOBAL_LOGGER = ConsoleLogger[] # This fill in __init__
+const _GLOBAL_LOGGER = ConsoleLogger[] 
+
+function _set_global_logger()
+    empty(_GLOBAL_LOGGER)
+    push!(_GLOBAL_LOGGER, global_logger())
+end
+
 function _tee_logger(logdir, nametag, ext)
     _mkpath(logdir)
     TeeLogger(

@@ -101,6 +101,7 @@ module GitWorkers
     include("Server_Deamon/run_gitworker_server.jl")
     include("Server_Deamon/spawn_main.jl")
     include("Server_Deamon/logging.jl")
+    include("Server_Deamon/deamon_loop.jl")
     include("Server_Deamon/procs.jl")
 
     export run_gitworker_server
@@ -113,8 +114,7 @@ module GitWorkers
         !Sys.isunix() && error("Non-unix systems are not yet supported!")
         
         # set global logger
-        empty!(_GLOBAL_LOGGER)
-        push!(_GLOBAL_LOGGER, global_logger())
+        _set_global_logger()
     end
     
 end

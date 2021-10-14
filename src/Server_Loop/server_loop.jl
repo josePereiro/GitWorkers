@@ -66,11 +66,15 @@ function _server_loop()
                     verb
                 )
                 
+                # ------------------------------------------------------
                 # wait
                 _server_loop_listen_wait()
-
+                
                 # ------------------------------------------------------
                 # loopcontrol
+
+                # pull
+                !success && continue
                 
                 # curriter
                 iter = _get_curriter()
@@ -124,9 +128,7 @@ function _server_loop()
 
             # ------------------------------------------------------
             # exec tasks
-            if success
-                _spawn_jlexpr_tasks()
-            end
+            success && _spawn_jlexpr_tasks()
 
             # ------------------------------------------------------
             # exec signals

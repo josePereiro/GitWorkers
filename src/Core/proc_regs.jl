@@ -51,10 +51,20 @@ function _validate_proc(regfile)
     return reg_lstart == curr_lstart
 end
 
-function _no_proc_running(hint; procdir = _local_procs_dir())
-    hint = string(hint)
+function _no_proc_running(f::Function)
+    procdir = _local_procs_dir()
     serverprocs = _filterdir(procdir; join = true) do regfile
-        contains(regfile, hint) && _validate_proc(regfile)
+        _validate_proc(regfile) && f(regfile)
     end
     return length(serverprocs)
 end
+
+function _kill_all_procs(procdir = _local_procs_dir())
+    _readdir(procdir; join = true) do procreg
+        pidi, tagi, _ = _parse_procreg_name(procreg)
+        isempty(pidi) && return
+        _safe_kill(pid; unsafe = false)
+    end
+    
+end
+

@@ -133,7 +133,8 @@ if _is_pull_mode; then
 		mkdir -p "${sh_recovery_dir}" || _error "unable to create recovery dir" 
 		git -C "${sh_repodir}" clone --depth=1 "${sh_url}" "${sh_recovery_dir}" || _error "git clone failed" 
 		mv -f "${sh_recovery_dir_git}" "${sh_repodir_git}" || _error "recovery copy failed"
-		git -C "${sh_repodir}" pull || : # unchecked I know
+		git -C "${sh_repodir}" fetch || : # unchecked I know
+		git -C "${sh_repodir}" reset --hard FETCH_HEAD || : # unchecked I know
 	fi
 fi
 [ "$?" != "0" ] && _error "PULL or CLONE fails"
@@ -146,14 +147,14 @@ rm -frd "${sh_recovery_dir}" || _error "at rm -frd recovery_dir"
 # push 
 if _is_push_mode; then
 	echo
-	echo "soft pushing"
+	echo "hard pushing"
 	_check_root || _error "_check_root fails" 
 	rm -frd "${sh_gitignore}" || _error "rm -frd .gitignore" 
 	git -C "${sh_repodir}" add -A || _error "add -A failed" 
 	git -C "${sh_repodir}" status || _error "git status failed"
 	git -C "${sh_repodir}" diff-index --quiet HEAD && _success # If nothing to commit _success
 	git -C "${sh_repodir}" -c user.name="${git_user_name}" -c user.email="${git_user_email}" commit -am "${sh_commit_msg}" || _error "commit -am 'msg' failed" 
-	git -C "${sh_repodir}" push || _error "git push failed" 
+	git -C "${sh_repodir}" push --force || _error "git push failed" 
 fi
 [ "$?" != "0" ] && _error "PUSH fails"
 

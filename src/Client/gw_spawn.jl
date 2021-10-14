@@ -4,7 +4,7 @@
 """
 function gw_spawn(expr::Expr; 
         follow = true, tout = 120.0,
-        wt = 3.0, verb = false
+        wt = 5.0, verb = false
     )
 
     !Meta.isexpr(expr, [:let, :block]) && error("A 'begin or let' block is expected. Ex: '@gw_spawn begin println(\"Hi\")' end")
@@ -32,6 +32,6 @@ gw_spawn(f::Function; kwargs...) = gw_spawn(f(); kwargs...)
     Capture the expression and spawn it
 """
 macro gw_spawn(expr)
-    GitWorkers.gw_spawn(expr; follow = true, tout = 120.0, wt = 3.0)
+    GitWorkers.gw_spawn(expr; follow = true, tout = 120.0, wt = 5.0)
     return :(nothing)
 end

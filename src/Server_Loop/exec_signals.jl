@@ -21,7 +21,6 @@ function _exec_killsigs()
         )
         print("\n\n")
 
-        # Test
         _safe_kill(tokill; unsafe)
     end
 end
