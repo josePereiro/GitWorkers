@@ -94,14 +94,16 @@ function gitworker_tasks_tests()
 
         tout = 10*60
         verb = false
-        # The task spawn system migth fail
-        for _ in 1:5
-            gw_test_task(tout; follow = false)
-        end
-        sleep(15)
-
 
         for it in 1:15
+
+            # The task spawn system migth fail
+            for _ in 1:5
+                gw_test_task(tout; follow = false)
+                sleep(3.0)
+            end
+            sleep(15)
+
 
             println("waiting, curriter: ", GitWorkers._get_curriter())
             timeout = !GitWorkers._waitfor_till_next_iter(;verb, tout)
@@ -152,7 +154,7 @@ function gitworker_tasks_tests()
 end
 
 let
-    for t in 1:5
+    for t in 1:3
         println("\n"^5)
         gitworker_tasks_tests()
         println("\n"^5)
