@@ -2,6 +2,7 @@ function gw_ping(n = 10; tout = 60.0, verb = false)
     (n < 1) && return
     t0 = time()
 
+    verb && println("gw_ping")
     gw_pull(;verb)
     
     try
@@ -14,7 +15,7 @@ function gw_ping(n = 10; tout = 60.0, verb = false)
         println()
 
         # recursive
-        gw_ping(n - 1;tout, verb)
+        gw_ping(n - 1; tout, verb)
 
     catch err
         (err isa InterruptException) && return

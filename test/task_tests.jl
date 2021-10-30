@@ -51,6 +51,7 @@ function gitworker_tasks_tests()
             gw_spawn(expr; verb = false, follow = true, tout = 60.0, wt = 5.0)
 
             isfile(dummy_file) && break
+            sleep(3.0)
         end
         
         @test isfile(dummy_file)
@@ -65,6 +66,7 @@ function gitworker_tasks_tests()
             src = """echo "bash str task test"; echo '$(token)' > '$(dummy_file)'"""
             gw_bash(src; verb = false, follow = true, tout = 60.0, wt = 5.0)
             isfile(dummy_file) && break
+            sleep(3.0)
         end
 
         @test isfile(dummy_file)
@@ -79,6 +81,7 @@ function gitworker_tasks_tests()
             src = """println("julia str task test"); write("$(dummy_file)", "$(token)") """
             gw_julia(src; verb = false, follow = true, tout = 60.0, wt = 5.0)
             isfile(dummy_file) && break
+            sleep(3.0)
         end
 
         @test isfile(dummy_file)
@@ -102,8 +105,6 @@ function gitworker_tasks_tests()
                 gw_test_task(tout; follow = false)
                 sleep(3.0)
             end
-            sleep(15)
-
 
             println("waiting, curriter: ", GitWorkers._get_curriter())
             timeout = !GitWorkers._waitfor_till_next_iter(;verb, tout)

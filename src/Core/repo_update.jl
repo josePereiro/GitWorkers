@@ -9,6 +9,7 @@ function _gw_pull(;
         feedback::Function = (out) -> nothing
     )
     
+    verb && println("_gw_pull")
     out = _call_sync_script(;
         repodir, url, 
         pull = true,
@@ -33,6 +34,7 @@ function _gw_push(;
         verb = true
     )
 
+    verb && println("_gw_push")
     out = _call_sync_script(;
         commit_msg,
         repodir, url, 
@@ -54,6 +56,7 @@ function _repo_update(upfun::Function;
         verb = false
     )
     
+    verb && println("_repo_update")
     success = false
 
     # ------------------------------------------------------
@@ -75,7 +78,7 @@ function _repo_update(upfun::Function;
         # ------------------------------------------------------
         # push
         if pushflag === true
-            success = _gw_push(;commit_msg, verb)
+            success = _gw_push(; commit_msg, verb)
             success && break
         end
 

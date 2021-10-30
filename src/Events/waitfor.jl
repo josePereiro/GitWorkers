@@ -1,4 +1,5 @@
 function _waitfor_handler(fun::Function; wt = 2.0, tout = 60.0, verb = false)
+    verb && println("_waitfor_handler")
     val0 = fun()
     t0 = time()
     while true
@@ -8,9 +9,14 @@ function _waitfor_handler(fun::Function; wt = 2.0, tout = 60.0, verb = false)
             return true
         end
         
+        # event
         val = fun()
         (val != val0) && return true
+
+        # time out
         ((time() - t0) > tout) && return false
+
+        # wait
         sleep(wt)
     end
     return false
