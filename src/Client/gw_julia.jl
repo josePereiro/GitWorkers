@@ -4,7 +4,7 @@ function gw_julia(src::AbstractString;
         wt = 3.0, verb = false
     )
 
-    taskid = _gen_id()
+    taskid = _task_id("JULIA")
     _repo_update(; verb) do
         _set_pushflag()
         _set_julia_task(taskid, src)

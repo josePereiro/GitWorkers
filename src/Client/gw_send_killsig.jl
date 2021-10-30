@@ -1,4 +1,8 @@
-function gw_send_killsig(pid; tries = 5, wtries = 2, unsafe = false, verb = false, tout = 120)
+function gw_send_killsig(tokill; 
+        unsafe = false,
+        tries = 5, wtries = 2, 
+        verb = false, wt = 5, tout = 120
+    )
 
     tries = max(tries, 1)
     wtries = max(wtries, 1)
@@ -7,28 +11,78 @@ function gw_send_killsig(pid; tries = 5, wtries = 2, unsafe = false, verb = fals
         while true
 
             println("-"^60)
-            println("Killing proc: ", pid)
+            println("Killing proc: ", tokill)
             _gw_running_procs(;verb, tout)
+            sleep(wt)
 
-            println("Sending kill signal")
-            _repo_update(;verb) do
-		
-                _set_pushflag()
-                _set_killsig(pid; unsafe)
-                
-                return true
-            end
-            println("Signal sent", "\n\n")
+            println("Sending kill task")
+            taskid = _gen_id("KILLTASK")
+            _gw_spawn(taskid; follow = true, tout, verb) do 
+                return quote
+                    let 
+                        # interpolate
+                        tokill = $(tokill)
+                        unsafe = $(unsafe)
+                        tries = $(tries)
+
+                        # procreg
+                        procreg = GitWorkers._find_procreg(tokill; procsdir = GitWorkers._local_procs_dir())
+                        @show basename(procreg)
+                        isvalidproc = GitWorkers._validate_proc(procreg)
+
+                        # protect the system processes
+                        if !unsafe && !isvalidproc
+                            @warn(string(tokill, " is not worker spanwed process, run 'gw_running_procs' to see or use 'unsave' to force killing!!!"), 
+                                looppid = getpid(), 
+                                time = GitWorkers.now()
+                            )
+                            return
+                        end
+
+                        if !unsafe && (contains(basename(procreg), GitWorkers._GW_SERVER_LOOP_PROC_TAG) || 
+                            contains(basename(procreg), GitWorkers._GW_SERVER_MAIN_PROC_TAG))
+                            @warn(string(tokill, " is protected, use 'unsave' to force killing!!!"), 
+                                looppid = getpid(), 
+                                time = GitWorkers.now()
+                            )
+                            return
+                        end
+                        
+                        for t in 1:tries
+                            # read signal
+                            isvalidproc = GitWorkers._validate_proc(procreg)
+                            !isvalidproc && break
+                            
+                            @warn("Executing kill sig", 
+                                looppid = getpid(), 
+                                tokill, unsafe, isvalidproc,
+                                time = GitWorkers.now()
+                            )
+                            println()
+                            GitWorkers._safe_kill(tokill; unsafe)
+                            sleep($(wt))
+                        end
+
+                        isvalidproc = GitWorkers._validate_proc(procreg)
+                        println()
+                        if isvalidproc
+                            @warn(string("Killing fails after ", tries, " tries"))
+                        else
+                            @info(string(tokill, " is dead, RIP!!!"))
+                        end
+                    end
+                end
+            end # _gw_spawn
             
             for _ in 1:wtries
-                println("Waiting, curriter: ", _get_curriter())
+                println("Updating procs, curriter: ", _get_curriter())
                 timeout = !_waitfor_till_next_iter(;verb, tout)
                 timeout && return
                 
                 # check
-                procreg = _find_procreg(pid; procsdir = _repo_procs_dir())
+                procreg = _find_procreg(tokill; procsdir = _repo_procs_dir())
                 if isempty(procreg)
-                    println("\nProcess ", pid, " is dead!!! RIP")
+                    println("\nDone")
                     return
                 end
                 sleep(3.0)

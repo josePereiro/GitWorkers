@@ -112,9 +112,11 @@ module GitWorkers
 
     export run_gitworker_server
     
-    include("Test/test_repos.jl")
-    include("Test/monkey_delete.jl")
-    include("Test/create_test_engine.jl")
+    include("DevLand/gw_create_devland.jl")
+    include("DevLand/monkey_delete.jl")
+    include("DevLand/test_repos.jl")
+
+    export gw_create_devland
 
     function __init__()
         !Sys.isunix() && error("Non-unix systems are not yet supported!")

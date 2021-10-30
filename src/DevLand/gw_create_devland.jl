@@ -1,5 +1,12 @@
 ## ---------------------------------------------------------------
-function _create_test_engine(testdir; clear_repos = true, clear_scripts = false)
+function gw_create_devland(; 
+        sys_root = homedir(),
+        clear_repos = true, clear_scripts = false
+    )
+
+    _set_root!(sys_root)
+    testdir = _gitworkers_homedir(".devland")
+
     reposdir = joinpath(testdir, "repos")
     clear_repos && _rm(reposdir)
     mkpath(reposdir)
@@ -7,14 +14,20 @@ function _create_test_engine(testdir; clear_repos = true, clear_scripts = false)
 
     # client script
     client_script = joinpath(testdir, "client.jl")
+    server_script = joinpath(testdir, "server.jl")
+
     clear_scripts && rm(client_script; force = true)
-    !isfile(client_script) && write(client_script, 
+    write(client_script, 
         join([
             "using GitWorkers", 
             "",
             "## ---------------------------------------------------------------",
+            "# cmd for run the server",
+            "# julia '$(server_script)'",
+            "",
+            "## ---------------------------------------------------------------",
             "# run to reset all",
-            "# GitWorkers._create_test_engine(@__DIR__)",
+            "# GitWorkers.gw_create_devland()",
             "",
             "## ---------------------------------------------------------------",
             "gw_setup_gitworker(;",
@@ -25,7 +38,6 @@ function _create_test_engine(testdir; clear_repos = true, clear_scripts = false)
     )
 
     # server script
-    server_script = joinpath(testdir, "server.jl")
     clear_scripts && rm(server_script; force = true)
     write(server_script, 
         join([
@@ -40,5 +52,5 @@ function _create_test_engine(testdir; clear_repos = true, clear_scripts = false)
         ], "\n")
     )
     
-    @info("GitWorkers setup", url, client_root, server_root)
+    @info("DevLand setup", client_script, server_script)
 end

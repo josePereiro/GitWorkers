@@ -4,7 +4,7 @@ function gw_bash(src::AbstractString;
         wt = 5.0, verb = false
     )
 
-    taskid = _gen_id()
+    taskid = _task_id("BASH")
     _repo_update(; verb) do
         _set_pushflag()
         _set_bash_task(taskid, src)

@@ -1,15 +1,19 @@
+function _task_id(tag, date = now())
+    tstr = Dates.format(date, "yyyymmdd\\THHMM")
+    GitWorkers._gen_id(string(tstr, tag))
+end
+
 # ----------------------------------------------------------------
 """
     Take an expression and spawn it
 """
-function gw_spawn(expr::Expr; 
+function _gw_spawn(expr::Expr, taskid; 
         follow = true, tout = 120.0,
         wt = 5.0, verb = false
     )
 
     !Meta.isexpr(expr, [:let, :block]) && error("A 'begin or let' block is expected. Ex: '@gw_spawn begin println(\"Hi\")' end")
 
-    taskid = _gen_id()
     _repo_update(; verb) do
         _set_pushflag()
         _set_jlexpr_task(taskid, expr)
@@ -22,10 +26,13 @@ function gw_spawn(expr::Expr;
     return :(nothing)
 end
 
+_gw_spawn(f::Function, taskid; kwargs...) = _gw_spawn(f(), taskid; kwargs...)
+
 """
     Take the return f()::Expr and spawn it
 """
-gw_spawn(f::Function; kwargs...) = gw_spawn(f(); kwargs...)
+gw_spawn(expr::Expr; kwargs...) = _gw_spawn(expr, _task_id("SPANW"); kwargs...)
+gw_spawn(f::Function; kwargs...) = _gw_spawn(f(), _task_id("SPANW"); kwargs...)
 
 # ----------------------------------------------------------------
 """
