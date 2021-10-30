@@ -1,12 +1,7 @@
 function _gw_running_procs(;verb = false, tout = 120)
 
 	# Do a full sync
-	println("-"^60)
-	println("Syncing, curriter: ", _get_curriter())
-	timeout = !_waitfor_till_next_iter(;verb, tout)
-	timeout && return
-	println("Done, curriter: ", _get_curriter())
-	println()
+	_gw_full_sync(; tout, verb)
 	
 	# print task procs
 	println("Running processes\n")

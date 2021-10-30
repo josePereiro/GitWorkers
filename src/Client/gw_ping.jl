@@ -6,12 +6,7 @@ function gw_ping(n = 10; tout = 60.0, verb = false)
     
     try
         # wait
-        println("-"^60)
-        println("Syncing, curriter: ", _get_curriter())
-        timeout = !_waitfor_till_next_iter(;tout, verb)
-        timeout && return
-        println("Done, curriter: ", _get_curriter())
-        println()
+        _gw_full_sync(; tout, verb)
         
         # print ping
         msg = string("Ping in ", round(time() - t0; sigdigits = 3), " secund(s)")

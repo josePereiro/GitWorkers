@@ -1,22 +1,15 @@
 # ----------------------------------------------------------------
-function _tail(str, len)
-    length(str) <= len && return str
-    l1 = lastindex(str)
-    l0 = max(firstindex(str), l1 - len)
-    str[l0:l1]
-end
-
-# ----------------------------------------------------------------
 function _follow_and_print(file, stophint; 
         tout = 120.0, wt = 5.0, c0 = 0, 
-        buffsize = 500, 
+        buffsize = 500,
         verb = false
     )
     
     # collect tail
-    tailstr = ""
+    # the tail needs to be long enought to the 'stophint' to be contained for sure
+    tailstr::String = ""
     function onprint(str)
-        tailstr = _tail(string(tailstr, str), buffsize)
+        tailstr = last(string(tailstr, str), buffsize)
     end
     
     lc = c0
@@ -65,7 +58,7 @@ function _follow_task(taskid; tout = 120.0, wt = 5.0, c0 = 0, verb = false)
 end
 
 # ----------------------------------------------------------------
-function gw_follow(taskid = _LAST_SPAWED_TASKID[]; 
+function gw_follow(taskid = gw_last_task(); 
         tout = 120.0, wt = 5.0, c0 = 0
     )
     _follow_task(taskid; tout, wt, c0)

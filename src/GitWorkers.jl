@@ -15,12 +15,15 @@ module GitWorkers
     include("Client/gw_follow.jl")
     include("Client/gw_last_task.jl")
     include("Client/gw_spawn.jl")
+    include("Client/gw_sync.jl")
+    include("Client/gw_sysdir.jl")
     include("Client/gw_push.jl")
     include("Client/gw_ping.jl")
     include("Client/gw_pull.jl")
     include("Client/gw_reset_server.jl")
     include("Client/gw_running_procs.jl")
     include("Client/gw_setup_gitworker.jl")
+    include("Client/gw_up_taskout.jl")
     include("Client/gw_test_task.jl")
     include("Client/gw_send_killsig.jl")
     include("Client/gw_up_serverlogs.jl")
@@ -31,11 +34,14 @@ module GitWorkers
         gw_curr_iter,
         gw_last_task, 
         gw_test_task,
+        gw_sysdir,
         gw_push, gw_ping, gw_pull,
         gw_server_loop_logs,
         gw_server_main_logs,
         gw_server_deamon_logs,
         gw_reset_server, 
+        gw_up_taskout, 
+        gw_sync, 
         gw_send_killsig
 
     export gw_spawn, @gw_spawn, 

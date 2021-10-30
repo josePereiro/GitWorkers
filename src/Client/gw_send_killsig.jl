@@ -1,4 +1,7 @@
-function gw_send_killsig(pid; tries = 5, unsafe = false, verb = false, tout = 120)
+function gw_send_killsig(pid; tries = 5, wtries = 2, unsafe = false, verb = false, tout = 120)
+
+    tries = max(tries, 1)
+    wtries = max(wtries, 1)
     
     try; 
         while true
@@ -15,9 +18,9 @@ function gw_send_killsig(pid; tries = 5, unsafe = false, verb = false, tout = 12
                 
                 return true
             end
-            println("Signal sended\n\n")
+            println("Signal sent", "\n\n")
             
-            for _ in 1:5
+            for _ in 1:wtries
                 println("Waiting, curriter: ", _get_curriter())
                 timeout = !_waitfor_till_next_iter(;verb, tout)
                 timeout && return

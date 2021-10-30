@@ -10,7 +10,7 @@ function gw_bash(src::AbstractString;
         _set_bash_task(taskid, src)
         return true
     end
-    _LAST_SPAWED_TASKID[] = taskid
+    _set_last_task(taskid)
 
     follow && _follow_task(taskid; tout, wt, verb)
 
