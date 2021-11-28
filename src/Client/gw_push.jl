@@ -1,1 +1,0 @@
-gw_push(;commit_msg = "Update at ($(now()))", verb = true) = _gw_push(;commit_msg, verb)
