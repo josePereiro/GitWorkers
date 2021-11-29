@@ -7,7 +7,7 @@ function _create_client_script(;
     temp = replace(temp, "REMOTE_URL" => url)
     temp = replace(temp, "CLIENT_ROOT" => client_root)
     temp = replace(temp, "SYSTEM_ROOT" => sys_root)
-    src = replace(temp, "SERVER_SCRIPT_PATH" => server_script)
+    src = replace(temp, "SERVER_SCRIPT_PATH" => client_script)
     write(client_script, src)
     return src
 end
@@ -32,6 +32,7 @@ function gw_create_devland(;
         clear_repos = true, 
         clear_scripts = false,
         verbose = false,
+        deb = false,
         branch_name = "main"
     )
 
@@ -65,15 +66,13 @@ function gw_create_devland(;
 
     if clear_scripts || !isfile(client_script) 
         _rm(client_script)
-        _create_client_script(; sys_root, client_root, server_script, url)
+        _create_client_script(; sys_root, client_root, client_script, url)
     end
 
     # server script
     if clear_scripts || !isfile(server_script) 
         _rm(server_script)
-        write(server_script, 
-            "LOAD_FROM_TEMPLATE"
-        )
+        _create_server_script(; server_root, url, deb, server_script)
     end
     
     @info("DevLand setup", client_script, server_script)
