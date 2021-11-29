@@ -13,12 +13,14 @@ gw_devland(sys_root::String) = joinpath(gw_depot_dir(sys_root), _GW_DEVLAND_FOLD
 # worker_dir
 _format_url(url::String) = replace(url, r"[^a-zA-Z0-9-_]"=> "_")
 worker_dir(gw::GitWorker) = joinpath(gw_depot_dir(gw), _format_url(remote_url(gw)))
+worker_relpath(gw::GitWorker, path) = _relbasepath(path, worker_dir(gw))
+worker_abspath(gw::GitWorker, path) = joinpath(worker_dir(gw), worker_relpath(gw, path))
 
 # gitlink folder
 const _GL_FOLDER_NAME = ".gitlink"
 gitlink_dir(gw::GitWorker) = joinpath(worker_dir(gw), _GL_FOLDER_NAME)
 
-# proc dir
+# procs dir
 const _GL_PROCS_FOLDER_NAME = ".gw-procs"
 gw_procs_dir(gw::GitWorker) = joinpath(worker_dir(gw), _GL_PROCS_FOLDER_NAME)
 
