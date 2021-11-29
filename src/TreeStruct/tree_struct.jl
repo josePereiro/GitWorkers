@@ -43,13 +43,11 @@ gw_tasks_dir(gw::GitWorker) = joinpath(worker_dir(gw), _GL_TASKS_FOLDER_NAME)
 # repo version
 function gw_repo_mirpath(gw::GitWorker, path::String)
     wrpath = worker_relpath(gw, path)
-    rdir = repo_dir(gw)
-    return joinpath(rdir, wrpath)
+    return joinpath(repo_dir(gw), wrpath)
 end
 
 # stage version
 function gw_stage_mirpath(gw::GitWorker, path::String)
     wrpath = worker_relpath(gw, path)
-    rdir = stage_dir(gw)
-    return joinpath(rdir, wrpath)
+    return joinpath(stage_dir(gw), wrpath)
 end

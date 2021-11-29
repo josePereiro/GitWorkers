@@ -13,6 +13,7 @@ module GitWorkers
     include("Utils/rand_str.jl")
     include("Utils/toml_utils.jl")
     include("Utils/run.jl")
+    include("Utils/hash_file.jl")
 
     include("TreeStruct/tree_struct.jl")
     include("TreeStruct/utils.jl")
@@ -28,6 +29,7 @@ module GitWorkers
     include("Client/gw_ping.jl")
     
     include("Task/spawn_task.jl")
+    include("Task/readme.jl")
     
     include("DevLand/gw_create_devland.jl")
     include("DevLand/test_gw.jl")
