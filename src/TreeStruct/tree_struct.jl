@@ -20,6 +20,14 @@ worker_abspath(gw::GitWorker, path) = joinpath(worker_dir(gw), worker_relpath(gw
 const _GL_FOLDER_NAME = ".gitlink"
 gitlink_dir(gw::GitWorker) = joinpath(worker_dir(gw), _GL_FOLDER_NAME)
 
+# repo_dir
+import GitLinks.repo_dir
+repo_dir(gw::GitWorker) = repo_dir(gitlink(gw))
+
+# stage_dir
+import GitLinks.stage_dir
+stage_dir(gw::GitWorker) = stage_dir(gitlink(gw))
+
 # procs dir
 const _GL_PROCS_FOLDER_NAME = ".gw-procs"
 gw_procs_dir(gw::GitWorker) = joinpath(worker_dir(gw), _GL_PROCS_FOLDER_NAME)
@@ -31,3 +39,17 @@ gw_logs_dir(gw::GitWorker) = joinpath(worker_dir(gw), _GL_LOGS_FOLDER_NAME)
 # tasks dir
 const _GL_TASKS_FOLDER_NAME = ".gw-tasks"
 gw_tasks_dir(gw::GitWorker) = joinpath(worker_dir(gw), _GL_TASKS_FOLDER_NAME)
+
+# repo version
+function gw_repo_mirpath(gw::GitWorker, path::String)
+    wrpath = worker_relpath(gw, path)
+    rdir = repo_dir(gw)
+    return joinpath(rdir, wrpath)
+end
+
+# stage version
+function gw_stage_mirpath(gw::GitWorker, path::String)
+    wrpath = worker_relpath(gw, path)
+    rdir = stage_dir(gw)
+    return joinpath(rdir, wrpath)
+end

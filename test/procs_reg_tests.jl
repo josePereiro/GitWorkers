@@ -1,6 +1,5 @@
 let
     gw = GW._test_gw()
-    GW.worker_dir(gw) |> GW._rm
     
     ptag = "HBKJSDBHK"
     pid = getpid()
