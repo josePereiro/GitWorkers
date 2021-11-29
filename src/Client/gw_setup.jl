@@ -15,7 +15,7 @@ function gw_setup(;
     else
         error("GitLink init fail (run 'git ls-remote <remote_url>' for testing connection)\nremote_url:$(url)")
     end
-
+    
     gw_curr(gw)
 
     return gw

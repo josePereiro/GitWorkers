@@ -1,6 +1,7 @@
 using GitWorkers
+const GW = GitWorkers
 using Test
 
 @testset "GitWorkers.jl" begin
-    @test true
+    include("procs_reg_tests.jl")
 end

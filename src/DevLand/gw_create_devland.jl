@@ -72,8 +72,10 @@ function gw_create_devland(;
     # server script
     if clear_scripts || !isfile(server_script) 
         _rm(server_script)
-        _create_server_script(; server_root, url, deb, server_script)
+        _create_server_script(;server_root, url, deb, server_script)
     end
     
     @info("DevLand setup", client_script, server_script)
+
+    return (;client_gw, server_gw)
 end

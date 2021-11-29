@@ -5,7 +5,7 @@ module GitWorkers
     import TOML
 
     include("Types/GitWorker.jl")
-    include("Types/gw_reg.jl")
+    include("Types/state_reg.jl")
     
     include("Utils/expr_src.jl")
     include("Utils/rand_str.jl")
@@ -14,7 +14,7 @@ module GitWorkers
     include("TreeStruct/tree_struct.jl")
     include("TreeStruct/utils.jl")
 
-    include("ProcManager/prog_reg.jl")
+    include("ProcManager/proc_reg.jl")
     include("ProcManager/utils.jl")
 
     include("GitLink/gitlink.jl")
@@ -24,6 +24,7 @@ module GitWorkers
     include("Client/gw_ping.jl")
     
     include("DevLand/gw_create_devland.jl")
+    include("DevLand/test_gw.jl")
     
 
     export gw_setup, gw_curr, gw_ping

@@ -1,6 +1,8 @@
-_write_toml(fn::String, dat::Dict; sorted = true) = open(fn, "w") do io
-    TOML.print(io, dat; sorted)
-    return fn
+function _write_toml(fn::String, dat::Dict; sorted = true)
+    open(fn, "w") do io
+        TOML.print(io, dat; sorted)
+        return fn
+    end
 end
 
 _write_toml(fn; kwargs...) = _write_toml(fn, _dict(kwargs...))
