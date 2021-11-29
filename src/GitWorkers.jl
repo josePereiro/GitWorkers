@@ -14,8 +14,11 @@ module GitWorkers
 
     include("Client/gw_setup.jl")
     include("Client/gw_curr.jl")
+    include("Client/gw_ping.jl")
     
     include("DevLand/gw_create_devland.jl")
+
+    export gw_setup, gw_curr, gw_ping
     
 
 

@@ -9,11 +9,13 @@ using GitWorkers
 # gw_create_devland(;
 #     sys_root = "SYSTEM_ROOT",
 #     clear_repos = true, 
-#     clear_scripts = false
+#     clear_scripts = false,
+#     verbose = false,
+#     deb = false,
 # )
 
 ## ---------------------------------------------------------------
-gw_setup_gitworker(;
+gw_setup(;
     sys_root = "CLIENT_ROOT",
     url = "REMOTE_URL",
 )
