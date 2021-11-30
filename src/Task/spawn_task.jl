@@ -7,12 +7,12 @@
 =#
 
 function _spawn_bash(shline::String;
-        deb = false, 
+        wait = false,
         ignorestatus = true, 
         detach = false
     )
     cmd = Cmd(`bash -c $(shline)`; ignorestatus, detach)
-    proc = run(cmd; wait = deb)
+    proc = run(cmd; wait)
     return _try_getpid(proc)
 end
 
@@ -23,7 +23,9 @@ function _spawn_shscript(rscfile::String;
         kwargs...
     )
     chmod(rscfile, 0o755)
-    shline = "bash -c '$(rscfile)' 2>&1 | tee '$(outfile)'"
+    shline = isempty(outfile) ? 
+        "bash -c '$(rscfile)'"
+        "bash -c '$(rscfile)' 2>&1 | tee '$(outfile)'"
     return _spawn_bash(shline; kwargs...)
 end
 
@@ -31,8 +33,9 @@ function _spawn_jlscript(rscfile::String;
         outfile = _dflt_outfile(rscfile),
         kwargs...
     )
-
-    shline = "julia --startup-file=no '$(rscfile)' 2>&1 | tee '$(outfile)'"
+    shline = isempty(outfile) ? 
+        "julia --startup-file=no '$(rscfile)'" : 
+        "julia --startup-file=no '$(rscfile)' 2>&1 | tee '$(outfile)'"
     return _spawn_bash(shline; kwargs...)
 end
 
