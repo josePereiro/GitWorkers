@@ -107,7 +107,7 @@ function _runme(taskdir::String, args)
         ## ------------------------------------------------------
         # WELCOME
         println("-"^60)
-        println("Hi from: ", __GW_TASK_ID)
+        println("Hi from: ", __GW_TASKID)
         println("\n")
         GitWorkers._flush()
 
@@ -140,7 +140,7 @@ function _runme(taskdir::String, args)
         ## ------------------------------------------------------
         # SAY GOOD BY
         println("-"^60)
-        println("Bye from: ", __GW_TASK_ID)
+        println("Bye from: ", __GW_TASKID)
         println("\n")
 
         ## ------------------------------------------------------
