@@ -21,7 +21,8 @@ function _runme(taskdir::String, args)
 
         ## ------------------------------------------------------
         # HASNDLE FlAGS
-        const __WORKER_FLAG = haskey(args, GitWorkers._GW_RUNME_W_FlAG)
+        const __ARGS = $(args)
+        const __WORKER_FLAG = any(__ARGS .== GitWorkers._GW_RUNME_W_FlAG)
 
         ## ------------------------------------------------------
         # MINIMUM DATA
