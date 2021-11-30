@@ -33,6 +33,7 @@ function _stage_jltask(gw::GitWorker,
     # task dir
     taskdir = gw_task_dir(gw, tid)
     taskdir = gw_stage_mirpath(gw, path)
+    mkpath(taskdir)
 
     # create runme.jl
     runfile = _runme_file(taskdir)
@@ -42,6 +43,8 @@ function _stage_jltask(gw::GitWorker,
     tdict = Dict{String, Any}()
     tdict[_GW_TASK_TID_KEY] = tid
     tdict[_GW_TASK_EXPTIME_KEY] = time() + vtime
+    tdict[_GW_TASK_RUNSTATE_KEY] = _GW_TASK_PENDING_RUNSTATE
+    _write_toml()
 
     
 

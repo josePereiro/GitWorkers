@@ -11,6 +11,7 @@ module GitWorkers
     include("Worker/GitWorker.jl")
     include("Worker/state_reg.jl")
     include("Worker/worker.jl")
+    include("Worker/lock.jl")
     
     include("Utils/expr_src.jl")
     include("Utils/rand_str.jl")
