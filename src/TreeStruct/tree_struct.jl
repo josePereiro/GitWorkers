@@ -39,6 +39,7 @@ gw_logs_dir(gw::GitWorker) = joinpath(worker_dir(gw), _GL_LOGS_FOLDER_NAME)
 # tasks dir
 const _GL_TASKS_FOLDER_NAME = ".gw-tasks"
 gw_tasks_dir(gw::GitWorker) = joinpath(worker_dir(gw), _GL_TASKS_FOLDER_NAME)
+gw_task_dir(gw::GitWorker, tid::String) = joinpath(gw_tasks_dir(gw), tid)
 
 # repo version
 function gw_repo_mirpath(gw::GitWorker, path::String)
