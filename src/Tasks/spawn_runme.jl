@@ -24,7 +24,7 @@ function _spawn_shscript(rscfile::String;
     )
     chmod(rscfile, 0o755)
     shline = isempty(outfile) ? 
-        "bash -c '$(rscfile)'"
+        "bash -c '$(rscfile)'" :
         "bash -c '$(rscfile)' 2>&1 | tee '$(outfile)'"
     return _spawn_bash(shline; kwargs...)
 end

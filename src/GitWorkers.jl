@@ -8,9 +8,14 @@ module GitWorkers
     import TOML
     import Serialization: serialize, deserialize
 
+    # Types
     include("Worker/GitWorker.jl")
+    include("Tasks/GWTask.jl")
+
+
     include("Worker/state_reg.jl")
     include("Worker/worker.jl")
+    include("Worker/gitlink.jl")
     
     include("Utils/expr_src.jl")
     include("Utils/rand_str.jl")
@@ -28,17 +33,20 @@ module GitWorkers
     include("ProcManager/utils.jl")
     include("ProcManager/safe_kill.jl")
 
-    include("GitLink/gitlink.jl")
 
     include("Client/gw_setup.jl")
     include("Client/gw_curr.jl")
     include("Client/gw_ping.jl")
     include("Client/gw_spawn.jl")
     
-    include("Task/spawn_task.jl")
-    include("Task/readme.jl")
-    include("Task/task.jl")
-    include("Task/runme.jl")
+    include("Tasks/parse_args.jl")
+    include("Tasks/readme.jl")
+    include("Tasks/runme.jl")
+    include("Tasks/spawn_runme.jl")
+    include("Tasks/task_toml.jl")
+    include("Tasks/taskdat.jl")
+    include("Tasks/taskid.jl")
+    include("Tasks/upload_task.jl")
     
     include("DevLand/gw_create_devland.jl")
     include("DevLand/test_gw.jl")

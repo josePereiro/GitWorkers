@@ -1,18 +1,9 @@
-## ------------------------------------------------------
-# Utils
-function _fatal_err(f::Function)
-    try; f()
-    catch err
-        GitWorkers._printerr(err)
-        GitWorkers._flush()
-        sleep(2.0) # time for flusing
-        exit()
-    end
-end
+const _GW_TASK_RUNME_FILE_NAME = "runme.jl"
+_runme_file(taskdir::String) = joinpath(taskdir, _GW_TASK_RUNME_FILE_NAME)
+
 
 ## ------------------------------------------------------
 # runme
-const _GW_RUNME_W_FlAG = "-w"
 const _GW_TASK_OS_UPFREC = 5.0
 
 function _runme(taskdir::String, args)
@@ -27,12 +18,12 @@ function _runme(taskdir::String, args)
         ## ------------------------------------------------------
         # MINIMUM DATA
         const __GW_TASK_DIR = $(taskdir)
-        const __GW_JLEXPR_FILE = GitWorkers._expr_file(__GW_TASK_DIR)
+        const __GW_TASKDAT_FILE = GitWorkers._taskdat_file(__GW_TASK_DIR)
         if !__WORKER_FLAG # ignore task.toml
             const __GW_TASKID = basename(__GW_TASK_DIR)
         end
         GitWorkers._fatal_err() do
-            !isfile(__GW_JLEXPR_FILE) && error("FATAL ERROR: task expr file not found at: '$(__GW_JLEXPR_FILE)'")
+            !isfile(__GW_TASKDAT_FILE) && error("FATAL ERROR: task expr file not found at: '$(__GW_TASKDAT_FILE)'")
         end
 
         ## ------------------------------------------------------
@@ -125,7 +116,9 @@ function _runme(taskdir::String, args)
         ## ------------------------------------------------------
         # RUN EXPR
         _fatal_err() do
-            __GW_EXPR = deserialize(__GW_JLEXPR_FILE)
+            __GW_TASKDAT = deserialize(__GW_TASKDAT_FILE)
+            !haskey(__GW_EXPR, GitWorkers._GW_TASK_EXPR_KEY) && error("FATAL ERROR: expr object missing!")
+            __GW_EXPR = __GW_TASKDAT[GitWorkers._GW_TASK_EXPR_KEY]
             eval(__GW_EXPR) # run
             GitWorkers._flush()
         end

@@ -23,3 +23,11 @@ function _find_worker_file(path)
     (dir == path) && return "" # Base
     return _find_worker_file(dir)
 end
+
+function _gw_from_toml(gwfile::String)
+    gdat = _read_toml(gwfile)
+    sys_root = get(gdat, _GW_WORKER_FILE_SYSROOT_KEY, "")
+    remote_url = get(gdat, _GW_WORKER_FILE_REMOTE_URL_KEY, "")
+    (isempty(sys_root) || isempty(remote_url)) && return nothing
+    return GitWorker(;sys_root, remote_url)
+end
