@@ -25,7 +25,7 @@ version = "0.2.0"
 [[GitLinks]]
 path = "/Users/Pereiro/.julia/dev/GitLinks"
 uuid = "e5655290-0136-40fd-b997-9e22755203bc"
-version = "0.5.2"
+version = "0.6.0"
 
 [[InteractiveUtils]]
 deps = ["Markdown"]

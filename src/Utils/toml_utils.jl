@@ -1,4 +1,5 @@
 function _write_toml(fn::String, dat::Dict; sorted = true)
+    _mkdir(fn)
     open(fn, "w") do io
         TOML.print(io, dat; sorted)
         return fn

@@ -7,3 +7,13 @@ function _fatal_err(gwt::GWTask, f::Function)
         exit()
     end
 end
+
+function _expr_src(ex::Expr)
+    buf = IOBuffer()
+    Base.show_unquoted(buf, ex)
+    src = String(take!(buf))
+    src = replace(src, r"#.*#\n" => "")
+    return string("# NOTE: This source is not 'original', it was generated from an `Expr`.", "\n", src)
+end
+
+_expr_src(gwt::GWTask) = _expr_src(_task_expr(gwt))

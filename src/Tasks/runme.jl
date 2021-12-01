@@ -1,37 +1,58 @@
 const _GW_TASK_RUNME_FILE_NAME = "runme.jl"
 _runme_file(taskdir::String) = joinpath(taskdir, _GW_TASK_RUNME_FILE_NAME)
+_runme_file(gwt::GWTask) = _runme_file(task_dir(gwt))
 
+## ------------------------------------------------------
+function _write_runme(gwt::GWTask)
+    rfile = _runme_file(gwt)
+    write(rfile, 
+        string(
+            "",
+        )
+    )
+end
+
+## ------------------------------------------------------
+function _resolve_gwtask(taskdir)
+    gwtfile = _task_file(taskdir)
+    tid = get(_read_toml(gwtfile), _GW_TASK_TID_KEY, "")
+    return isempty(tid) ? 
+        GWTask(basename(task_dir), taskdir) : 
+        GWTask(tid, taskdir)
+end
 
 ## ------------------------------------------------------
 # runme
 const _GW_TASK_OS_UPFREC = 5.0
 
-function _runme(taskdir::String, args)
+function _runme(taskdir::String, args::Vector)
 
     @eval begin
+
+        # TODO: activate a temp env
+        # A copy of a pre-generated one
+
+        ## ------------------------------------------------------
+        const __GWM = GitWorkers
+
+        ## ------------------------------------------------------
+        # GWTASK
+        const __GW_TASK_DIR = $(taskdir)
+        const __GWT = __GWM._resolve_gwtask(__GW_TASK_DIR)
 
         ## ------------------------------------------------------
         # HASNDLE FlAGS
         const __ARGS = $(args)
-        const __WORKER_FLAG = any(__ARGS .== GitWorkers._GW_RUNME_W_FlAG)
+        __GWM._parse_args!(__GWT, __ARGS)
 
         ## ------------------------------------------------------
-        # MINIMUM DATA
-        const __GW_TASK_DIR = $(taskdir)
-        const __GW_TASKDAT_FILE = GitWorkers._taskdat_file(__GW_TASK_DIR)
-        if !__WORKER_FLAG # ignore task.toml
-            const __GW_TASKID = basename(__GW_TASK_DIR)
-        end
-        GitWorkers._fatal_err() do
-            !isfile(__GW_TASKDAT_FILE) && error("FATAL ERROR: task expr file not found at: '$(__GW_TASKDAT_FILE)'")
-        end
+        # WORKER MODE (RUNNING UNDER A WORKER PROCESS)
+        if is_worker_mode(gwt)
 
-        ## ------------------------------------------------------
-        # WORKER MODE
-        if __WORKER_FLAG
+            # TODO: move to sys_root
+            root = sys_root(gitworking(gwt))
 
-            const __GW_TASK_FILE = GitWorkers._task_file(__GW_TASK_DIR)
-            const __GW_TASK_DAT = Dict{String, Any}()
+            _read_task_toml!(gwt)
 
             # read task.toml
             GitWorkers._fatal_err() do
@@ -116,6 +137,8 @@ function _runme(taskdir::String, args)
         ## ------------------------------------------------------
         # RUN EXPR
         _fatal_err() do
+            __GW_TASKDAT_FILE = __GWM._taskdat_file(__GWT)
+            !isfile(__GW_TASKDAT_FILE) && error("FATAL ERROR: task expr file not found at: '$(__GW_TASKDAT_FILE)'")
             __GW_TASKDAT = deserialize(__GW_TASKDAT_FILE)
             !haskey(__GW_EXPR, GitWorkers._GW_TASK_EXPR_KEY) && error("FATAL ERROR: expr object missing!")
             __GW_EXPR = __GW_TASKDAT[GitWorkers._GW_TASK_EXPR_KEY]
