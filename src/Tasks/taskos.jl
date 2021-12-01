@@ -15,21 +15,22 @@ function _run_task_os(gwt::GWTask)
 
             # update
             _up_task_status!(gwt, _GW_TASK_RUNNING_STATUS)
-        end
 
-        # PROC REGISTRY
-        
-        # SYS MAINTINANCE
-        # while true
-
-        #     # PROC REGISTRY
-
-        #     # FLUSH
-        #     _flush()
+            # PROC REGISTRY
             
-        #     # SLEEP
-        #     sleep(_GW_TASK_OS_UPFREC)
-        # end
+            # SYS MAINTINANCE
+            while true
+
+                # PROC REGISTRY
+
+                # FLUSH
+                _flush()
+                
+                # SLEEP
+                sleep(_GW_TASK_OS_UPFREC)
+            end
+            
+        end
 
     end
 end
