@@ -50,6 +50,7 @@ function _print_welcome(gwt::GWTask)
     _flush()
 end
 
+const _TASK_EOTASK_REGEX = Regex("(?<head>$(_GW_EOTASK_TOKEN))\\n(?<info>(?:.*\\n)+)(?<tail>$(_GW_HEAD_SEP))[\\s\\n]*\$")
 function _print_eotask(gwt::GWTask)
     _flush()
     println("\n"^2)

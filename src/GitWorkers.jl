@@ -43,6 +43,7 @@ module GitWorkers
     include("Client/gw_spawn.jl")
     
     include("Tasks/gwt_env.jl")
+    include("Tasks/out_log.jl")
     include("Tasks/parse_args.jl")
     include("Tasks/readme.jl")
     include("Tasks/runme.jl")
