@@ -1,9 +1,16 @@
 function _fatal_err(f::Function, gwt::GWTask)
     try; f()
     catch err
-        GitWorkers._printerr(err)
-        GitWorkers._flush()
-        sleep(2.0) # time for flusing
+        _printerr(err)
+        _print_eotask(gwt)
+
+        _flush()
+
+        if is_worker_mode(gwt) 
+            _up_task_status!(gwt, _GW_TASK_ERROR_STATUS)
+            # TODO: del proc reg
+        end
+
         exit()
     end
 end
@@ -17,3 +24,38 @@ function _expr_src(ex::Expr)
 end
 
 _expr_src(gwt::GWTask) = _expr_src(_task_expr(gwt))
+
+## ------------------------------------------------------
+const _GW_TASK_T0_KEY = "_T0"
+_tic!(gwt::GWTask) = set!(gwt, _GW_TASK_T0_KEY, now())
+_toc(gwt::GWTask) = now() - get(gwt, _GW_TASK_T0_KEY, now())
+
+## ------------------------------------------------------
+const _GW_WELCOME_TOKEN = rpad("RUNNING TASK ", 60, ">")
+const _GW_EOTASK_TOKEN = rpad("END OF TASK ", 60, ">")
+const _GW_HEAD_SEP = rpad("", 60, "<")
+
+function _print_welcome(gwt::GWTask)
+    _tic!(gwt)
+    println(_GW_WELCOME_TOKEN)
+    # println()
+    println("taskid             ", task_id(gwt))
+    println("pid                ", getpid())
+    println("pwd                ", pwd())
+    println("wroker mode        ", is_worker_mode(gwt))
+    println("start time         ", now())
+    # println()
+    println(_GW_HEAD_SEP)
+    println("\n"^2)
+    _flush()
+end
+
+function _print_eotask(gwt::GWTask)
+    _flush()
+    println("\n"^2)
+    println(_GW_EOTASK_TOKEN)
+    println("end time           ", now())
+    cantime = Dates.canonicalize(Dates.CompoundPeriod(_toc(gwt)))
+    println("tot time           ", cantime)
+    println(_GW_HEAD_SEP)
+end

@@ -7,7 +7,7 @@ const _GW_TASK_SRC_KEY = "src"
 const _GW_TASK_DESC_KEY = "desc"
 const _GW_TASK_LANG_KEY = "lang"
 
-_task_dat(gwt::GWTask) = get!(gwt, _GW_TASK_FILE_NAME) do
+_task_dat(gwt::GWTask) = get!(gwt, _GW_TASK_DAT_FILE_NAME) do
     Dict{String, Any}()
 end
 
@@ -28,7 +28,7 @@ function _read_task_dat!(gwt::GWTask)
 
     tfile = _taskdat_file(gwt)
     dat = deserialize(tfile)
-    merge!(_task_toml(gwt), dat)
+    merge!(_task_dat(gwt), dat)
     
     return dat
 end

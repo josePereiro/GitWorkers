@@ -4,6 +4,7 @@ module GitWorkers
     import GitLinks: GitLink
     
     import Dates
+    import Dates: now
     import Pkg
     
     import TOML
@@ -46,6 +47,7 @@ module GitWorkers
     include("Tasks/readme.jl")
     include("Tasks/runme.jl")
     include("Tasks/task_toml.jl")
+    include("Tasks/taskos.jl")
     include("Tasks/taskdat.jl")
     include("Tasks/taskid.jl")
     include("Tasks/utils.jl")
