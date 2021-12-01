@@ -2,7 +2,7 @@ module GitWorkers
 
     import GitLinks
     import GitLinks: GitLink
-    import ExternalCmds
+    
     import Dates
     import Pkg
     
