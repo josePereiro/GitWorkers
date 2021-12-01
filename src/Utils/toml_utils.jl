@@ -17,6 +17,12 @@ function _read_toml(fn)
     end
 end
 
+function _merge_toml(fn::String, dat::Dict; sorted = true)
+    toml = _read_toml(fn)
+    merge!(toml, dat)
+    _write_toml(fn, toml)
+end
+
 function _has_content(fn; kwargs...)
     dat = _read_toml(fn)
     isempty(kwargs) && return false

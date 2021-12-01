@@ -17,5 +17,8 @@ function _write_task(gwt::GWTask, ex::Expr;
     # readme.md
     readme && _do_readme!(gwt)
 
+    # runme.jl
+    _write_runme(gwt)
+
     return gwt
 end

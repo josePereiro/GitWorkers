@@ -1,4 +1,4 @@
-function _fatal_err(gwt::GWTask, f::Function)
+function _fatal_err(f::Function, gwt::GWTask)
     try; f()
     catch err
         GitWorkers._printerr(err)

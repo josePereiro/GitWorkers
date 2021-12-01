@@ -23,7 +23,6 @@ module GitWorkers
     
     include("Utils/rand_str.jl")
     include("Utils/toml_utils.jl")
-    include("Utils/fatal_err.jl")
     include("Utils/run.jl")
     include("Utils/flush.jl")
     include("Utils/hash_file.jl")

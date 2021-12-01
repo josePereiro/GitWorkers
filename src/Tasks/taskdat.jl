@@ -30,7 +30,7 @@ function _read_task_dat!(gwt::GWTask)
     dat = deserialize(tfile)
     merge!(_task_toml(gwt), dat)
     
-    return toml
+    return dat
 end
 
 function _task_desc(gwt::GWTask)
@@ -40,7 +40,7 @@ end
 
 function _task_expr(gwt::GWTask)
     dat = _task_dat(gwt)
-    get!(dat, _GW_TASK_EXPR_KEY, :(nothing))
+    get!(dat, _GW_TASK_EXPR_KEY, nothing)
 end
 
 function _task_src(gwt::GWTask)
