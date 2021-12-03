@@ -1,0 +1,3 @@
+struct GWDeamon
+    
+end

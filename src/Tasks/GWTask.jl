@@ -1,12 +1,17 @@
 # contains the information required for running a task
-struct GWTask
+struct GWTask <: AbstractGWRegistry
+    # Task
     tid::String
-    task_dir::String
 
-    # Sys dat
+    # GWRegistry
+    home_dir::String
     dat::Dict{Any, Any}
 
-    GWTask(tid, task_dir) = new(tid, task_dir, Dict{Any, Any}())
+    function GWTask(tid, task_dir) 
+        tid = string(tid)
+        home_dir = string(task_dir)
+        new(tid, home_dir, Dict{Any, Any}())
+    end
     GWTask(;tid, task_dir) = GWTask(tid, task_dir)
 
 end
@@ -21,19 +26,8 @@ function Base.show(io::IO, gwt::GWTask)
     println(io, ")")
 end
 
-import Base.get!
-get!(f::Function, gwt::GWTask, key) = get!(f, gwt.dat, key)
-get!(gwt::GWTask, key, val) = get!(gwt.dat, key, val)
-
-import Base.get
-get(f::Function, gwt::GWTask, key) = get(f, gwt.dat, key)
-get(gwt::GWTask, key, val) = get(gwt.dat, key, val)
-
-set!(gwt::GWTask, key, val) = (gwt.dat[key] = val)
-set!(f::Function, gwt::GWTask, key) = (gwt.dat[key] = f())
-
 task_id(gwt::GWTask) = gwt.tid
-task_dir(gwt::GWTask) = gwt.task_dir
+task_dir(gwt::GWTask) = homedir(gwt)
 
 const _GIT_WORKER_KEY = :_gitworker
 function gitworker(gwt::GWTask) 

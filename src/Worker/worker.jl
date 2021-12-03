@@ -2,7 +2,8 @@ const _GW_WORKER_FILE_NAME = "gitworker.toml"
 const _GW_WORKER_FILE_SYSROOT_KEY = "sys_root"
 const _GW_WORKER_FILE_REMOTE_URL_KEY = "remote_url"
 
-_worker_file(gw::GitWorker) = joinpath(worker_dir(gw), _GW_WORKER_FILE_NAME)
+_worker_file(gwdir::String) = joinpath(gwdir, _GW_WORKER_FILE_NAME)
+_worker_file(gw::GitWorker) = _worker_file(worker_dir(gw))
 
 function _write_worker_file(gw::GitWorker) 
     wdict = Dict{String, String}()

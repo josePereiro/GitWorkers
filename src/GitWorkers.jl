@@ -14,11 +14,13 @@ module GitWorkers
     import LoggingExtras
 
     # Type (Order matters)
+    include("AbstractGWRegistries/AbstractGWRegistry.jl")
     include("Worker/GitWorker.jl")
     include("Tasks/GWTask.jl")
 
     # Orderless
-    include("Worker/state_reg.jl")
+    include("AbstractGWRegistries/state_reg.jl")
+    
     include("Worker/worker.jl")
     include("Worker/gitlink.jl")
     
