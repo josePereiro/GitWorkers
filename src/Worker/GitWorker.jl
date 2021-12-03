@@ -4,16 +4,16 @@ struct GitWorker <: AbstractWorker
     remote_url::String
 
     # AbstractWorker
-    rootdir::String
+    worker_root::String
     dat::Dict{Any, Any}
 
     function GitWorker(sys_root, remote_url)
         sys_root = string(sys_root)
         remote_url = string(remote_url)
-        depotdir = gw_deamon_dir(sys_root)
-        rootdir = worker_dir(depotdir, remote_url)
+        depotdir = _depot_dir(sys_root)
+        worker_root = worker_dir(depotdir, remote_url)
         dat = Dict{Symbol, Any}()
-        new(sys_root, remote_url, rootdir, dat)
+        new(sys_root, remote_url, worker_root, dat)
     end
     GitWorker(;sys_root, remote_url) = GitWorker(sys_root, remote_url)
     GitWorker(remote_url) = GitWorker(_GW_SYSTEM_DFLT_ROOT, remote_url)

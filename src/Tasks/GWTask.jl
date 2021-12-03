@@ -4,13 +4,13 @@ struct GWTask <: AbstractWorker
     tid::String
 
     # AbstractWorker
-    rootdir::String
+    worker_root::String
     dat::Dict{Any, Any}
 
     function GWTask(tid, task_dir) 
         tid = string(tid)
-        rootdir = string(task_dir)
-        new(tid, rootdir, Dict{Any, Any}())
+        worker_root = string(task_dir)
+        new(tid, worker_root, Dict{Any, Any}())
     end
     GWTask(;tid, task_dir) = GWTask(tid, task_dir)
 
@@ -27,7 +27,7 @@ function Base.show(io::IO, gwt::GWTask)
 end
 
 task_id(gwt::GWTask) = gwt.tid
-task_dir(gwt::GWTask) = rootdir(gwt)
+task_dir(gwt::GWTask) = worker_root(gwt)
 
 const _GIT_WORKER_KEY = :_gitworker
 function gitworker(gwt::GWTask) 

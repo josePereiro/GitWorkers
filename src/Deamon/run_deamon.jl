@@ -2,7 +2,7 @@ function run_deamon(; sys_root = _GW_SYSTEM_DFLT_ROOT)
 
     loop_frec = 5.0
 
-    depotdir = sgw_depot_dir(sys_root)
+    depotdir = sdepot_dir(sys_root)
     mkpath(depotdir)
 
     ## ------------------------------------------------

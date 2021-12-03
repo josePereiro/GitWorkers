@@ -23,6 +23,12 @@ module GitWorkers
     include("AbstractWorkers/tree_struct.jl")
     include("AbstractWorkers/procs_reg.jl")
     
+    include("Deamon/GWDeamon.jl")
+    include("Deamon/procs.jl")
+    include("Deamon/run_deamon.jl")
+    include("Deamon/spawn_worker.jl")
+    include("Deamon/tree_struct.jl")
+
     include("Worker/worker.jl")
     include("Worker/gitlink.jl")
     include("Worker/tree_struct.jl")

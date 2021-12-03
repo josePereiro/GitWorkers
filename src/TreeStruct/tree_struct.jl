@@ -1,24 +1,11 @@
-# sys def root
-const _GW_SYSTEM_DFLT_ROOT = homedir()
-
-# depot dir
-const _GW_DEPOT_NAME = ".gitworkers"
-gw_depot_dir(sys_root::String) = joinpath(sys_root, _GW_DEPOT_NAME)
-gw_depot_dir(gw::GitWorker) = gw_depot_dir(sys_root(gw))
-
-# deamon dir
-const _GW_DEAMON_FOLDER_NAME = "gwdeamon"
-gw_deamon_dir(sys_root::String) = joinpath(sys_root, _GW_DEAMON_FOLDER_NAME)
-gw_deamon_dir(gw::GitWorker) = gw_deamon_dir(sys_root(gw))
-
 # devland
 const _GW_DEVLAND_FOLDER_NAME = "devland"
-gw_devland(sys_root::String) = joinpath(gw_depot_dir(sys_root), _GW_DEVLAND_FOLDER_NAME)
+gw_devland(sys_root::String) = joinpath(depot_dir(sys_root), _GW_DEVLAND_FOLDER_NAME)
 
 # worker_dir
 _format_url(url::String) = replace(url, r"[^a-zA-Z0-9-_]"=> "_")
 worker_dir(depodir::String, url::String) = joinpath(depodir, _format_url(url))
-worker_dir(gw::GitWorker) = worker_dir(gw_depot_dir(gw), remote_url(gw))
+worker_dir(gw::GitWorker) = worker_dir(depot_dir(gw), remote_url(gw))
 worker_relpath(gw::GitWorker, path) = _relbasepath(path, worker_dir(gw))
 worker_abspath(gw::GitWorker, path) = joinpath(worker_dir(gw), worker_relpath(gw, path))
 
