@@ -22,18 +22,6 @@ worker_dir(gw::GitWorker) = worker_dir(gw_depot_dir(gw), remote_url(gw))
 worker_relpath(gw::GitWorker, path) = _relbasepath(path, worker_dir(gw))
 worker_abspath(gw::GitWorker, path) = joinpath(worker_dir(gw), worker_relpath(gw, path))
 
-# procs dir
-const _GL_PROCS_FOLDER_NAME = "procs"
-_procs_dir(dir::String) = joinpath(dir, _GL_PROCS_FOLDER_NAME)
-gw_procs_dir(gw::GitWorker) = _procs_dir(worker_dir(gw))
-dm_procs_dir(dmdir::String) = _procs_dir(dmdir)
-
-# log dir
-const _GL_LOGS_FOLDER_NAME = "logs"
-_logs_dir(dir::String) = joinpath(dir, _GL_LOGS_FOLDER_NAME)
-gw_logs_dir(gw::GitWorker) = _logs_dir(worker_dir(gw)s)
-dm_logs_dir(dmdir::String) = _logs_dir(dmdir)
-
 # tasks dir
 const _GL_TASKS_FOLDER_NAME = "tasks"
 gw_tasks_dir(gw::GitWorker) = joinpath(worker_dir(gw), _GL_TASKS_FOLDER_NAME)

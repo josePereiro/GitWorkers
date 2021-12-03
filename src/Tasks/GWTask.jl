@@ -1,16 +1,16 @@
 # contains the information required for running a task
-struct GWTask <: AbstractGWRegistry
+struct GWTask <: AbstractWorker
     # Task
     tid::String
 
-    # GWRegistry
-    home_dir::String
+    # AbstractWorker
+    rootdir::String
     dat::Dict{Any, Any}
 
     function GWTask(tid, task_dir) 
         tid = string(tid)
-        home_dir = string(task_dir)
-        new(tid, home_dir, Dict{Any, Any}())
+        rootdir = string(task_dir)
+        new(tid, rootdir, Dict{Any, Any}())
     end
     GWTask(;tid, task_dir) = GWTask(tid, task_dir)
 
@@ -27,7 +27,7 @@ function Base.show(io::IO, gwt::GWTask)
 end
 
 task_id(gwt::GWTask) = gwt.tid
-task_dir(gwt::GWTask) = homedir(gwt)
+task_dir(gwt::GWTask) = rootdir(gwt)
 
 const _GIT_WORKER_KEY = :_gitworker
 function gitworker(gwt::GWTask) 

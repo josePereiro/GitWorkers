@@ -1,19 +1,19 @@
-struct GitWorker <: AbstractGWRegistry
+struct GitWorker <: AbstractWorker
     # GW stuff
     sys_root::String
     remote_url::String
 
-    # Register
-    home_dir::String
+    # AbstractWorker
+    rootdir::String
     dat::Dict{Any, Any}
 
     function GitWorker(sys_root, remote_url)
         sys_root = string(sys_root)
         remote_url = string(remote_url)
         depotdir = gw_deamon_dir(sys_root)
-        home_dir = worker_dir(depotdir, remote_url)
+        rootdir = worker_dir(depotdir, remote_url)
         dat = Dict{Symbol, Any}()
-        new(sys_root, remote_url, home_dir, dat)
+        new(sys_root, remote_url, rootdir, dat)
     end
     GitWorker(;sys_root, remote_url) = GitWorker(sys_root, remote_url)
     GitWorker(remote_url) = GitWorker(_GW_SYSTEM_DFLT_ROOT, remote_url)

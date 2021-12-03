@@ -14,15 +14,18 @@ module GitWorkers
     import LoggingExtras
 
     # Type (Order matters)
-    include("AbstractGWRegistries/AbstractGWRegistry.jl")
+    include("AbstractWorkers/AbstractWorker.jl")
     include("Worker/GitWorker.jl")
     include("Tasks/GWTask.jl")
 
     # Orderless
-    include("AbstractGWRegistries/state_reg.jl")
+    include("AbstractWorkers/state_reg.jl")
+    include("AbstractWorkers/tree_struct.jl")
+    include("AbstractWorkers/procs_reg.jl")
     
     include("Worker/worker.jl")
     include("Worker/gitlink.jl")
+    include("Worker/tree_struct.jl")
     
     include("Utils/rand_str.jl")
     include("Utils/toml_utils.jl")
@@ -30,13 +33,10 @@ module GitWorkers
     include("Utils/flush.jl")
     include("Utils/hash_file.jl")
     include("Utils/printerr.jl")
+    include("Utils/procs.jl")
 
     include("TreeStruct/tree_struct.jl")
     include("TreeStruct/utils.jl")
-
-    include("ProcManager/proc_reg.jl")
-    include("ProcManager/utils.jl")
-    include("ProcManager/safe_kill.jl")
 
     include("Client/upload_task.jl")
     include("Client/gw_setup.jl")
@@ -54,6 +54,7 @@ module GitWorkers
     include("Tasks/taskdat.jl")
     include("Tasks/taskid.jl")
     include("Tasks/utils.jl")
+    include("Tasks/tree_struct.jl")
     include("Tasks/write_task.jl")
 
     include("TasksManager/spawn_task.jl")
