@@ -14,3 +14,5 @@ TkeyDict(nt::NamedTuple, T::DataType, convfun = T) =
 
 TkeyDict(nt::Base.Iterators.Pairs, T::DataType, convfun = T) =
     TkeyDict(Dict(pairs(nt)...), T, convfun)
+
+

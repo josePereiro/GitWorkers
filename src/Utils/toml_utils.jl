@@ -23,23 +23,12 @@ function _merge_toml(fn::String, dat::Dict; sorted = true)
     _write_toml(fn, toml)
 end
 
-function _has_content(fn; kwargs...)
-    dat = _read_toml(fn)
-    isempty(kwargs) && return false
-    for (k0, v0) in kwargs
-        strk = string(k0)
-        !haskey(dat, strk) && return false
-        v0 != dat[strk] && return false
-    end
-    return true
-end
+# function _haspairs(fn::String, p, ps...)
+#     dat = _read_toml(fn)
+#     _haspairs(dat, p, ps...)
+# end
 
-function _has_key(fn, keys...)
-    dat = _read_toml(fn)
-    isempty(keys) && return false
-    for k0 in keys
-        strk = string(k0)
-        !haskey(dat, strk) && return false
-    end
-    return true
-end
+# function _haskeys(fn::String, k, ks...)
+#     dat = _read_toml(fn)
+#     return _haskeys(dat, k, ks...)
+# end

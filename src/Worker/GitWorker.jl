@@ -11,7 +11,7 @@ struct GitWorker <: AbstractWorker
         sys_root = string(sys_root)
         remote_url = string(remote_url)
         depotdir = _depot_dir(sys_root)
-        worker_root = worker_dir(depotdir, remote_url)
+        worker_root = _url_dir(depotdir, remote_url)
         dat = Dict{Symbol, Any}()
         new(sys_root, remote_url, worker_root, dat)
     end

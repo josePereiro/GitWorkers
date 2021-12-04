@@ -39,7 +39,7 @@ function gw_create_devland(;
     
     # ---------------------------------------------------------------
     # systems
-    devland = gw_devland(sys_root)
+    devland = devland_dir(sys_root)
     upstream_repo, url = GitLinks.create_local_upstream(devland; 
         verbose, branch_name
     )

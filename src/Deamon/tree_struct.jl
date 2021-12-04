@@ -10,5 +10,3 @@ depot_dir(d::GWDeamon) = _depot_dir(sys_root(d))
 const _GW_DEAMON_FOLDER_NAME = "gwdeamon"
 _deamon_dir(sys_root::String) = joinpath(_depot_dir(sys_root), _GW_DEAMON_FOLDER_NAME)
 deamon_dir(d::GWDeamon) = _deamon_dir(sys_root(d))
-
-# logs
