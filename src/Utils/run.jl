@@ -13,3 +13,9 @@ function _spawn_bash(src::String; cmdkwargs...)
     proc = run(cmd; wait = false)
     return _try_getpid(proc)
 end
+
+function _run_bash(src::String; cmdkwargs...)
+    cmd = Cmd(`bash -c $(src)`; cmdkwargs...)
+    run(cmd; wait = true)
+    return nothing
+end

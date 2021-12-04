@@ -25,13 +25,14 @@ module GitWorkers
     include("Deamon/GWDeamon.jl")
     include("Deamon/procs_reg.jl")
     include("Deamon/run_deamon.jl")
-    include("Deamon/spawn_worker.jl")
     include("Deamon/tree_struct.jl")
 
     include("Worker/worker.jl")
     include("Worker/gitlink.jl")
+    include("Worker/gitlink_proc.jl")
     include("Worker/procs_reg.jl")
     include("Worker/tree_struct.jl")
+    include("Worker/spawn_worker_procs.jl")
 
     include("Tasks/gwt_env.jl")
     include("Tasks/out_log.jl")
@@ -72,6 +73,8 @@ module GitWorkers
     include("DevLand/tree_struct.jl")
 
     export gw_setup, gw_curr, gw_ping
+    export run_gitworker_server
+    export gw_create_devland
     
     function __init__()
         !Sys.isunix() && error("Non-unix systems are not yet supported!")

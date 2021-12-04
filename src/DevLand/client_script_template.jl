@@ -8,6 +8,7 @@ using GitWorkers
 # run to reset all
 # gw_create_devland(;
 #     sys_root = "SYSTEM_ROOT",
+#     remote_url = "REMOTE_URL",
 #     clear_repos = true, 
 #     clear_scripts = false,
 #     verbose = false,

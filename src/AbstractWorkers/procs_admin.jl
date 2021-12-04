@@ -1,13 +1,13 @@
 const _GW_PROC_REG_INVALID_HASH = "INVALID"
 
-_proc_reg_name(rid::String, pid::Integer, vhash::String) = _nusv_file_name(rid, pid, vhash)
+_proc_reg_name(ptag::String, pid::Integer, vhash::String) = _nusv_file_name(ptag, pid, vhash)
 function _parse_proc_reg_name(prn::String)
     dig = _parse_nusv(prn)
-    length(dig) != 3 && return (;rid = "", pid = -1, vhash = _GW_PROC_REG_INVALID_HASH)
-    rid = dig[1]
+    length(dig) != 3 && return (;ptag = "", pid = -1, vhash = _GW_PROC_REG_INVALID_HASH)
+    ptag = dig[1]
     pid = _tryparse(Int, dig[2], -1)
     vhash = dig[3]
-    return (;rid, pid, vhash)
+    return (;ptag, pid, vhash)
 end
 
 function _get_pid_vhash(pid::Integer)
@@ -17,12 +17,12 @@ function _get_pid_vhash(pid::Integer)
     return vhash
 end
 
-function _reg_proc(w::AbstractWorker, rid::String, pid::Integer = getpid())
+function _reg_proc(w::AbstractWorker, ptag::String = ptag(w), pid::Integer = getpid())
 
     # reg file
     pdir = procs_dir(w)
     vhash = _get_pid_vhash(pid)
-    rname = _proc_reg_name(rid, pid, vhash)
+    rname = _proc_reg_name(ptag, pid, vhash)
     rfile = joinpath(pdir, rname)
     _mkdir(rfile)
     touch(rfile)
@@ -30,7 +30,7 @@ function _reg_proc(w::AbstractWorker, rid::String, pid::Integer = getpid())
     return rfile
 end
 
-function _find_proc_reg(w::AbstractWorker, hint)
+function _findfirst_proc_reg(w::AbstractWorker, hint)
     pdir = procs_dir(w)
     for rname in _readdir(pdir)
         _has_usvvalue(rname, hint) && return joinpath(pdir, rname) 
@@ -38,39 +38,60 @@ function _find_proc_reg(w::AbstractWorker, hint)
     return ""
 end
 
+function _findall_proc_reg(w::AbstractWorker, hint)
+    pdir = procs_dir(w)
+    found = String[]
+    for rname in _readdir(pdir)
+        if _has_usvvalue(rname, hint) 
+            push!(found, joinpath(pdir, rname))
+        end
+    end
+    return found
+end
+
+
 function _read_proc_reg(w::AbstractWorker, hint)
     # reg file
-    rfile = _find_proc_reg(w, hint)
+    rfile = _findfirst_proc_reg(w, hint)
     _parse_proc_reg_name(rfile)
 end
 
 function _is_valid_proc(rfile::String)
-    rid, pid, rvhash = _parse_proc_reg_name(rfile)
+    ptag, pid, rvhash = _parse_proc_reg_name(rfile)
     svhash = _get_pid_vhash(pid)
     isvalid = (svhash == rvhash) && (rvhash != _GW_PROC_REG_INVALID_HASH)
     !isvalid && rm(rfile; force = true)
     return isvalid
 end
-_is_valid_proc(w::AbstractWorker, hint) = _is_valid_proc(_find_proc_reg(w, hint))
+_is_valid_proc(w::AbstractWorker, hint) = _is_valid_proc(_findfirst_proc_reg(w, hint))
+
+_is_running(w::AbstractWorker, hint) = _is_valid_proc(w, hint)
 
 function _safe_kill(rfile)
     !_is_valid_proc(rfile) && return false
-    rid, pid, _ = _parse_proc_reg_name(rfile)
+    ptag, pid, _ = _parse_proc_reg_name(rfile)
     pid == -1 && return false
     mypid = getpid()
     (mypid == pid) && return false
     return _force_kill(pid)
 end
-_safe_kill(w::AbstractWorker, phint) = _safe_kill(_find_proc_reg(w, phint))
+_safe_kill(w::AbstractWorker, phint) = _safe_kill(_findfirst_proc_reg(w, phint))
 
 function _kill_duplicated_procs(w::AbstractWorker)
     pdir = procs_dir(w)
     rids = String[]
+    cptag = ptag(w)
     for rfile in _readdir(pdir; join = true)
-        rid, pid, rvhash = _parse_proc_reg_name(rfile)
-        if (rid in rids)
+        ptag, pid, rvhash = _parse_proc_reg_name(rfile)
+        
+        if cptag == ptag 
             _safe_kill(rfile)
-            push(rids, rid)
+            continue
+        end
+        
+        if (ptag in rids)
+            _safe_kill(rfile)
+            push(rids, ptag)
         end
     end
     return nothing
@@ -82,4 +103,13 @@ function _del_invalid_proc_regs(w::AbstractWorker)
         !_is_valid_proc(rfile) && rm(rfile; force = true)
     end
     return nothing
+end
+
+const _GW_PTAG_KEY = "ptag"
+ptag!(w::AbstractWorker, tag::String) = set!(w, _GW_PTAG_KEY, tag)
+
+function ptag(w::AbstractWorker)
+    get(w, _GW_PTAG_KEY) do
+        rand_str()
+    end
 end

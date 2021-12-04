@@ -5,8 +5,8 @@ let
     rfile = GW._reg_proc(gw, ptag)
     @test isfile(rfile)
     pid = getpid()
-    rfile1 = GW._find_proc_reg(gw, pid)
-    rfile2 = GW._find_proc_reg(gw, ptag)
+    rfile1 = GW._findfirst_proc_reg(gw, pid)
+    rfile2 = GW._findfirst_proc_reg(gw, ptag)
     @test rfile1 == rfile2
 
     @test GW._is_valid_proc(gw, pid)

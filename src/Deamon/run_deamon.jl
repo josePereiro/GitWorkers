@@ -1,33 +1,43 @@
 const _GW_MIM_DEAMON_LOOP_FREC = 5.0
 const _GW_MAX_DEAMON_LOOP_FREC = 60.0
 
-function run_deamon(;
-        sys_root = _GW_SYSTEM_DFLT_ROOT
+function run_gitworker_server(;
+        url = "",
+        sys_root = _GW_SYSTEM_DFLT_ROOT,
+        deb = false
     )
+
+    ## ------------------------------------------------
+    # INSTANTIATE WORKERS
+    if !isempty(url)
+        urls = url isa String ? [url] : url
+        for remote_url in urls
+            _setup_worker(; sys_root, url = remote_url)
+        end
+    end
 
     ## ------------------------------------------------
     # GWDeamon
     dm = GWDeamon(sys_root)
     depotdir = depot_dir(dm)
     mkpath(depotdir)
+    ptag!(dm, _GW_DEAMON_PROC_ID)
 
     ## ------------------------------------------------
     # HANDLE PROCESS
-    _up_procs_from_disk!(dm)
-    pcount = _registered_procs_count(dm, _GW_DEAMON_PROC_ID)
-    if pcount > 0
-        error("A deamon is already running, got pcount = '$(pcount)'")
+    if _is_running(dm, _GW_DEAMON_PROC_ID)
+        error("A deamon process is already running!!!")
     end
-    _reg_proc!(dm, _GW_DEAMON_PROC_ID)
+    _del_invalid_proc_regs(dm)
+    _kill_duplicated_procs(dm)
+    _reg_proc(dm)
 
     ## ------------------------------------------------
     # LOOP DEAMON GLOBALS
     loop_frec = _GW_MIM_DEAMON_LOOP_FREC
 
     ## ------------------------------------------------
-    # WORKER
-    gws = GitWorker[]
-
+    # WORKERS LOOP
     while true
 
         ## ------------------------------------------------
@@ -36,13 +46,9 @@ function run_deamon(;
 
         ## ------------------------------------------------
         # HANDLE DEAMON PROCESS
-        _up_procs_from_disk!(dm)
-        pcount = _registered_procs_count(dm, _GW_DEAMON_PROC_ID)
-        if pcount > 1
-            # TODO: do not die, kill the other deamon
-            error("Too many deamons running, got pcount = '$(pcount)'")
-        end
-        _reg_proc!(dm, _GW_DEAMON_PROC_ID)
+        _del_invalid_proc_regs(dm)
+        _kill_duplicated_procs(dm)
+        _reg_proc(dm)
 
         ## ------------------------------------------------
         # HANDLE EACH WORKER FOLDER
@@ -50,19 +56,12 @@ function run_deamon(;
 
             ## ------------------------------------------------
             # LOAD WORKER
-            !isdir(path) && continue
-            gwtoml = _worker_file(path)
-            !isfile(gwtoml) && continue
-            gw = _gw_from_toml(gwtoml)
+            gw = _load_worker(path)
             isnothing(gw) && continue
 
             ## ------------------------------------------------
-            # HAnDLE WORKER PROCESS
-            _up_procs_from_disk!(gw)
-            pcount = _registered_procs_count(gw, _GW_DEAMON_PROC_ID)
-            if pcount 
-
-            end
+            # HANDLE WORKER PROCESS
+            _spawn_worker_procs(gw; deb)
         end
 
     end

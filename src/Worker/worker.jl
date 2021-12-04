@@ -10,6 +10,7 @@ function _write_worker_file(gw::GitWorker)
     wdict[_GW_WORKER_FILE_SYSROOT_KEY] = sys_root(gw)
     wdict[_GW_WORKER_FILE_REMOTE_URL_KEY] = remote_url(gw)
     wfile = _worker_file(gw)
+    _mkdir(wfile)
     return _write_toml(wfile, wdict)
 end
 
@@ -31,4 +32,33 @@ function _gw_from_toml(gwfile::String)
     remote_url = get(gdat, _GW_WORKER_FILE_REMOTE_URL_KEY, "")
     (isempty(sys_root) || isempty(remote_url)) && return nothing
     return GitWorker(;sys_root, remote_url)
+end
+
+function _load_worker(dir::String)
+    !isdir(dir) && return nothing
+    gwtoml = _worker_file(dir)
+    !isfile(gwtoml) && return nothing
+    return _gw_from_toml(gwtoml)
+end
+
+function _setup_worker(gw::GitWorker)
+
+    # write gitworker.toml
+    _write_worker_file(gw)
+
+    # init gitlink
+    gl = gitlink(gw)
+    url = remote_url(gw)
+    conn_test = GitLinks.instantiate(gl; verbose = false)
+    conn_test ?
+        @info("Worker connected", url) :
+        @error("GitLink init fail (run 'git ls-remote <remote_url>' for testing connection)\nremote_url:$(url)")
+
+    return gw
+end
+
+
+function _setup_worker(; sys_root = _GW_SYSTEM_DFLT_ROOT, url::String) 
+    gw = GitWorker(;sys_root, remote_url = url)
+    _setup_worker(gw::GitWorker)
 end
