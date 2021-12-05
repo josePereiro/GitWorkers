@@ -16,10 +16,10 @@ end
 ## ---------------------------------------------------------------
 # GLOBALS
 const GW = GitWorker(;
-    sys_root = __SYSTEM_ROOT__,
-    remote_url = __REMOTE_URL__,
+    sys_root = "__SYS_ROOT__",
+    remote_url = "__REMOTE_URL__",
 )
-ptag!(GW, __GITLINK_PTAG__)
+ptag!(GW, "__GITLINK_PTAG__")
 
 ## ---------------------------------------------------------------
 # OS

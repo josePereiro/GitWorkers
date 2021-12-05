@@ -11,15 +11,13 @@ function _create_gitlink_proc_script(gw::GitWorker, scrfile;
     src = replace(src, "__CLEAR_SCRIPT__" => string(clear_script))
 
     sroot = sys_root(gw)
-    src = replace(src, "__SYSTEM_ROOT__" => "\"$(sroot)\"")
+    src = replace(src, "__SYS_ROOT__" => sroot)
     url = remote_url(gw)
-    src = replace(src, "__REMOTE_URL__" => "\"$(url)\"")
-    src = replace(src, "__GITLINK_PTAG__" => "\"$(_GW_GITLINK_PROC_PTAG)\"")
+    src = replace(src, "__REMOTE_URL__" => url)
+    src = replace(src, "__GITLINK_PTAG__" => _GW_GITLINK_PROC_PTAG)
     src = replace(src, "__GL_VERBOSE__" => string(verbose))
     _mkdir(scrfile)
     write(scrfile, src)
-
-    println(src)
 
     return scrfile
 end
@@ -47,7 +45,6 @@ function _spawn_gitlink_proc(gw::GitWorker; deb = false)
     _create_gitlink_proc_script(gw, scrfile; clear_script = true, verbose = deb)
     
     projdir = pkgdir(GitWorkers)
-    
     jlcmd = "julia --startup-file=no --project=$(projdir) $(scrfile)"
 
     # pid = _spawn_bash(jlcmd)

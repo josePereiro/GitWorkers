@@ -49,7 +49,6 @@ function _findall_proc_reg(w::AbstractWorker, hint)
     return found
 end
 
-
 function _read_proc_reg(w::AbstractWorker, hint)
     # reg file
     rfile = _findfirst_proc_reg(w, hint)
@@ -76,6 +75,13 @@ function _safe_kill(rfile)
     return _force_kill(pid)
 end
 _safe_kill(w::AbstractWorker, phint) = _safe_kill(_findfirst_proc_reg(w, phint))
+
+function _safe_killall(w::AbstractWorker, hint)
+    reg_files = _findall_proc_reg(w, hint)
+    for file in reg_files
+        _safe_kill(file)
+    end
+end
 
 function _kill_duplicated_procs(w::AbstractWorker)
     pdir = procs_dir(w)
@@ -110,6 +116,6 @@ ptag!(w::AbstractWorker, tag::String) = set!(w, _GW_PTAG_KEY, tag)
 
 function ptag(w::AbstractWorker)
     get(w, _GW_PTAG_KEY) do
-        rand_str()
+        error("ptag not defined!!!")
     end
 end
