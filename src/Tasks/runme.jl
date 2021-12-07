@@ -68,7 +68,7 @@ function _runme(taskdir::String)
             __GW_EXPR = _task_expr(__GWT)
             isnothing(__GW_EXPR) && error("FATAL ERROR: expr object missing!")
             eval(__GW_EXPR) # run
-            __GWM._flush()
+            __GWM._flush_all()
         end
 
         ## ------------------------------------------------------
@@ -82,7 +82,7 @@ function _runme(taskdir::String)
         ## ------------------------------------------------------
         # flush like a crazy
         for _ in 1:5
-            __GWM._flush()
+            __GWM._flush_all()
             sleep(0.05)
         end
 

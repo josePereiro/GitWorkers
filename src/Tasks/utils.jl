@@ -4,7 +4,7 @@ function _fatal_err(f::Function, gwt::GWTask)
         _printerr(err)
         _print_eotask(gwt)
 
-        _flush()
+        _flush_all()
 
         if is_worker_mode(gwt) 
             _up_task_status!(gwt, _GW_TASK_ERROR_STATUS)
@@ -47,12 +47,12 @@ function _print_welcome(gwt::GWTask)
     # println()
     println(_GW_HEAD_SEP)
     println("\n"^2)
-    _flush()
+    _flush_all()
 end
 
 const _TASK_EOTASK_REGEX = Regex("(?<head>$(_GW_EOTASK_TOKEN))\\n(?<info>(?:.*\\n)+)(?<tail>$(_GW_HEAD_SEP))[\\s\\n]*\$")
 function _print_eotask(gwt::GWTask)
-    _flush()
+    _flush_all()
     println("\n"^2)
     println(_GW_EOTASK_TOKEN)
     println("end time           ", now())

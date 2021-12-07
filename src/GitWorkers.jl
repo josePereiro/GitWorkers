@@ -11,7 +11,9 @@ module GitWorkers
     import Serialization: serialize, deserialize
 
     import Logging
+    import Logging: ConsoleLogger, global_logger, with_logger
     import LoggingExtras
+    import LoggingExtras: TeeLogger, DatetimeRotatingFileLogger
 
     # Type (Order matters)
     include("AbstractWorkers/AbstractWorker.jl")
@@ -21,6 +23,7 @@ module GitWorkers
     # Workers
     include("AbstractWorkers/tree_struct.jl")
     include("AbstractWorkers/procs_admin.jl")
+    include("AbstractWorkers/logging.jl")
     
     include("Deamon/GWDeamon.jl")
     include("Deamon/procs_reg.jl")
@@ -52,7 +55,8 @@ module GitWorkers
     include("Utils/rand_str.jl")
     include("Utils/toml_utils.jl")
     include("Utils/run.jl")
-    include("Utils/flush.jl")
+    include("Utils/flush_all.jl")
+    include("Utils/logging.jl")
     include("Utils/hash_file.jl")
     include("Utils/printerr.jl")
     include("Utils/procs.jl")
@@ -78,6 +82,8 @@ module GitWorkers
     
     function __init__()
         !Sys.isunix() && error("Non-unix systems are not yet supported!")
+
+        _set_global_logger()
     end
     
 end

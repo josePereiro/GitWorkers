@@ -24,7 +24,7 @@ function _run_task_os(gwt::GWTask)
                 # PROC REGISTRY
 
                 # FLUSH
-                _flush()
+                _flush_all()
                 
                 # SLEEP
                 sleep(_GW_TASK_OS_UPFREC)
