@@ -47,7 +47,6 @@ function _runme(taskdir::String)
         ## ------------------------------------------------------
         # TASK STATUS
         @async __GWM._run_task_os(__GWT)
-        # __GWM._run_task_os(__GWT)
         
         ## ------------------------------------------------------
         # RUN EXPR

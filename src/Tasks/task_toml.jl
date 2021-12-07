@@ -53,6 +53,7 @@ function _up_task_status(gwt::GWTask, status)
     _write_toml(_task_file(gwt), toml)
 end
 
+_is_done_task(gwt::GWTask) = (_get_task_status(gwt) == _GW_TASK_DONE_STATUS)
 _is_pending_task(gwt::GWTask) = (_get_task_status(gwt) == _GW_TASK_PENDING_STATUS)
 _is_spawned_task(gwt::GWTask) = (_get_task_status(gwt) == _GW_TASK_SPAWNED_STATUS)
 

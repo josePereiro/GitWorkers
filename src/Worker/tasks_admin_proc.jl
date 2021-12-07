@@ -1,4 +1,4 @@
-const _GW_TASKS_ADMIN_PROC_PTAG = "TASKS_ADMIN"
+const _GW_TASKS_ADMIN_PROC_PTAG = "TASKS-ADMIN"
 const _GW_TASKS_ADMIN_OS_UP_FREC = 3.0
 
 ## ---------------------------------------------------------------
@@ -16,7 +16,7 @@ end
 
 function _download_tasks(rtdir, ltdir)
     mkpath(ltdir)
-    for rtask in readdir(rtdir; join = true)
+    for rtask in _readdir(rtdir; join = true)
         !isdir(rtask) && continue # ignore files
         ltask = joinpath(ltdir, basename(rtask))
         isdir(ltask) && continue # ignore already down (lazy)
@@ -33,6 +33,7 @@ function _spawn_tasks(tasksdir)
 
         @info("Spawing task", tid = task_id(gwt))
         _spawn_runme(gwt)
+        _up_task_status(gwt, _GW_TASK_SPAWNED_STATUS)
     end
 end
 
@@ -63,16 +64,18 @@ function _run_tasks_admin_loop(gw::GitWorker)
     rtdir = repo_mirpath(gw, ltdir)
     mkpath(ltdir)
 
+    _download_tasks(rtdir, ltdir)
+
     while true
     
         # DOWNLOAD NEW TASKS
-        if_pull(gl) do
+        # if_pull(gl) do
             _download_tasks(rtdir, ltdir)
-            up_pull_reg!(gl)
-        end
+            # up_pull_reg!(gl)
+        # end
 
         # SPAWN TASKS
-        _spawn_tasks(tasksdir)
+        _spawn_tasks(ltdir)
 
         # UPLOAD TASKS
         _upload_tasks(gl, ltdir, rtdir)
@@ -94,7 +97,7 @@ function _create_tasks_admin_proc_script(gw::GitWorker, scrfile)
     url = remote_url(gw)
     src = replace(src, "__REMOTE_URL__" => url)
     src = replace(src, "__PTAG__" => _GW_TASKS_ADMIN_PROC_PTAG)
-    
+
     _mkdir(scrfile)
     write(scrfile, src)
 
@@ -114,9 +117,10 @@ function _spawn_tasks_admin_proc(gw::GitWorker)
     julia = Base.julia_cmd()
     jlcmd = Cmd(
         `$(julia) --startup-file=no --project=$(projdir) $(scrfile)`; 
-        dir = homedir()
+        dir = homedir(), ignorestatus = false
     )
-    run(jlcmd; wait = false)
+    # run(jlcmd; wait = false)
+    run(jlcmd; wait = true)
 
     return false
 end

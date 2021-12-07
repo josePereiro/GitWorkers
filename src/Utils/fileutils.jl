@@ -1,7 +1,7 @@
 _mkdir(path) = mkpath(dirname(path))
 
 _readdir(dir; join::Bool = false, sort::Bool = true) = 
-    isdir(dir) ? readdir(dir; join, sort) : String[]
+    try; readdir(dir; join, sort) catch err; String[] end 
 
 function _readdir(f::Function, dir; kwargs...)
     for file in _readdir(dir; kwargs...)

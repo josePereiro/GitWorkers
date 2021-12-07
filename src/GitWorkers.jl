@@ -79,6 +79,7 @@ module GitWorkers
     export gw_setup, gw_curr, gw_ping
     export run_gitworker_server
     export gw_create_devland
+    export @gw_spawn
     
     function __init__()
         !Sys.isunix() && error("Non-unix systems are not yet supported!")

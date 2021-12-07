@@ -35,9 +35,7 @@ let
 
     while true
         with_logger(GW) do
-            
             @info("Starting Tasks Admin", pid = getpid())
-
             _run_tasks_admin_loop(GW)
         end
     end

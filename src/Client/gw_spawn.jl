@@ -9,37 +9,32 @@ function _gw_spawn(gw::GitWorker, ex::Expr, tname;
 
     !Meta.isexpr(ex, [:let, :block]) && error("A 'begin or let' block is expected. Ex: '@gw_spawn begin println(\"Hi\")' end")
 
-    # task id
-    tid = _task_id(tname)
-    
-    # readme
-    readme = _readme(;tid, 
-        src = _expr_src(ex), 
-        desc = "Hi, no description provided!!!", 
-        lang = "julia"
-    )
+    gl = gitlink(gw)
 
-    ok_flag = _upload_jltask(gw,
-        tid, ex; readme,
-        vtime = _GW_DFLT_TASK_VTIME
-    )
+    writewdir(gl; tout) do _
 
-    if ok_flag
-        @info("Task uploaded")
-    else
-        @error("Task uploading fail")
+        tid = _task_id(tname)
+        ltdir = task_dir(gw, tid)
+        rtdir = repo_mirpath(gw, ltdir)
+        gwt = GWTask(tid, rtdir)
+
+        _write_task(gwt, ex;
+            desc = "Hiiiiii", lang = "julia",
+            src = _expr_src(ex),
+            readme = true
+        )
     end
 
     return :(nothing)
 end
 
-_gw_spawn(f::Function, taskid; kwargs...) = _gw_spawn(f(), taskid; kwargs...)
+_gw_spawn(f::Function, gw::GitWorker, tname; kwargs...) = _gw_spawn(gw, f(), tname; kwargs...)
 
 """
     Take the return f()::Expr and spawn it
 """
-gw_spawn(ex::Expr; kwargs...) = _gw_spawn(ex, _task_id("SPANW"); kwargs...)
-gw_spawn(f::Function; kwargs...) = _gw_spawn(f(), _task_id("SPANW"); kwargs...)
+gw_spawn(ex::Expr; kwargs...) = _gw_spawn(gw_curr(), ex, "SPAWN"; kwargs...)
+gw_spawn(f::Function; kwargs...) = _gw_spawn(f(), gw_curr(), "SPAWN"; kwargs...)
 
 # ----------------------------------------------------------------
 """

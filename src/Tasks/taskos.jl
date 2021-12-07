@@ -7,21 +7,27 @@ function _run_task_os(gwt::GWTask)
         # HANDLE STATUS
         _fatal_err(gwt) do
         
-            _read_task_toml(gwt)
+            # go it done
+            if _is_done_task(gwt)
+                sleep(3.0)
+                exit()
+            end
+
             # check if pending
-            curr_status = _get_task_status(gwt)
-            !_is_pending_task(gwt) && 
-                error("FATAL ERROR: Task status '$(curr_status)' != '$(_GW_TASK_PENDING_STATUS)'")
+            !_is_spawned_task(gwt) &&
+                error("FATAL ERROR: Task status '$(_get_task_status(gwt))'")
 
             # update
             _up_task_status(gwt, _GW_TASK_RUNNING_STATUS)
 
             # PROC REGISTRY
+            _reg_proc(gwt, task_id(gwt))
             
             # SYS MAINTINANCE
             while true
 
                 # PROC REGISTRY
+                _reg_proc(gwt, task_id(gwt))
 
                 # FLUSH
                 _flush_all()
