@@ -97,7 +97,8 @@ function _kill_duplicated_procs(w::AbstractWorker)
         
         if (wid in rids)
             _safe_kill(rfile)
-            push(rids, wid)
+        else
+            push!(rids, wid)
         end
     end
     return nothing

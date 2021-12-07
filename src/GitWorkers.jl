@@ -1,7 +1,6 @@
 module GitWorkers
 
-    import GitLinks
-    import GitLinks: GitLink
+    using GitLinks
     
     import Dates
     import Dates: now
@@ -27,15 +26,14 @@ module GitWorkers
     
     include("Deamon/GWDeamon.jl")
     include("Deamon/procs_reg.jl")
-    include("Deamon/run_deamon.jl")
     include("Deamon/tree_struct.jl")
+    include("Deamon/run_server.jl")
 
     include("Worker/worker.jl")
-    include("Worker/gitlink.jl")
     include("Worker/gitlink_proc.jl")
+    include("Worker/tasks_admin_proc.jl")
     include("Worker/procs_reg.jl")
     include("Worker/tree_struct.jl")
-    include("Worker/spawn_worker_procs.jl")
 
     include("Tasks/gwt_env.jl")
     include("Tasks/out_log.jl")
@@ -52,6 +50,7 @@ module GitWorkers
     include("Tasks/spawn_task.jl")
     
     # Utils
+    include("Utils/FileTracker.jl")
     include("Utils/rand_str.jl")
     include("Utils/toml_utils.jl")
     include("Utils/run.jl")
@@ -62,6 +61,7 @@ module GitWorkers
     include("Utils/procs.jl")
     include("Utils/fileutils.jl")
     include("Utils/dictutils.jl")
+    include("Utils/julia_cmd.jl")
     include("Utils/nusv_file.jl")
     include("Utils/base.jl")
 

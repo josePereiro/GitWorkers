@@ -2,11 +2,9 @@ import GitWorkers
 import GitWorkers: GitWorker
 import GitWorkers: wid!, wid
 import GitWorkers: _is_running
-import GitWorkers: gitlink
-import GitWorkers: _run_gitlink_proc_os
+import GitWorkers: _run_tasks_admin_loop
+import GitWorkers: _run_tasks_admin_proc_os
 import GitWorkers: with_logger
-import GitLinks
-import GitLinks: run_sync_loop
 
 ## ---------------------------------------------------------------
 # CLEAR SCRIPT
@@ -22,7 +20,7 @@ wid!(GW, "__PTAG__")
 
 ## ---------------------------------------------------------------
 # OS
-@async _run_gitlink_proc_os(GW)
+@async _run_tasks_admin_proc_os(GW)
 
 ## ---------------------------------------------------------------
 # CHECK PROC UNIQUENESS
@@ -32,19 +30,15 @@ if _is_running(GW, wid(GW))
 end
 
 ## ---------------------------------------------------------------
-# GitLink loop
+# tasks admin loop
 let
-    gl = gitlink(GW)
 
     while true
         with_logger(GW) do
             
-            @info("Starting GitLink", pid = getpid())
+            @info("Starting Tasks Admin", pid = getpid())
 
-            run_sync_loop(gl; 
-                tout = 60 * 60, # re-lunch in an hour
-                verbose = true
-            )
+            _run_tasks_admin_loop(GW)
         end
     end
 

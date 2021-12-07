@@ -7,7 +7,7 @@ function _fatal_err(f::Function, gwt::GWTask)
         _flush_all()
 
         if is_worker_mode(gwt) 
-            _up_task_status!(gwt, _GW_TASK_ERROR_STATUS)
+            _up_task_status(gwt, _GW_TASK_ERROR_STATUS)
             # TODO: del proc reg
         end
 

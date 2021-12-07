@@ -10,7 +10,7 @@ function _write_task(gwt::GWTask, ex::Expr;
 
     # task.toml
     extime = time() + vtime
-    _write_task_toml!(gwt; extime, desc)
+    _write_task_toml(gwt; extime, desc)
 
     # taskdat.jls
     _write_task_dat!(gwt; ex, src, desc, lang)

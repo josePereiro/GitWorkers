@@ -11,6 +11,9 @@ relpath(w::AbstractWorker, path::String) = _relbasepath(path, worker_root(w))
 import Base.abspath
 abspath(w::AbstractWorker, path::String) = joinpath(worker_root(w), relpath(w, path))
 
+import Base.mkpath
+mkpath(w::AbstractWorker) = mkpath(worker_root(w))
+
 # procs dir
 const _GL_PROCS_FOLDER_NAME = "procs"
 _procs_dir(dir::String) = joinpath(dir, _GL_PROCS_FOLDER_NAME)

@@ -15,18 +15,6 @@ function _write_runme(gwt::GWTask)
 end
 
 ## ------------------------------------------------------
-# Try to find a GitWorker config file
-function _resolve_gwtask(taskdir)
-    gwtfile = _task_file(taskdir)
-    tid = get(_read_toml(gwtfile), _GW_TASK_TID_KEY, "")
-    return isempty(tid) ? 
-        GWTask(basename(taskdir), taskdir) : 
-        GWTask(tid, taskdir)
-end
-
-
-
-## ------------------------------------------------------
 # runme
 
 function _runme(taskdir::String)
@@ -42,7 +30,7 @@ function _runme(taskdir::String)
         ## ------------------------------------------------------
         # GWTASK
         const __GW_TASK_DIR = $(taskdir)
-        const __GWT = __GWM._resolve_gwtask(__GW_TASK_DIR)
+        const __GWT = __GWM._load_task(__GW_TASK_DIR)
 
         ## ------------------------------------------------------
         # HANDLE FlAGS
@@ -73,7 +61,7 @@ function _runme(taskdir::String)
 
         ## ------------------------------------------------------
         # LABEL AS DONE
-        _up_task_status!(__GWT, _GW_TASK_DONE_STATUS)
+        _up_task_status(__GWT, _GW_TASK_DONE_STATUS)
 
         ## ------------------------------------------------------
         # SAY GOOD BY

@@ -10,7 +10,9 @@ struct GWTask <: AbstractWorker
     function GWTask(tid, task_dir) 
         tid = string(tid)
         worker_root = string(task_dir)
-        new(tid, worker_root, Dict{Any, Any}())
+        gwt = new(tid, worker_root, Dict{Any, Any}())
+        wid!(gwt, tid)
+        return gwt
     end
     GWTask(;tid, task_dir) = GWTask(tid, task_dir)
 
