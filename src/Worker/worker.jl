@@ -15,7 +15,6 @@ function _write_worker_file(gw::GitWorker)
 end
 
 function _find_worker_file(path)
-    @show path
     if isdir(path) # Base
         wfile = joinpath(path, _GW_WORKER_FILE_NAME)
         isfile(wfile) && return wfile
@@ -41,7 +40,7 @@ function _load_worker(dir::String)
     return _gw_from_toml(gwtoml)
 end
 
-function _setup_worker(gw::GitWorker)
+function _setup_worker(gw::GitWorker; verbose = false)
 
     # write gitworker.toml
     _write_worker_file(gw)
@@ -49,16 +48,15 @@ function _setup_worker(gw::GitWorker)
     # init gitlink
     gl = gitlink(gw)
     url = remote_url(gw)
-    conn_test = GitLinks.instantiate(gl; verbose = false)
+    conn_test = GitLinks.instantiate(gl; verbose)
     conn_test ?
         @info("Worker connected", url) :
         @error("GitLink init fail (run 'git ls-remote <remote_url>' for testing connection)\nremote_url:$(url)")
-
     return gw
 end
 
 
-function _setup_worker(; sys_root = _GW_SYSTEM_DFLT_ROOT, url::String) 
+function _setup_worker(; sys_root = _GW_SYSTEM_DFLT_ROOT, url::String, verbose = false) 
     gw = GitWorker(;sys_root, remote_url = url)
     _setup_worker(gw::GitWorker)
 end

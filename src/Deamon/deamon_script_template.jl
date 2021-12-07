@@ -1,20 +1,19 @@
 import GitWorkers
-import GitWorkers: _run_server
+import GitWorkers: _run_deamon
 import GitWorkers: GWDeamon
 import GitWorkers: _GW_DEAMON_PROC_ID
 import GitWorkers: _safe_killall
-import GitWorkers: ptag!
+import GitWorkers: wid!
+import GitWorkers: with_logger
 
 ## ---------------------------------------------------------------
 # CLEAR SCRIPT
-if __CLEAR_SCRIPT__
-    rm(@__FILE__; force = true)
-end
+rm(@__FILE__; force = true)
 
 ## ---------------------------------------------------------------
 # GWDeamon
 DM = GWDeamon("__SYS_ROOT__")
-ptag!(DM, _GW_DEAMON_PROC_ID)
+wid!(DM, _GW_DEAMON_PROC_ID)
 
 ## ------------------------------------------------
 # KILL OTHER SERVERS
@@ -24,9 +23,9 @@ end
 
 ## ------------------------------------------------
 # RUN SERVER LOOP
-_run_server(DM;
-    deb = __DEB__
-)
+with_logger(DM) do
+    _run_deamon(DM)
+end
 
 ## ------------------------------------------------
 # EXIT

@@ -1,7 +1,7 @@
 const _GW_LOGGER_KEY = "_logger"
 get_logger(w::AbstractWorker) = get!(w, _GW_LOGGER_KEY) do
     ldir = logs_dir(w)
-    return _tee_logger(ldir, "TEST")
+    return _tee_logger(ldir, wid(w))
 end
 
 import Logging.with_logger

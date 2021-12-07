@@ -11,7 +11,6 @@ function _haspairs(d, p, ps...)
         v != d[k] && return false
     end
     k, v = p
-    @show k, v
     !haskey(d, k) && return false
     v != d[k] && return false
     return true

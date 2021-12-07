@@ -2,23 +2,22 @@ using GitWorkers
 
 ## ---------------------------------------------------------------
 # cmd for run the server
-# julia 'SERVER_SCRIPT_PATH'
+# julia '__SERVER_SCRIPT_PATH__'
 
 ## ---------------------------------------------------------------
 # run to reset all
 # gw_create_devland(;
-#     sys_root = "SYSTEM_ROOT",
-#     remote_url = "REMOTE_URL",
+#     sys_root = "__SYS_ROOT__",
+#     remote_url = "__REMOTE_URL__",
 #     clear_repos = true, 
 #     clear_scripts = false,
-#     verbose = false,
-#     deb = false,
+#     verbose = false
 # )
 
 ## ---------------------------------------------------------------
 gw_setup(;
-    sys_root = "CLIENT_ROOT",
-    url = "REMOTE_URL",
+    sys_root = "__CLIENT_ROOT__",
+    url = "__REMOTE_URL__",
 )
 
 ## ---------------------------------------------------------------

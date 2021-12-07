@@ -7,8 +7,8 @@ let
     pid = GW._try_getpid(proc)
     @test pid != -1
 
-    ptag = "TEST"
-    rfile = GW._reg_proc(gw, ptag, pid)
+    wid = "TEST"
+    rfile = GW._reg_proc(gw, wid, pid)
 
     @test GW._safe_kill(gw, pid)
 

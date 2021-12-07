@@ -13,4 +13,10 @@ struct GWDeamon <: AbstractWorker
 
 end
 
+function Base.show(io::IO, gw::GWDeamon) 
+    println(io, "GWDeamon(;")
+    println(io, "   sys_root = \"", gw.sys_root, "\",")
+    println(io, ")")
+end
+
 sys_root(d::GWDeamon) = d.sys_root

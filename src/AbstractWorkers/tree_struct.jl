@@ -1,3 +1,5 @@
+# TODO: eliminate sys_root (it is only use for computing the depot_root)
+
 # worker_root
 worker_root(w::AbstractWorker) = w.worker_root
 

@@ -4,23 +4,20 @@ function _create_client_script(;
     )
     client_tfile = joinpath(@__DIR__, "client_script_template.jl")
     temp::String = read(client_tfile, String)
-    temp = replace(temp, "REMOTE_URL" => remote_url)
-    temp = replace(temp, "CLIENT_ROOT" => client_root)
-    temp = replace(temp, "SYSTEM_ROOT" => sys_root)
-    src = replace(temp, "SERVER_SCRIPT_PATH" => server_script)
+    temp = replace(temp, "__REMOTE_URL__" => remote_url)
+    temp = replace(temp, "__CLIENT_ROOT__" => client_root)
+    temp = replace(temp, "__SYS_ROOT__" => sys_root)
+    src = replace(temp, "__SERVER_SCRIPT_PATH__" => server_script)
     write(client_script, src)
     return src
 end
 
 function _create_server_script(; 
-        server_root, remote_url, deb, server_script
+        server_root, remote_url, server_script
     )
-    # SERVER_ROOT
-    # DEB_MODE
     server_tfile = joinpath(@__DIR__, "server_script_template.jl")
     temp::String = read(server_tfile, String)
-    temp = replace(temp, "REMOTE_URL" => remote_url)
-    temp = replace(temp, "DEB_MODE" => string(deb))
+    temp = replace(temp, "__REMOTE_URL__" => remote_url)
     src = replace(temp, "SERVER_ROOT" => server_root)
     write(server_script, src)
     return src
@@ -33,7 +30,6 @@ function gw_create_devland(;
         clear_repos = true, 
         clear_scripts = false,
         verbose = false,
-        deb = false,
         branch_name = "main"
     )
 
@@ -60,11 +56,11 @@ function gw_create_devland(;
 
     @info("Setting server")
     server_gw = GitWorker(server_root, remote_url)
-    gw_setup(server_gw; verbose)
+    gw_setup(server_gw)
 
     @info("Setting client")
     client_gw = GitWorker(client_root, remote_url)
-    gw_setup(client_gw; verbose)
+    gw_setup(client_gw)
 
     # ---------------------------------------------------------------
     # scripts
@@ -79,7 +75,7 @@ function gw_create_devland(;
     # server script
     if clear_scripts || !isfile(server_script) 
         _rm(server_script)
-        _create_server_script(;server_root, remote_url, deb, server_script)
+        _create_server_script(;server_root, remote_url, server_script)
     end
     
     @info("DevLand setup", client_script, server_script)

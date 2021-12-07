@@ -1,13 +1,13 @@
 const _GW_PROC_REG_INVALID_HASH = "INVALID"
 
-_proc_reg_name(ptag::String, pid::Integer, vhash::String) = _nusv_file_name(ptag, pid, vhash)
+_proc_reg_name(wid::String, pid::Integer, vhash::String) = _nusv_file_name(wid, pid, vhash)
 function _parse_proc_reg_name(prn::String)
     dig = _parse_nusv(prn)
-    length(dig) != 3 && return (;ptag = "", pid = -1, vhash = _GW_PROC_REG_INVALID_HASH)
-    ptag = dig[1]
+    length(dig) != 3 && return (;wid = "", pid = -1, vhash = _GW_PROC_REG_INVALID_HASH)
+    wid = dig[1]
     pid = _tryparse(Int, dig[2], -1)
     vhash = dig[3]
-    return (;ptag, pid, vhash)
+    return (;wid, pid, vhash)
 end
 
 function _get_pid_vhash(pid::Integer)
@@ -17,12 +17,12 @@ function _get_pid_vhash(pid::Integer)
     return vhash
 end
 
-function _reg_proc(w::AbstractWorker, ptag::String = ptag(w), pid::Integer = getpid())
+function _reg_proc(w::AbstractWorker, wid::String = wid(w), pid::Integer = getpid())
 
     # reg file
     pdir = procs_dir(w)
     vhash = _get_pid_vhash(pid)
-    rname = _proc_reg_name(ptag, pid, vhash)
+    rname = _proc_reg_name(wid, pid, vhash)
     rfile = joinpath(pdir, rname)
     _mkdir(rfile)
     touch(rfile)
@@ -56,7 +56,7 @@ function _read_proc_reg(w::AbstractWorker, hint)
 end
 
 function _is_valid_proc(rfile::String)
-    ptag, pid, rvhash = _parse_proc_reg_name(rfile)
+    wid, pid, rvhash = _parse_proc_reg_name(rfile)
     svhash = _get_pid_vhash(pid)
     isvalid = (svhash == rvhash) && (rvhash != _GW_PROC_REG_INVALID_HASH)
     !isvalid && rm(rfile; force = true)
@@ -68,7 +68,7 @@ _is_running(w::AbstractWorker, hint) = _is_valid_proc(w, hint)
 
 function _safe_kill(rfile)
     !_is_valid_proc(rfile) && return false
-    ptag, pid, _ = _parse_proc_reg_name(rfile)
+    wid, pid, _ = _parse_proc_reg_name(rfile)
     pid == -1 && return false
     mypid = getpid()
     (mypid == pid) && return false
@@ -86,18 +86,18 @@ end
 function _kill_duplicated_procs(w::AbstractWorker)
     pdir = procs_dir(w)
     rids = String[]
-    cptag = ptag(w)
+    cptag = wid(w)
     for rfile in _readdir(pdir; join = true)
-        ptag, pid, rvhash = _parse_proc_reg_name(rfile)
+        wid, pid, rvhash = _parse_proc_reg_name(rfile)
         
-        if cptag == ptag 
+        if cptag == wid 
             _safe_kill(rfile)
             continue
         end
         
-        if (ptag in rids)
+        if (wid in rids)
             _safe_kill(rfile)
-            push(rids, ptag)
+            push(rids, wid)
         end
     end
     return nothing
@@ -109,13 +109,4 @@ function _del_invalid_proc_regs(w::AbstractWorker)
         !_is_valid_proc(rfile) && rm(rfile; force = true)
     end
     return nothing
-end
-
-const _GW_PTAG_KEY = "ptag"
-ptag!(w::AbstractWorker, tag::String) = set!(w, _GW_PTAG_KEY, tag)
-
-function ptag(w::AbstractWorker)
-    get(w, _GW_PTAG_KEY) do
-        error("ptag not defined!!!")
-    end
 end

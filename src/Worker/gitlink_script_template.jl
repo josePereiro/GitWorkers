@@ -1,17 +1,16 @@
 import GitWorkers
 import GitWorkers: GitWorker
-import GitWorkers: ptag!, ptag
+import GitWorkers: wid!, wid
 import GitWorkers: _is_running
 import GitWorkers: gitlink
 import GitWorkers: run_gitlink_proc_os
+import GitWorkers: with_logger
 import GitLinks
 import GitLinks: run_sync_loop
 
 ## ---------------------------------------------------------------
 # CLEAR SCRIPT
-if __CLEAR_SCRIPT__
-    rm(@__FILE__; force = true)
-end
+rm(@__FILE__; force = true)
 
 ## ---------------------------------------------------------------
 # GLOBALS
@@ -19,7 +18,7 @@ const GW = GitWorker(;
     sys_root = "__SYS_ROOT__",
     remote_url = "__REMOTE_URL__",
 )
-ptag!(GW, "__GITLINK_PTAG__")
+wid!(GW, "__GITLINK_PTAG__")
 
 ## ---------------------------------------------------------------
 # OS
@@ -27,8 +26,8 @@ ptag!(GW, "__GITLINK_PTAG__")
 
 ## ---------------------------------------------------------------
 # CHECK PROC UNIQUENESS
-if _is_running(GW, ptag(GW))
-    error("A $(ptag(GW)) process is already running!!!")
+if _is_running(GW, wid(GW))
+    error("A $(wid(GW)) process is already running!!!")
     exit()
 end
 
@@ -38,10 +37,12 @@ let
     gl = gitlink(GW)
 
     while true
-        run_sync_loop(gl; 
-            tout = 60 * 60, # re-lunch in an hour
-            verbose = __GL_VERBOSE__
-        )
+        with_logger(GW) do
+            run_sync_loop(gl; 
+                tout = 60 * 60, # re-lunch in an hour
+                verbose = true
+            )
+        end
     end
 
 end
