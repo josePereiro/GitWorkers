@@ -1,0 +1,3 @@
+- creates parent-child worker structure
+- if parent die, child exit (improve process security)
+- log errors before catch/exit
