@@ -1,16 +1,16 @@
 let
     gw = GW._test_gw()
     
-    wid = "HBKJSDBHK"
-    rfile = GW._reg_proc(gw, wid)
+    agent_ider = "HBKJSDBHK"
+    rfile = GW._reg_proc(gw, agent_ider)
     @test isfile(rfile)
     pid = getpid()
     rfile1 = GW._findfirst_proc_reg(gw, pid)
-    rfile2 = GW._findfirst_proc_reg(gw, wid)
+    rfile2 = GW._findfirst_proc_reg(gw, agent_ider)
     @test rfile1 == rfile2
 
     @test GW._is_valid_proc(gw, pid)
-    @test GW._is_valid_proc(gw, wid)
+    @test GW._is_valid_proc(gw, agent_ider)
 
-    GW.worker_root(gw) |> GW._rm
+    GW.agent_dir(gw) |> GW._rm
 end

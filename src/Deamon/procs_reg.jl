@@ -1,1 +1,0 @@
-const _GW_DEAMON_PROC_ID = "DEAMON"

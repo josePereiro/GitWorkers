@@ -5,6 +5,8 @@ version = "0.7.1"
 
 [deps]
 Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
+FilesTreeTools = "638332cd-b357-4bf5-bfa2-3531168477f5"
+GWUtils = "772e7830-88e0-466f-82c6-af9b8962b67b"
 GitLinks = "e5655290-0136-40fd-b997-9e22755203bc"
 LibGit2 = "76f85450-5226-5b5a-8eaa-529ad045b433"
 Logging = "56ddb016-857b-54e1-b83d-db4d58db5568"

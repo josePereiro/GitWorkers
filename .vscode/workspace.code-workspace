@@ -1,0 +1,28 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"path": "../../GitTCPs"
+		},
+		{
+			"path": "../../GitLinks"
+		},
+		{
+			"path": "../../FilesTreeTools"
+		},
+		{
+			"path": "../../GWProcs"
+		},
+		{
+			"path": "../../GWUtils"
+		},
+		{
+			"path": "../../../../.gitworker"
+		}
+	],
+	"settings": {
+		"julia.environmentPath": "/Users/Pereiro/.julia/dev/GitWorkers"
+	}
+}

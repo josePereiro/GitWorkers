@@ -1,14 +1,14 @@
 let
     gw = GW._test_gw()
-    GW.worker_root(gw) |> GW._rm
+    GW.agent_dir(gw) |> GW._rm
     
     wt = 5
     proc = run(`sleep $(wt)`; wait = false)
     pid = GW._try_getpid(proc)
     @test pid != -1
 
-    wid = "TEST"
-    rfile = GW._reg_proc(gw, wid, pid)
+    agent_ider = "TEST"
+    rfile = GW._reg_proc(gw, agent_ider, pid)
 
     @test GW._safe_kill(gw, pid)
 
@@ -21,5 +21,5 @@ let
     end
     @test dead_flag
 
-    GW.worker_root(gw) |> GW._rm
+    GW.agent_dir(gw) |> GW._rm
 end
