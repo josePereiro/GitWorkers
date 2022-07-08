@@ -13,17 +13,21 @@ function _parse_proc_reg_name(prn::String)
     return (;agent_ider, pid, vhash)
 end
 
-function _reg_proc(w::AbstractGWAgent, agent_ider::String = agent_ider(w), pid::Integer = getpid())
-
+function _proc_reg_file(w::AbstractGWAgent, agent_ider, pid)
     # reg file
     pdir = procs_dir(w)
     vhash = _get_pid_vhash(pid)
     rname = _proc_reg_name(agent_ider, pid, vhash)
     rfile = joinpath(pdir, rname)
-    _mkdir(rfile)
-    touch(rfile)
 
     return rfile
+end
+
+function _reg_proc(w::AbstractGWAgent, agent_ider, pid)
+
+    rfile = _proc_reg_file(w, agent_ider, pid)
+    _mkdir(rfile)
+    touch(rfile)
 end
 
 # lstart is use as validation of a running pid register
@@ -54,6 +58,8 @@ function _findall_proc_reg(w::AbstractGWAgent, hint)
     return found
 end
 
+_is_unregistered(w::AbstractGWAgent, hint) = isempty(_findall_proc_reg(w, hint))
+
 function _read_proc_reg(w::AbstractGWAgent, hint)
     # reg file
     rfile = _findfirst_proc_reg(w, hint)
@@ -72,6 +78,7 @@ _is_valid_proc(w::AbstractGWAgent, hint) = _is_valid_proc(_findfirst_proc_reg(w,
 
 _is_running(w::AbstractGWAgent, hint) = _is_valid_proc(w, hint)
 
+# TODO: log killings
 function _safe_kill(rfile)
     !_is_valid_proc(rfile) && return false
     _, pid, _ = _parse_proc_reg_name(rfile)
@@ -113,7 +120,7 @@ end
 function _del_invalid_proc_regs(w::AbstractGWAgent)
     pdir = procs_dir(w)
     for rfile in _readdir(pdir; join = true)
-        !_is_valid_proc(rfile) && _rm(rfile)
+        _is_valid_proc(rfile)
     end
     return nothing
 end

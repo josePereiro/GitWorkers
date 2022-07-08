@@ -9,12 +9,12 @@
 		{
 			"path": "../../GitLinks"
 		},
-		{
-			"path": "../../FilesTreeTools"
-		},
-		{
-			"path": "../../GWProcs"
-		},
+		// {
+		// 	"path": "../../FilesTreeTools"
+		// },
+		// {
+		// 	"path": "../../GWProcs"
+		// },
 		{
 			"path": "../../GWUtils"
 		},

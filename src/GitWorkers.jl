@@ -12,88 +12,48 @@ module GitWorkers
     import Serialization: serialize, deserialize
 
     # Types (Order matters)
+    include("GWAgents/types.jl")
     include("GWAgents/AbstractGWAgent.jl")
+    include("GWAgents/file_struct.jl")
     include("GWAgents/GWDeamon.jl")
     include("GWAgents/GitWorker.jl")
     include("GWAgents/GWTaskRunTime.jl")
-    include("GWAgents/procs_admin.jl")
 
+    include("Client/gw_curr.jl")
+    include("Client/gw_ping.jl")
+    include("Client/gw_setup.jl")
+    include("Client/gw_spawn.jl")
+    include("Client/gw_request_push.jl")
+    include("Client/gw_test_task.jl")
+    include("Client/gw_follow_server.jl")
+    include("Client/gw_running_procs.jl")
+    include("Client/gw_killem_all.jl")
+    include("Client/gw_send_killer.jl")
+    include("Client/upload_task.jl")
+    include("Client/gw_list_tasks.jl")
+    include("Client/pull_and_listen.jl")
+    
     include("Server/run_server.jl")
+    include("Server/spawn_worker_proc.jl")
+    include("Server/spawn_task_proc.jl")
+    include("Server/run_task.jl")
+    include("Server/run_worker.jl")
 
-
-    # include("AbstractWorkers/AbstractGWAgent.jl")
-    # include("Worker/GitWorker.jl")
-    # include("Tasks/GWTask.jl")
-
-    # # Workers
-    # include("AbstractWorkers/tree_struct.jl")
-    # include("AbstractWorkers/procs_admin.jl")
-    # include("AbstractWorkers/logging.jl")
+    include("DevLand/gw_create_devland.jl")
     
-    # include("Deamon/GWDeamon.jl")
-    # include("Deamon/procs_reg.jl")
-    # include("Deamon/tree_struct.jl")
-    # include("Deamon/run_server.jl")
-    # include("Deamon/utils.jl")
+    include("Utils/agents.jl")
+    include("Utils/procs_admin.jl")
+    include("Utils/test_utils.jl")
 
-    # include("Worker/worker.jl")
-    # include("Worker/gitlink_proc.jl")
-    # include("Worker/tasks_admin_proc.jl")
-    # include("Worker/procs_reg.jl")
-    # include("Worker/tree_struct.jl")
-    # include("Worker/utils.jl")
-
-    # include("Tasks/gwt_env.jl")
-    # include("Tasks/out_log.jl")
-    # include("Tasks/parse_args.jl")
-    # include("Tasks/readme.jl")
-    # include("Tasks/runme.jl")
-    # include("Tasks/task_toml.jl")
-    # include("Tasks/taskos.jl")
-    # include("Tasks/taskdat.jl")
-    # include("Tasks/taskid.jl")
-    # include("Tasks/utils.jl")
-    # include("Tasks/tree_struct.jl")
-    # include("Tasks/write_task.jl")
-    # include("Tasks/spawn_task.jl")
+    export gw_create_devland
+    export gw_setup, gw_ping, gw_curr, gw_spawn, @gw_spawn
+    export gw_request_push, gw_test_task, gw_follow_server
+    export gw_send_killer, gw_list_tasks,gw_running_procs
+    export run_gitworker_server, gw_killem_all
     
-    # # Utils
-    # include("Utils/FileTracker.jl")
-    # include("Utils/rand_str.jl")
-    # include("Utils/toml_utils.jl")
-    # include("Utils/run.jl")
-    # include("Utils/flush_all.jl")
-    # include("Utils/logging.jl")
-    # include("Utils/hash_file.jl")
-    # include("Utils/printerr.jl")
-    # include("Utils/procs.jl")
-    # include("Utils/fileutils.jl")
-    # include("Utils/dictutils.jl")
-    # include("Utils/julia_cmd.jl")
-    # include("Utils/nusv_file.jl")
-    # include("Utils/base.jl")
-    # include("Utils/track_and_print.jl")
-
-    # include("Client/upload_task.jl")
-    # include("Client/gw_setup.jl")
-    # include("Client/gw_curr.jl")
-    # include("Client/gw_ping.jl")
-    # include("Client/gw_spawn.jl")
-    
-    # # DevLand
-    # include("DevLand/gw_create_devland.jl")
-    # include("DevLand/test_gw.jl")
-    # include("DevLand/tree_struct.jl")
-
-    # export gw_setup, gw_curr, gw_ping
-    # export run_gitworker_server
-    # export gw_create_devland
-    # export @gw_spawn
     
     function __init__()
         !Sys.isunix() && error("Non-unix systems are not yet supported!")
-
-        # _set_global_logger()
     end
     
 end

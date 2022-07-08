@@ -1,11 +1,12 @@
 const _GW_MIM_DEAMON_LOOP_FREC = 5.0
 
 ## ---------------------------------------------------------------
-function run_gitworker_server(
-        sys_root = homedir();
+function run_gitworker_server(;
+        sys_root = homedir(),
         url = "",
         force = false, 
-        verbose = true
+        verbose = true, 
+        ntiters = Inf
     )
 
     # ------------------------------------------------
@@ -19,42 +20,74 @@ function run_gitworker_server(
 
     # ------------------------------------------------
     # DEAMON
-    dm = GWDeamon(sys_root)
+    dm = GWDeamon(sys_root; write = true)
+    collect_workers!(dm)
 
     ## ------------------------------------------------
-    # KILL OTHER SERVERS
-    # force && _safe_killall(dm, _GW_DEAMON_PROC_ID)
+    # MAINTINANCE
+    del_invalid_proc_registries(dm)
+    if force 
+        safe_killall(dm) # kill others
+        clear_proc_regs(dm)
+        sleep(1.0)
+    end
+    duplicated = duplicated_procs(dm)
+    if length(duplicated) > 0
+        _, pid, _ = _parse_proc_reg_name(first(duplicated))
+        error("Another deamon is running at process $(pid)")
+    end
+    write_proc_reg(dm)
 
     ## ------------------------------------------------
     # INIT
-    collect_workers!(dm)
-    verbose && print_listeners!(dm) # init listeners
+    verbose && print_listeners!(dm; from_beginning = false) # init listeners
 
-    with_logger(dm) do
+    ## ------------------------------------------------
+    # INFO
+    log_info(dm, "Starting deamon";
+        pid = getpid(), 
+        depotdir = gitworkers_dir(dm)
+    )
 
-        ## ------------------------------------------------
-        # INFO
-        @info("Starting deamon", 
-            pid = getpid(), 
-            depotdir = gitworkers_dir(dm)
-        )
+    verbose && print_listeners!(dm; from_beginning = true)
 
-    end
-
-    verbose && print_listeners!(dm)
     
     ## ------------------------------------------------
     # LOOP
-    for it in 1:10
+    it = 0
+    wt = 5.0
+    while it < ntiters
+
+        it += 1
 
         # INFO
-        with_logger(dm) do
-            @info("New iter", it, pid = getpid())
-        end
-        
-        verbose && print_listeners!(dm)
+        log_info(dm, "SERVER ITER"; it, pid = getpid())
 
-        sleep(1.0)
+        ## ------------------------------------------------
+        # DEAMON MAINTINANCE
+        del_invalid_proc_registries(dm)
+        safe_killall(dm)
+        write_proc_reg(dm)
+
+        ## ------------------------------------------------
+        # WORKERS LOOP
+        collect_listeners!(dm; from_beginning = true)
+        for (_, gw) in collect_workers!(dm)
+
+            # WORKER MAINTINANCE (Independet from pid)
+            del_invalid_proc_registries(gw)
+
+            # SPAWN WRIKER PROCS
+            !is_running(gw) && _spawn_worker_proc(dm, gw)
+
+            # PRINT
+            verbose && print_listeners(dm)
+
+        end
+
+        # WAIT
+        sleep(wt)
+        
     end
     
     
@@ -65,7 +98,7 @@ end
 
 ## ---------------------------------------------------------------
 # function run_gitworker_server(;
-#         sys_root = _GW_SYSTEM_DFLT_ROOT,
+#         sys_root = homedir(),
 #         url = "",
 #         force = false
 #     )

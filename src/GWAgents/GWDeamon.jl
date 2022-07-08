@@ -1,58 +1,31 @@
-
-struct GWDeamon <: AbstractGWAgent
-    dat::Dict
-
-    function GWDeamon(sys_root::AbstractString; write = true)
-        dm = new(Dict{Any, Any}())
-        set!(dm, :sys_root, sys_root)
-        write && write_toml_file(dm)
-        return dm
-    end
-
-end
-
 ## ---------------------------------------------------
 # AGENT INTERFACE
 
+# deamon_dir
+deamon_dir(sys_root) = gitworkers_dir(sys_root)
+deamon_dir(w::AbstractGWAgent) = deamon_dir(sys_root(w))
+
 # sys_root
-sys_root(dm::GWDeamon) = get(dm, :sys_root)
-
-# depot dir
-gitworkers_dir(dm::GWDeamon) = get!(dm, :gitworkers_dir) do
-    joinpath(sys_root(dm), ".gitworkers")
-end
-
-# agent_dir
-agent_dir(dm::GWDeamon) = get!(dm, :agent_dir) do
-    joinpath(gitworkers_dir(dm), "gw-deamon")
-end
+sys_root(::Type{<:GWDeamon}, agent_dir::AbstractString) = _dirname(agent_dir, 1)
 
 # procs dir
-procs_dir(dm::GWDeamon) = get!(dm, :procs_dir) do
-    joinpath(agent_dir(dm), "procs")
-end
+procs_dir(::Type{<:GWDeamon}, agent_dir::AbstractString) = joinpath(agent_dir, "deamon-procs")
 
 # logs dir
-logs_dir(dm::GWDeamon) = get!(dm, :logs_dir) do
-    joinpath(agent_dir(dm), "logs")
-end
+logs_dir(::Type{<:GWDeamon}, agent_dir::AbstractString) = joinpath(agent_dir, "deamon-logs")
 
 # parent
 parent_agent(dm::GWDeamon) = dm
 
 # toml_file
-write_toml_file(dm::GWDeamon) = _write_toml(toml_file(dm); 
-    sys_root = sys_root(dm)
-)
+write_toml_file(dm::GWDeamon) = _write_toml(toml_file(dm))
 
-function read_toml_file(::Type{GWDeamon}, tf::AbstractString)
-    toml = _read_toml(tf)
-    isempty(toml) && return nothing
-    sys_root = get(toml, "sys_root", nothing)
-    isnothing(sys_root) && return nothing
+function read_toml_file(T::Type{GWDeamon}, tf::AbstractString)
+    isfile(tf) || return nothing
+    basename(tf) == toml_file_name(T) || return nothing
+    sys_root = sys_root(GWDeamon, dirname(tf))
     return GWDeamon(sys_root; write = false)    
 end
-
 
 ## ---------------------------------------------------
 # DEAMON INTERFACE
@@ -80,10 +53,6 @@ function collect_workers!(dm::GWDeamon)
 
 end
 
-log_listeners(dm::GWDeamon) = get!(dm, :log_listeners) do
-    Dict{String, Union{FileListener, DirListener}}()
-end
-
 function collect_listeners!(dm::GWDeamon; from_beginning = false) 
     
     lls = log_listeners(dm)
@@ -95,15 +64,14 @@ function collect_listeners!(dm::GWDeamon; from_beginning = false)
     end
 
     # worker logs
-    collect_workers!(dm)
-    for (_, gw) in git_workers(dm)
+    for (_, gw) in collect_workers!(dm)
         
         gw_ldir = logs_dir(gw)
         get!(lls, gw_ldir) do
             DirListener(gw_ldir; from_beginning)
         end
 
-        # tasks
+        # tasks out
         for (_, trt) in collect_tasks!(gw)
             trt_out = out_file(trt)
             get!(lls, trt_out) do
@@ -117,37 +85,48 @@ function collect_listeners!(dm::GWDeamon; from_beginning = false)
 
 end
 
-function _print_new_bytes(title, bytes::Vector)
-    
-    str = String(bytes)
+## ---------------------------------------------------
+# REPO
 
-    # print
-    printstyled(title; color = :blue)
-    println()
-    println(str)
-    println()
+repo_path(dm::GWDeamon, gw::GitWorker, path::AbstractString = agent_dir(gw)) = 
+    repo_path(sys_root(dm), repo_dir(gw), path)
 
+repo_agent(dm::GWDeamon, gw::GitWorker; write = false) = get!(dm, :repo_agent) do
+    GWDeamon(repo_path(dm, gw, sys_root(dm)); write)
 end
 
-function print_listeners(dm::GWDeamon)
+## ---------------------------------------------------
+# SYNCHRONIZATION
 
-    lls = log_listeners(dm)
-    depot_dir = gitworkers_dir(dm)
+function sync_to_repo(dm::GWDeamon, repo_dir::AbstractString)
+    for lpath in [
+            toml_file(dm),
+            logs_dir(dm),
+            procs_dir(dm)
+        ]
+        rpath = repo_path(dm, repo_dir, lpath)
+        _cp(lpath, rpath)
+    end
+end
+function sync_to_repo(dm::GWDeamon, gw::GitWorker) 
+    sync_to_repo(dm, repo_dir(gw))
+    sync_to_repo(gw, repo_dir(gw))
+end
 
-    for (path, ll) in lls
-        if isdir(path)
-            dir_bytes = _readbytes!(ll)
-            for (file, bytes) in dir_bytes
-                title = string("From ", _relbasepath(file, depot_dir))
-                _print_new_bytes(title, bytes)
-            end
-        elseif isfile(path)
-            bytes = _readbytes!(ll)
-            title = string("From ", _relbasepath(path, depot_dir))
-            _print_new_bytes(title, bytes)
-        end
+# The deamon is created by the server and no update from global (by now)
+# is required
+sync_from_repo(::GWDeamon, ::AbstractString) = nothing
+
+## ---------------------------------------------------
+# PROCS
+
+function del_invalid_proc_registries(dm::GWDeamon)
+    # deamon
+    _del_invalid_proc_regs(dm)
+
+    # workers
+    for (_, gw) in git_workers(dm)
+        _del_invalid_proc_regs(gw)
     end
 
 end
-
-print_listeners!(dm::GWDeamon) = (collect_listeners!(dm); print_listeners(dm))
