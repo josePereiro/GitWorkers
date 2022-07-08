@@ -24,21 +24,21 @@ uuid = "f43a241f-c20a-4ad4-852c-f6b1247861c6"
 uuid = "7b1f6079-737a-58dc-b8bc-7a2ca5c1b5ee"
 
 [[deps.FilesTreeTools]]
-path = "/Users/Pereiro/.julia/dev/FilesTreeTools"
+git-tree-sha1 = "4f5748f5b2c8e41858be46a6c835988f7cc038eb"
 uuid = "638332cd-b357-4bf5-bfa2-3531168477f5"
-version = "0.5.0"
+version = "0.6.0"
 
 [[deps.GWUtils]]
 deps = ["Dates", "Logging", "LoggingExtras", "TOML"]
-path = "/Users/Pereiro/.julia/dev/GWUtils"
+git-tree-sha1 = "9ed2f81513fea7ede440c70dbc991ebce58092c1"
 uuid = "772e7830-88e0-466f-82c6-af9b8962b67b"
-version = "0.1.0"
+version = "0.1.1"
 
 [[deps.GitLinks]]
 deps = ["GWUtils", "Random", "SimpleLockFiles"]
-path = "/Users/Pereiro/.julia/dev/GitLinks"
+git-tree-sha1 = "95b70ca31d96bbcc5db783dcd4e9f7c537c0f62b"
 uuid = "e5655290-0136-40fd-b997-9e22755203bc"
-version = "0.7.1"
+version = "0.9.0"
 
 [[deps.InteractiveUtils]]
 deps = ["Markdown"]

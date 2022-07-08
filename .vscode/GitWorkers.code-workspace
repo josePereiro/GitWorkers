@@ -3,15 +3,15 @@
 		{
 			"path": ".."
 		},
-		{
-			"path": "../../GitTCPs"
-		},
+		// {
+		// 	"path": "../../GitTCPs"
+		// },
 		{
 			"path": "../../GitLinks"
 		},
-		// {
-		// 	"path": "../../FilesTreeTools"
-		// },
+		{
+			"path": "../../FilesTreeTools"
+		},
 		// {
 		// 	"path": "../../GWProcs"
 		// },
