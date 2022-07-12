@@ -71,6 +71,7 @@ const RUNNING_STATUS = "RUNNING"
 const ERROR_STATUS = "ERROR"
 const DONE_STATUS = "DONE"
 const UNKNOWN_STATUS = "UNKNOWN"
+const KILLED_STATUS = "KILLED"
 
 status_file(trt::GWTaskRunTime) = get!(trt, :status_file) do
     joinpath(agent_dir(trt), "status.txt")

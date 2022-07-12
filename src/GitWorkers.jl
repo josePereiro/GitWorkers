@@ -2,6 +2,7 @@ module GitWorkers
 
     using GWUtils
     using GitLinks
+    using GitLinks: up_push_reg!
     using FilesTreeTools
     
     import Dates
@@ -23,6 +24,8 @@ module GitWorkers
     include("Client/gw_ping.jl")
     include("Client/gw_setup.jl")
     include("Client/gw_spawn.jl")
+    include("Client/gw_follow.jl")
+    include("Client/gw_open_remote.jl")
     include("Client/gw_request_push.jl")
     include("Client/gw_test_task.jl")
     include("Client/gw_follow_server.jl")
@@ -30,6 +33,7 @@ module GitWorkers
     include("Client/gw_killem_all.jl")
     include("Client/gw_send_killer.jl")
     include("Client/upload_task.jl")
+    include("Client/gw_sync.jl")
     include("Client/gw_list_tasks.jl")
     include("Client/pull_and_listen.jl")
     
@@ -46,11 +50,12 @@ module GitWorkers
     include("Utils/test_utils.jl")
 
     export gw_create_devland
-    export gw_setup, gw_ping, gw_curr, gw_spawn, @gw_spawn
+    export gw_setup, gw_ping, gw_spawn, @gw_spawn
     export gw_request_push, gw_test_task, gw_follow_server
     export gw_send_killer, gw_list_tasks,gw_running_procs
-    export run_gitworker_server, gw_killem_all
-    
+    export gw_open_remote, gw_follow
+    export gw_curr, gw_curr_task
+    export run_gitworker_server, gw_killem_all, gw_sync
     
     function __init__()
         !Sys.isunix() && error("Non-unix systems are not yet supported!")

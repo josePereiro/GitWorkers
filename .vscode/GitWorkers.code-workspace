@@ -18,9 +18,9 @@
 		{
 			"path": "../../GWUtils"
 		},
-		{
-			"path": "../../../../.gitworker"
-		}
+		// {
+			// "path": "../../../../.gitworker"
+		// }
 	],
 	"settings": {
 		"julia.environmentPath": "/Users/Pereiro/.julia/dev/GitWorkers"

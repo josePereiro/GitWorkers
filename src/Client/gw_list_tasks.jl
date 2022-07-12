@@ -1,7 +1,11 @@
-function gw_list_tasks()
+function gw_list_tasks(; sync = true)
     gw = gw_curr()
     # TODO: wait till responce
-    send_force_push_signal(gitlink(gw)) # one push
+    if sync
+        println("="^60)
+        gw_sync(; verbose = true)
+        println("-"^60)
+    end
 
     rgw = repo_agent(gw)
     for dir in sort!(_readdir(tasks_dir(rgw); join = true))

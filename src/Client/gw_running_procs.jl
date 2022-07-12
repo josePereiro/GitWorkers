@@ -1,4 +1,4 @@
-function gw_running_procs()
+function gw_running_procs(; sync = true)
 
     gw = gw_curr()
     rgw = repo_agent(gw)
@@ -6,9 +6,11 @@ function gw_running_procs()
     try
         while true
             
-            send_force_push_signal(gitlink(gw)) # sync
-            
-            println("-"^60)
+            println("="^60)
+            if sync
+                gw_sync(; verbose = true)
+                println("-"^60)
+            end
 
             # deamon
             rdm = parent_agent(rgw)

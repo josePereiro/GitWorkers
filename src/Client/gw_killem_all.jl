@@ -29,12 +29,14 @@ function gw_killem_all()
                 GitWorkers.is_running(trt) || break
                 GitWorkers.safe_kill(trt)
                 sleep(1.0)
-                
             end
 
-            GitWorkers.is_running(trt) ? 
-                println("Tough guy '", ider, "', kill failed ;(") :
+            if GitWorkers.is_running(trt)
+                println("Tough guy '", ider, "', kill failed ;(")
+            else
                 println("RIP ", ider)
+                GitWorkers.write_status(trt, GitWorkers.KILLED_STATUS)
+            end
             
             println("\n"^2)
 

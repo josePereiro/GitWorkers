@@ -40,6 +40,7 @@ function _run_task(tdir::AbstractString)
         println("pwd:     ", pwd())
         println("<"^53)
         println()
+        _flush_all()
 
         # LOG WELCOME > out.log
         log_info(trt, 
@@ -48,6 +49,7 @@ function _run_task(tdir::AbstractString)
             pid = getpid(),
             root_dir = agent_dir(trt),
         )
+        _flush_all()
 
         # RUN EX
         __dat_file = dat_file(trt)
