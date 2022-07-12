@@ -25,8 +25,11 @@ function _spawn_worker_proc(dm::GWDeamon, gw::GitWorker)
         write_proc_reg(gw, worker_pid)
     
         # LOG
-        worker_id = agent_ider(gw)
-        log_info(dm, "Worker spawned"; worker_pid, worker_id)
+        log_info(dm, "WORKER SPAWNED"; 
+            worker_pid, 
+            worker_id = agent_ider(gw),
+            url = remote_url(gw)
+        )
     
     end
 end
