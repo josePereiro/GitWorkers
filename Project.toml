@@ -1,7 +1,7 @@
 name = "GitWorkers"
 uuid = "9e5d5e8c-ba81-11ea-39e8-15323c797f61"
 authors = ["josePereiro"]
-version = "0.8.0"
+version = "0.8.1"
 
 [deps]
 GitLinks = "e5655290-0136-40fd-b997-9e22755203bc"
