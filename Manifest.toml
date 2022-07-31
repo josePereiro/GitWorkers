@@ -30,15 +30,15 @@ version = "0.6.0"
 
 [[deps.GWUtils]]
 deps = ["Dates", "Logging", "LoggingExtras", "TOML"]
-path = "/Users/Pereiro/.julia/dev/GWUtils"
+git-tree-sha1 = "46b9d957930d4ac5f64023bf88f2fe5c18d68373"
 uuid = "772e7830-88e0-466f-82c6-af9b8962b67b"
-version = "0.1.1"
+version = "0.1.2"
 
 [[deps.GitLinks]]
 deps = ["Dates", "GWUtils", "Random", "SimpleLockFiles"]
-path = "/Users/Pereiro/.julia/dev/GitLinks"
+git-tree-sha1 = "b505218ee5fa43c3337b671d6d4a0b4b7767c5eb"
 uuid = "e5655290-0136-40fd-b997-9e22755203bc"
-version = "0.10.0"
+version = "0.11.0"
 
 [[deps.InteractiveUtils]]
 deps = ["Markdown"]
