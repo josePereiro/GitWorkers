@@ -1,7 +1,11 @@
 function gw_sync(; verbose = true)
 
     gl = gitlink(gw_curr())
-    gw_request_push(; verbose) || return false
+    ok_flag = gw_request_push(; verbose) 
+    if !ok_flag
+        verbose && println("Request failed")
+        return false
+    end
     verbose && print("waiting...")
     while true
         if is_pull_required(gl)

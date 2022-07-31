@@ -1,7 +1,7 @@
 using GitWorkers
 
 ## ---------------------------------------------------------------
-# cmd for running the server
+# cmd for running the server (run in different process)
 # julia --project '__SERVER_SCRIPT_PATH__'
 
 ## ---------------------------------------------------------------
