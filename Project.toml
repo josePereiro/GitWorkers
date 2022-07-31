@@ -1,16 +1,16 @@
 name = "GitWorkers"
 uuid = "9e5d5e8c-ba81-11ea-39e8-15323c797f61"
 authors = ["josePereiro"]
-version = "0.8.1"
+version = "0.9.0"
 
 [deps]
-Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
-FilesTreeTools = "638332cd-b357-4bf5-bfa2-3531168477f5"
-GWUtils = "772e7830-88e0-466f-82c6-af9b8962b67b"
 GitLinks = "e5655290-0136-40fd-b997-9e22755203bc"
-Logging = "56ddb016-857b-54e1-b83d-db4d58db5568"
+Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
+GWUtils = "772e7830-88e0-466f-82c6-af9b8962b67b"
 Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
 Serialization = "9e88b42a-f829-5b0c-bbe9-9e923198166b"
+Logging = "56ddb016-857b-54e1-b83d-db4d58db5568"
+FilesTreeTools = "638332cd-b357-4bf5-bfa2-3531168477f5"
 TOML = "fa267f1f-6049-4f14-aa54-33bafae1ed76"
 
 [compat]
